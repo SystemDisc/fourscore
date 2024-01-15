@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="8px" height="16px" viewBox="0 0 8 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>ShapeFacebook</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="MVP-Voter" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="122" transform="translate(-20.000000, -599.000000)" fill="#1A419E">
+            <g id="Social" transform="translate(0.000000, 503.000000)">
+                <g id="Facebook" transform="translate(20.000000, 86.000000)">
+                    <path d="M5.31920774,26 L1.77245509,26 L1.77245509,18.0002964 L0,18.0002964 L0,15.2424321 L1.77245509,15.2424321 L1.77245509,13.5872392 C1.77245509,11.3386194 2.77291571,10 5.61584523,10 L7.98280362,10 L7.98280362,12.7578643 L6.50391525,12.7578643 C5.39720559,12.7578643 5.32350683,13.1437993 5.32350683,13.8623143 L5.31920774,15.2418393 L8,15.2418393 L7.68616613,17.9997036 L5.31920774,17.9997036 L5.31920774,26 L5.31920774,26 Z" id="ShapeFacebook"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

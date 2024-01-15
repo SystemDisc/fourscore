@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="67" height="28" viewBox="0 0 67 28">
+    <g fill="none" fill-rule="evenodd" transform="translate(0 -1)">
+        <rect width="67" height="28" y="1" fill="#FF7B00" rx="8"/>
+        <text fill="#FFF" font-family="Lato-Light, Lato" font-size="24" font-weight="300">
+            <tspan x="11.712" y="24">beta</tspan>
+        </text>
+    </g>
+</svg>

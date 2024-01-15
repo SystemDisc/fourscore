@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="127px" height="122px" viewBox="0 0 127 122" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>Star</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <radialGradient cx="50%" cy="35.1520849%" fx="50%" fy="35.1520849%" r="47.2395533%" id="radialGradient-1">
+            <stop stop-color="#FAD961" offset="0%"></stop>
+            <stop stop-color="#F76B1C" offset="100%"></stop>
+        </radialGradient>
+        <linearGradient x1="104.09966%" y1="85.3082439%" x2="-29.748894%" y2="17.0628232%" id="linearGradient-2">
+            <stop stop-color="#FAD961" offset="0%"></stop>
+            <stop stop-color="#F76B1C" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="MVP-Voter" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="122b" transform="translate(-124.000000, -247.000000)" stroke="url(#linearGradient-2)" fill="url(#radialGradient-1)">
+            <polygon id="Star" points="187.5 347.25 149.000066 367.490613 156.352899 324.620307 125.205798 294.259387 168.250033 288.004693 187.5 249 206.749967 288.004693 249.794202 294.259387 218.647101 324.620307 225.999934 367.490613"></polygon>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="58px" height="58px" viewBox="0 0 58 58" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>clear check button</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="MVP-Voter" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="122a" transform="translate(-65.000000, -628.000000)" stroke="#343434">
+            <g id="clear-check-button" transform="translate(66.000000, 629.000000)">
+                <g id="Greyed-check-button">
+                    <path d="M28,0 C43.463,0 56,12.5356 56,28 C56,43.463 43.463,56 28,56 C12.5356,56 3.55271368e-15,43.4644 3.55271368e-15,28 C3.55271368e-15,12.5356 12.5356,0 28,0 L28,0 Z" id="outline"></path>
+                    <path d="M28.0962607,31.1696208 L39.7021248,19 L42.5336981,21.9708 L28.5079985,36.6792 L28.0961454,36.2473 L27.6856274,36.6778 L19,27.5694 L21.8315733,24.6 L28.0962607,31.1696208 Z" id="icon"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
