@@ -1,3 +1,4 @@
+import LocationForm from '@/components/molecules/location-form';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -5,7 +6,7 @@ export default function Home() {
   return (
     <>
       <div>
-        <header className='p-4 h-screen bg-[url("/images/home/bg.png")] bg-cover bg-right-bottom'>
+        <header className='p-4 min-h-screen bg-[url("/images/home/bg.png")] bg-cover bg-right-bottom'>
           <nav className="grid grid-cols-2 h-11">
             <div className="flex justify-start items-center">
               <Link href="/">
@@ -18,24 +19,7 @@ export default function Home() {
               </Link>
             </div>
           </nav>
-          <div className="h-[calc(100vh_-_2.75rem_-_1rem)] flex items-center md:justify-start content-center flex-wrap md:pl-20 p-0 justify-center">
-            <div className="md:w-full text-7xl font-black text-[#443423] mb-10">
-              <div className='max-w-xl w-full text-center'>
-                We Believe.
-              </div>
-            </div>
-            <form className="flex items-center justify-start max-w-xl w-full mb-5 border border-black rounded-full overflow-hidden bg-white has-[:focus]:outline has-[:focus]:outline-2">
-              <input className='w-[calc(100%_-_64px)] h-16 pl-4 text-xl bg-transparent border-none focus-visible:outline-none' type="text" placeholder="Voter Registration Address" />
-              <button type="submit" className="flex items-center justify-center h-14 w-14 ml-1 bg-[#22c064] rounded-full text-4xl pb-3 text-white font-bold border border-black">
-                go
-              </button>
-            </form>
-            <div className="md:w-full text-stroke text-[#f99000] text-2xl font-bold">
-              <div className='max-w-xl w-full text-center'>
-                Find your perfect political candidate
-              </div>
-            </div>
-          </div>
+          <LocationForm />
         </header>
         <section className='mt-12 p-4'>
           <div className="grid grid-cols-3 max-w-2xl mx-auto text-center text-xl tracking-widest text-[#9b9b9b]">
@@ -76,7 +60,7 @@ export default function Home() {
             and connecting candidates with their community.
           </p>
         </section>
-        <section className='bg-[#d8d8d8] pt-24 pb-24 mb-12'>
+        <section className='bg-[#d8d8d8] pt-24 pb-24 mb-9'>
           <div className='max-w-4xl mx-auto'>
             <div className='float-left pr-8'>
               <Image src="/images/home/phone-preview.png" width={306} height={585} alt='App Preview' />
