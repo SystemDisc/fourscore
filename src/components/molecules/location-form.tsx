@@ -3,6 +3,7 @@
 import { Autocomplete, useJsApiLoader } from '@react-google-maps/api';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
+import Button from '../atoms/button';
 
 export default function LocationForm() {
   const { isLoaded } = useJsApiLoader({
@@ -53,9 +54,9 @@ export default function LocationForm() {
         {!isLoaded &&
           <input className='w-[calc(100%_-_64px)] h-16 pl-4 text-xl bg-transparent border-none focus-visible:outline-none' type="text" placeholder="Voter Registration Address" />
         }
-        <button type="submit" className="flex items-center justify-center h-14 w-14 ml-1 bg-[#22c064] rounded-full text-4xl pb-3 text-white font-bold border border-black">
+        <Button className='h-14 w-14 ml-1 text-4xl !px-0 !pt-0 pb-3 font-bold !tracking-normal'>
           go
-        </button>
+        </Button>
       </form>
       <div className="md:w-full text-stroke text-[#f99000] text-2xl font-bold">
         <div className='max-w-xl w-full text-center'>
