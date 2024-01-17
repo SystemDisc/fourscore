@@ -15,10 +15,9 @@ export default forwardRef(function Accordion({
   isRounded,
   tabHeadings,
   tabs,
-  headerBgColor,
-  headerTextColor,
   className,
   wrapperClassname,
+  headerClassname,
   ...props
 }: {
   header: string | ReactNode;
@@ -30,9 +29,8 @@ export default forwardRef(function Accordion({
   isRounded?: boolean;
   tabHeadings?: string[];
   tabs?: ReactNode[];
-  headerBgColor?: string;
-  headerTextColor?: string;
   wrapperClassname?: string;
+  headerClassname?: string;
 } & React.HTMLAttributes<HTMLDivElement>, ref?: Ref<{ updateSize: () => void }>) {
   if (iconRotation === undefined) {
     iconRotation = 180;
@@ -125,20 +123,16 @@ export default forwardRef(function Accordion({
 
   return (
     <div className={wrapperClassname} {...props}>
-      <header ref={headerRef} className={classNames('min-h-16 flex items-center justify-between border border-b-0 border-white bg-neutral-300 p-4 cursor-pointer !text-black', {
+      <header ref={headerRef} className={classNames('min-h-16 flex items-center justify-center border border-b-0 border-white bg-neutral-300 p-4 cursor-pointer !text-black', {
         'rounded': rounded,
         'rounded-b-none': open && rounded,
-        'bg-neutral-100': !headerBgColor,
-      })} onClick={(e) => {
+      }, headerClassname)} onClick={(e) => {
         const elems = document.querySelectorAll('.tab-button');
         if ([...elems].every(elem => !elem.contains(e.target as Node))) {
-          toggle()
+          toggle();
         }
-      }} style={{
-        backgroundColor: headerBgColor || undefined,
-        color: headerTextColor || undefined,
       }}>
-        {typeof header === 'string' ? <span>{header}</span> : header}
+        {typeof header === 'string' ? <span className='flex-1'>{header}</span> : header}
         <div className='flex items-center'>
           {tabHeadings &&
             tabHeadings.map((heading, index) => (

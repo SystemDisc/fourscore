@@ -4,6 +4,7 @@ import { Autocomplete, useJsApiLoader } from '@react-google-maps/api';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import Button from '../atoms/button';
+import Link from 'next/link';
 
 export default function LocationForm() {
   const { isLoaded } = useJsApiLoader({
@@ -58,9 +59,14 @@ export default function LocationForm() {
           go
         </Button>
       </form>
-      <div className="md:w-full text-stroke text-[#f99000] text-2xl font-bold">
-        <div className='max-w-xl w-full text-center'>
+      <div className="md:w-full text-[#f99000] text-2xl">
+        <div className='max-w-xl w-full text-center text-stroke mb-4 font-bold'>
           Find your perfect political candidate
+        </div>
+        <div className='max-w-xl w-full text-center'>
+          <Button className='!tracking-wide' buttonType='white' isLink href='/candidate'>
+            I'm a candidate
+          </Button>
         </div>
       </div>
     </div>
