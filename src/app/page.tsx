@@ -130,7 +130,7 @@ export default function Home() {
           <div className="flex lg:w-[calc(100%_-_150px_*_3)] items-center justify-center lg:justify-end bg-[#7ad9a2] h-24 px-4 mb-9">Taxes</div>
           <div className="flex lg:w-[calc(100%_-_150px_*_2)] items-center justify-center lg:justify-end bg-[#4ecd83] h-24 px-4 mb-9">Crime</div>
           <div className="flex lg:w-[calc(100%_-_150px_*_1)] items-center justify-center lg:justify-end bg-[#22c064] h-24 px-4 mb-9">Traffic</div>
-          <div className="lg:max-w-[552px] text-5xl lg:absolute lg:top-0 lg:right-12 text-right text-black lg:w-full font-light mb-9">
+          <div className="lg:max-w-[552px] text-5xl lg:absolute lg:top-0 lg:right-12 p-4 lg:p-0 text-right text-black lg:w-full font-light mb-9">
             Tell your representatives exactly what they should be focused on
           </div>
         </section>
