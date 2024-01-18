@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <>
       <div>
-        <header className='p-4 min-h-screen bg-[url("/images/home/candidate-bg.png")] bg-cover [background-position:bottom_center]'>
+        <header className='p-4 min-h-screen lg:min-h-[75vh] bg-[url("/images/home/candidate-bg.png")] bg-cover [background-position:bottom_center]'>
           <nav className="grid grid-cols-2 h-11">
             <div className="flex justify-start items-center">
               <Link href="/">
@@ -21,7 +21,7 @@ export default function Home() {
               </Button>
             </div>
           </nav>
-          <div className="min-h-[calc(100vh_-_2.75rem_-_1rem)] flex items-center md:justify-start content-center flex-wrap md:pl-20 p-0 justify-center text-white">
+          <div className="min-h-[calc(100vh_-_2.75rem_-_1rem)] lg:min-h-[calc(75vh_-_2.75rem_-_1rem)] flex items-center md:justify-start content-center flex-wrap md:pl-20 p-0 justify-center text-white">
             <div className="md:w-full text-7xl font-black mb-4">
               <div className='max-w-xl w-full text-center text-stroke'>
                 Connected
@@ -44,7 +44,7 @@ export default function Home() {
             </div>
           </div>
         </header>
-        <section className='from-[#9EA1A5] to-[#393C40] bg-gradient-to-b text-white pt-24 pb-24'>
+        <section className='from-[#9EA1A5] to-[#393C40] bg-gradient-to-b text-white pt-12 pb-24'>
           <div className='max-w-6xl mx-auto lg:grid lg:grid-cols-2 lg:gap-8 px-4'>
             <div className='flex items-center justify-center'>
               <Image src="/images/home/phone-preview.png" width={839} height={1106} alt='App Preview' />

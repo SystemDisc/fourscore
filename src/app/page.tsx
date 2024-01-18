@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <>
       <div>
-        <header className='p-4 min-h-screen bg-[url("/images/home/bg.png")] bg-cover bg-right-bottom'>
+        <header className='p-4 min-h-screen lg:min-h-[75vh] bg-[url("/images/home/bg.png")] bg-cover bg-right-bottom'>
           <nav className="grid grid-cols-2 h-11">
             <div className="flex justify-start items-center">
               <Link href="/">
