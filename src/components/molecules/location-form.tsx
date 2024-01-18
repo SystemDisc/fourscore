@@ -33,7 +33,7 @@ export default function LocationForm() {
   }, [router]);
 
   return (
-    <div className="min-h-[calc(100vh_-_2.75rem_-_1rem)] lg:min-h-[calc(75vh_-_2.75rem_-_1rem)] flex items-center md:justify-start content-center flex-wrap md:pl-20 p-0 justify-center">
+    <div className="min-h-[calc(100vh_-_2.75rem_-_2rem_-_3rem)] flex items-center md:justify-start content-center flex-wrap md:pl-20 p-0 justify-center">
       <div className="md:w-full text-7xl font-black text-[#443423] mb-10">
         <div className='max-w-xl w-full text-center'>
           We Believe.

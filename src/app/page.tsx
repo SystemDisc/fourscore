@@ -1,4 +1,5 @@
 import Button from '@/components/atoms/button';
+import ChevronDown from '@/components/atoms/chevron-down';
 import Accordion from '@/components/molecules/accordion';
 import LocationForm from '@/components/molecules/location-form';
 import Image from 'next/image';
@@ -8,7 +9,7 @@ export default function Home() {
   return (
     <>
       <div>
-        <header className='p-4 min-h-screen lg:min-h-[75vh] bg-[url("/images/home/bg.png")] bg-cover bg-right-bottom'>
+        <header className='p-4 min-h-screen bg-[url("/images/home/bg.png")] bg-cover bg-right-bottom'>
           <nav className="grid grid-cols-2 h-11">
             <div className="flex justify-start items-center">
               <Link href="/">
@@ -22,8 +23,9 @@ export default function Home() {
             </div>
           </nav>
           <LocationForm />
+          <ChevronDown htmlFor='3-steps' />
         </header>
-        <section className='mt-12 p-4'>
+        <section className='mt-12 p-4' id='3-steps'>
           <div className="grid grid-cols-3 max-w-2xl mx-auto text-center text-xl tracking-widest text-[#9b9b9b]">
             <div className='col-span-3 lg:col-span-1 mb-4'>
               <div className='mb-2'>
