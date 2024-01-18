@@ -42,12 +42,6 @@ export default forwardRef(function Accordion({
   const rounded = isRounded === undefined ? true : isRounded;
 
   useEffect(() => {
-    if ((isOpen === true || isOpen === false) && isOpen != open) {
-      toggle();
-    }
-  }, [isOpen]);
-
-  useEffect(() => {
     const handler = () => {
       if (articleRef.current && open) {
         const height = [...articleRef.current.children].reduce((height, elem) => {
@@ -106,6 +100,12 @@ export default forwardRef(function Accordion({
       }
     }
   };
+
+  useEffect(() => {
+    if ((isOpen === true || isOpen === false) && isOpen != open) {
+      toggle();
+    }
+  }, [isOpen, open, toggle]);
 
   useImperativeHandle(ref, () => ({
     updateSize: () => {

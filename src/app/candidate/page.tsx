@@ -38,7 +38,7 @@ export default function Home() {
               </div>
               <div className='max-w-xl w-full text-center text-xl font-bold'>
                 <Button isLink buttonType='white' href='/'>
-                  I'm a voter
+                  I&apos;m a voter
                 </Button>
               </div>
             </div>
@@ -57,7 +57,7 @@ export default function Home() {
                 You and the voter each take the same FourScore poll.
               </p>
               <p className='w-full mb-16'>
-                When the voter completes their poll, they are shown all the candidates on their ballot and a FourScore rating next to each name.  The FourScore rating ranges from 0% to 100% and is based on how similar your poll is with the voters'.
+                When the voter completes their poll, they are shown all the candidates on their ballot and a FourScore rating next to each name.  The FourScore rating ranges from 0% to 100% and is based on how similar your poll is with the voters&apos;.
               </p>
               <p className='w-full mb-16'>
                 You promote your candidacy by connecting with supporters, non-supporters, and undecided voters on the issues that are most important to them.

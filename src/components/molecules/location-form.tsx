@@ -30,7 +30,7 @@ export default function LocationForm() {
 
   const onLoad = useCallback((newAutocomplete: google.maps.places.Autocomplete) => {
     setAutocomplete(newAutocomplete);
-  }, []);
+  }, [router]);
 
   return (
     <div className="min-h-[calc(100vh_-_2.75rem_-_1rem)] flex items-center md:justify-start content-center flex-wrap md:pl-20 p-0 justify-center">
@@ -65,7 +65,7 @@ export default function LocationForm() {
         </div>
         <div className='max-w-xl w-full text-center'>
           <Button className='!tracking-wide' buttonType='white' isLink href='/candidate'>
-            I'm a candidate
+            I&apos;m a candidate
           </Button>
         </div>
       </div>
