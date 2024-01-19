@@ -7,8 +7,8 @@ import Link from 'next/link';
 export default function Home() {
   return (
     <>
-      <div>
-        <header className='p-4 min-h-screen bg-[url("/images/home/candidate-bg.png")] bg-cover [background-position:bottom_center]'>
+      <div className='h-full'>
+        <header className='p-4 min-h-[100dvh] bg-[url("/images/home/candidate-bg.png")] bg-cover [background-position:bottom_center]'>
           <nav className="grid grid-cols-2 h-11">
             <div className="flex justify-start items-center">
               <Link href="/">
@@ -21,7 +21,7 @@ export default function Home() {
               </Button>
             </div>
           </nav>
-          <div className="min-h-[calc(100vh_-_2.75rem_-_2rem_-_3rem)] flex items-center md:justify-start content-center flex-wrap md:pl-20 p-0 justify-center text-white">
+          <div className="min-h-[calc(100dvh_-_2.75rem_-_2rem_-_3rem)] flex items-center md:justify-start content-center flex-wrap md:pl-20 p-0 justify-center text-white">
             <div className="md:w-full text-7xl font-black mb-4">
               <div className='max-w-xl w-full text-center text-stroke'>
                 Connected
