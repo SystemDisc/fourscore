@@ -4,7 +4,6 @@ import { Autocomplete, useJsApiLoader } from '@react-google-maps/api';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import Button from '../atoms/button';
-import Link from 'next/link';
 
 export default function LocationForm() {
   const { isLoaded } = useJsApiLoader({
@@ -20,6 +19,9 @@ export default function LocationForm() {
   const onPlaceChanged = useCallback(() => {
     const place = autocomplete!.getPlace();
     const streetNumber = place?.address_components?.find(a => a.types.find(t => 'street_number'));
+
+    localStorage.setItem('center', JSON.stringify(place.geometry?.location));
+    localStorage.setItem('placeId', place.place_id || '');
 
     if (streetNumber) {
       router.push('/confirm-address');
