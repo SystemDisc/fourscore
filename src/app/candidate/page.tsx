@@ -92,32 +92,32 @@ export default function Home() {
               </h2>
             </div>
             <div className='max-h-fit lg:columns-3 lg:col-span-2 gap-4 mx-4 lg:mx-16 [&>*:not(:last-child)]:mb-4'>
-              <Accordion header='FourScore Rating' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column'>
+              <Accordion isOpen header='FourScore Rating' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column'>
                 <p>
                   The FourScore rating helps voters find candidates who support the same issues they support. The more you align when with a voter on the issues, the higher your FourScore rating.
                 </p>
               </Accordion>
-              <Accordion header='Candidate Profile Page' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column break-after-column'>
+              <Accordion isOpen header='Candidate Profile Page' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column break-after-column'>
                 <p>
                   When you sign up, you can create a candidate profile page. Your profile page highlights your experience, education, volunteerism, and endorsements.  When a voter is on the fence, this is where they come to make their decision on who to support.
                 </p>
               </Accordion>
-              <Accordion header='Community Insights' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column'>
+              <Accordion isOpen header='Community Insights' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column'>
                 <p>
                   When voters fill out their local, state and national poll, it provides valuable insight on the area you serve.  This insight allows you to understand your community&apos;s needs and concerns better.  Additionally, you&apos;ll see which of your answers are most popular and least popular with your community.
                 </p>
               </Accordion>
-              <Accordion header='Social & Website Links' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column break-after-column'>
+              <Accordion isOpen header='Social & Website Links' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column break-after-column'>
                 <p>
                   Easily link your social accounts and campaign website to your FourScore candidate profile page.
                 </p>
               </Accordion>
-              <Accordion header='Custom Audiences' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column'>
+              <Accordion isOpen header='Custom Audiences' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column'>
                 <p>
                   You can quickly select your target audience based on their survey and send relevant messaging to that audience.
                 </p>
               </Accordion>
-              <Accordion header='Campaign Insights' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column'>
+              <Accordion isOpen header='Campaign Insights' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column'>
                 <p>
                   Get a quick look at how your campaign is doing.  Watch as your supporter numbers grow in real-time.
                 </p>

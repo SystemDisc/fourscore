@@ -84,7 +84,7 @@ export default function Home() {
             </div>
           </div>
           <div className='max-h-fit lg:columns-3 lg:col-span-2 gap-4 mx-4 lg:mx-16 [&>*:not(:last-child)]:mb-4'>
-            <Accordion header='What is FourScore?' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column'>
+            <Accordion isOpen header='What is FourScore?' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column'>
               <p>FourScore is a non-partisian, online tool built to help voters: </p>
               <ul className='list-disc list-inside grid grid-cols-1 gap-4 mb-4'>
                 <li>
@@ -107,19 +107,19 @@ export default function Home() {
                 </li>
               </ul>
             </Accordion>
-            <Accordion header='As a voter, are my candidate selections, my answers, and my info kept private?' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column break-after-column'>
+            <Accordion isOpen header='As a voter, are my candidate selections, my answers, and my info kept private?' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column break-after-column'>
               <p>Yes.</p>
               <p>We are not in the business of selling yours, or anyone&apos;s personal data.</p>
             </Accordion>
-            <Accordion header='What party or political organization is FourScore affiliated with?' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column'>
+            <Accordion isOpen header='What party or political organization is FourScore affiliated with?' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column'>
               <p>None.</p>
               <p>FourScore is totally independent and non-partisian. We are not affiliated with any political party or political organization of any kind.  We serve to empower communities and the voters within those communities.</p>
               <p>Any candidate, elected official, or voter is welcome to utilize the many benefits of FourScore.</p>
             </Accordion>
-            <Accordion header='How does FourScore make money?' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column break-after-column'>
+            <Accordion isOpen header='How does FourScore make money?' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column break-after-column'>
               <p>FourScore makes money by charging elected officials and candidates for real-time public opinion about their community&apos;s greatest concerns, and connecting them with their voters.</p>
             </Accordion>
-            <Accordion header='What does it cost to use FourScore?' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column'>
+            <Accordion isOpen header='What does it cost to use FourScore?' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column'>
               <p>Nothing, nada, zero, zilch.</p>
               <p>FourScore is FREE forever for voters.</p>
               <p>FourScore makes money by charging elected officials and candidates for real-time insight on the public opinion within their community, and connecting them with their voters.</p>

@@ -105,7 +105,7 @@ export default forwardRef(function Accordion({
     if ((isOpen === true || isOpen === false) && isOpen != open) {
       toggle();
     }
-  }, [isOpen, open, toggle]);
+  }, [isOpen]);
 
   useImperativeHandle(ref, () => ({
     updateSize: () => {
