@@ -60,9 +60,9 @@ export default function Home() {
               of people and communities
             </h2>
             <p className='text-3xl tracking-wide text-[#9b9b9b]'>
-              FourScore is a non-partisan website that empowers <br className='hidden lg:inline-block' />
-              communities by matching voters with candidates <br className='hidden lg:inline-block' />
-              and connecting candidates with their community.
+              FourScore seamlessly connects voters with candidates <br className='hidden lg:inline-block' />
+              through policy-based matching, <br className='hidden lg:inline-block' />
+              making every vote more informed and impactful.
             </p>
           </div>
         </section>
