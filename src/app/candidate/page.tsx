@@ -1,6 +1,7 @@
 import Button from '@/components/atoms/button';
 import ChevronDown from '@/components/atoms/chevron-down';
 import Accordion from '@/components/molecules/accordion';
+import AuthButton from '@/components/molecules/auth-button';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -16,9 +17,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="flex justify-end items-center">
-              <Button className='border-white text-white hover:!text-neutral-300' buttonType='flat' isLink href='/user/sign-in'>
-                Sign in
-              </Button>
+              <AuthButton isCandidate />
             </div>
           </nav>
           <div className="min-h-[calc(100dvh_-_2.75rem_-_2rem_-_3rem)] flex items-center md:justify-start content-center flex-wrap md:pl-20 p-0 justify-center text-white">

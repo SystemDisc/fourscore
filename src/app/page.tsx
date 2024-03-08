@@ -1,6 +1,6 @@
-import Button from '@/components/atoms/button';
 import ChevronDown from '@/components/atoms/chevron-down';
 import Accordion from '@/components/molecules/accordion';
+import AuthButton from '@/components/molecules/auth-button';
 import LocationForm from '@/components/molecules/location-form';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -17,9 +17,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="flex justify-end items-center">
-              <Button buttonType='flat' isLink href='/user/sign-in'>
-                Sign in
-              </Button>
+              <AuthButton />
             </div>
           </nav>
           <LocationForm />

@@ -6,25 +6,34 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "migrate": "tsx migrate.ts"
   },
   "dependencies": {
+    "@auth/kysely-adapter": "^0.6.0",
     "@react-google-maps/api": "^2.19.2",
     "classnames": "^2.5.1",
+    "kysely": "^0.26.3",
     "next": "^14.0.4",
+    "next-auth": "^4.24.6",
+    "nodemailer": "^6.9.11",
+    "pg": "^8.11.3",
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.0.1"
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/pg": "^8.11.2",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
+    "dotenv-flow": "^4.1.0",
     "eslint": "^8",
     "eslint-config-next": "^14.0.4",
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
+    "tsx": "^4.7.1",
     "typescript": "^5"
   }
 }
