@@ -23,7 +23,7 @@ export default function Home() {
           <LocationForm />
           <ChevronDown htmlFor='3-steps' />
         </header>
-        <section className='mt-12 p-4' id='3-steps'>
+        <section className='pt-12 p-4 bg-white' id='3-steps'>
           <div className="grid grid-cols-3 max-w-2xl mx-auto text-center text-xl tracking-widest text-[#9b9b9b]">
             <div className='col-span-3 lg:col-span-1 mb-4'>
               <div className='mb-2'>
@@ -51,20 +51,20 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <section className='mt-16 lg:ml-8 p-4 mb-20 lg:grid-cols-2'>
-          <div>
+        <section className='pt-16 lg:pl-8 pb-20 lg:grid-cols-2 bg-white'>
+          <div className='p-4'>
             <h2 className='text-6xl font-light tracking-wide mb-8'>
               We believe in the power <br className='hidden lg:inline-block' />
               of people and communities
             </h2>
             <p className='text-3xl tracking-wide text-[#9b9b9b]'>
               FourScore seamlessly connects voters with candidates <br className='hidden lg:inline-block' />
-              through policy-based matching, <br className='hidden lg:inline-block' />
-              making every vote more informed and impactful.
+              through policy-based matching, making every vote <br className='hidden lg:inline-block' />
+              more informed and impactful.
             </p>
           </div>
         </section>
-        <section className='from-[#9EA1A5] to-[#393C40] bg-gradient-to-b text-white pt-24 pb-24 mb-9'>
+        <section className='from-[#9EA1A5] to-[#393C40] bg-gradient-to-b text-white pt-24 pb-36'>
           <div className='max-w-4xl mx-auto lg:grid lg:grid-cols-2 lg:gap-8 px-4'>
             <div>
               <Image src="/images/home/phone-preview.png" width={839} height={1106} alt='App Preview' />
@@ -124,13 +124,13 @@ export default function Home() {
             </Accordion>
           </div>
         </section>
-        <section className='relative text-6xl text-white'>
+        <section className='relative text-6xl text-white bg-white py-9'>
           <div className="flex lg:w-[calc(100%_-_150px_*_5)] items-center justify-center lg:justify-end bg-[#d3f2e0] h-24 px-4 mb-9">Schools</div>
           <div className="flex lg:w-[calc(100%_-_150px_*_4)] items-center justify-center lg:justify-end bg-[#a7e6c1] h-24 px-4 mb-9">Jobs</div>
           <div className="flex lg:w-[calc(100%_-_150px_*_3)] items-center justify-center lg:justify-end bg-[#7ad9a2] h-24 px-4 mb-9">Taxes</div>
           <div className="flex lg:w-[calc(100%_-_150px_*_2)] items-center justify-center lg:justify-end bg-[#4ecd83] h-24 px-4 mb-9">Crime</div>
-          <div className="flex lg:w-[calc(100%_-_150px_*_1)] items-center justify-center lg:justify-end bg-[#22c064] h-24 px-4 mb-9">Traffic</div>
-          <div className="lg:max-w-[552px] text-5xl lg:absolute lg:top-0 lg:right-12 p-4 lg:p-0 text-center lg:text-right text-black lg:w-full font-light mb-9">
+          <div className="flex lg:w-[calc(100%_-_150px_*_1)] items-center justify-center lg:justify-end bg-[#22c064] h-24 px-4 mb-9 lg:mb-0">Traffic</div>
+          <div className="lg:max-w-[552px] text-5xl lg:absolute lg:top-9 lg:right-12 p-4 lg:p-0 text-center lg:text-right text-black lg:w-full font-light">
             Tell your representatives exactly what they should be focused on
           </div>
         </section>
@@ -157,7 +157,7 @@ export default function Home() {
           </div>
         </section>
         <section className='from-[#9EA1A5] to-[#393C40] bg-gradient-to-b text-white lg:hidden items-center justify-center py-24 px-8 lg:px-24 flex'>
-          <ul className='list-disc list-inside text-4xl'>
+          <ul className='list-disc list-inside text-2xl'>
             <li className='mb-4'>
               The Voter takes the poll and generates anonymous
               data about the community for their Representatives
