@@ -203,7 +203,7 @@ export default function Poll({
                     } else {
                       setAnswers((answers) => {
                         (async () => {
-                          await savePoll(session.user, answers);
+                          await savePoll(session?.user, answers);
                           router.push('/dashboard');
                         })().catch(console.error);
                         return answers;
