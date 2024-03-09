@@ -41,7 +41,16 @@ export default function Poll({
     <section className='grid grid-cols-1'>
       <div className='grid grid-cols-2 gap-4 p-4'>
         <div>
-          <Button buttonType='flat' className='w-full' disabled={currentIndex === 0}>
+          <Button
+            buttonType='flat'
+            className='w-full'
+            disabled={currentIndex === 0}
+            onClick={() => {
+              setCurrentIndex(currentIndex - 1);
+              setAgree(answers[currentIndex - 1].agree);
+              setRating(answers[currentIndex - 1].rating);
+            }}
+          >
             Back
           </Button>
         </div>
@@ -184,10 +193,10 @@ export default function Poll({
                     const newAnswers = [...answers];
                     newAnswers[index].agree = agree;
                     newAnswers[index].rating = rating;
-                    setAgree(undefined);
-                    setRating(undefined);
                     setAnswers(newAnswers);
                     setCurrentIndex(currentIndex + 1);
+                    setAgree(answers[currentIndex + 1].agree);
+                    setRating(answers[currentIndex + 1].rating);
                   }}
                 >
                   Continue
