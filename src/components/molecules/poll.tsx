@@ -64,7 +64,7 @@ export default function Poll({
       {questions.map((question, index) => (
         <section
           key={question.id}
-          className={classNames('min-h-[calc(100dvh_-_5rem_-_44px)]', {
+          className={classNames('min-h-[calc(100dvh_-_3rem_-_42px)] lg:min-h-[calc(100dvh_-_5rem_-_44px)]', {
             'hidden': index !== currentIndex,
           })}
         >
