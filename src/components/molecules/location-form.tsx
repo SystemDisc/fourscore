@@ -18,15 +18,17 @@ export default function LocationForm() {
 
   const onPlaceChanged = useCallback(() => {
     const place = autocomplete!.getPlace();
-    const streetNumber = place?.address_components?.find(a => a.types.find(t => 'street_number'));
+    if (place) {
+      const streetNumber = place.address_components?.find(a => a.types.find(t => 'street_number'));
 
-    localStorage.setItem('center', JSON.stringify(place.geometry?.location));
-    localStorage.setItem('placeId', place.place_id || '');
+      localStorage.setItem('center', JSON.stringify(place.geometry?.location));
+      localStorage.setItem('placeId', place.place_id || '');
 
-    if (streetNumber) {
-      router.push('/confirm-address');
-    } else {
-      router.push('/edit-address');
+      if (streetNumber) {
+        router.push('/confirm-address');
+      } else {
+        router.push('/edit-address');
+      }
     }
   }, [autocomplete]);
 
