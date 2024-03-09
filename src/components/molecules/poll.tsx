@@ -62,9 +62,12 @@ export default function Poll({
         </div>
       </div>
       {questions.map((question, index) => (
-        <section className={classNames('min-h-[calc(100dvh_-_5rem_-_44px)]', {
-          'hidden': index !== currentIndex,
-        })}>
+        <section
+          key={question.id}
+          className={classNames('min-h-[calc(100dvh_-_5rem_-_44px)]', {
+            'hidden': index !== currentIndex,
+          })}
+        >
           <div className='h-32 bg-gradient-to-bl from-[#6932D1] to-[#899ED4] flex items-end justify-between p-4'>
             <div className='text-7xl text-white'>
               {question.locality?.name}
@@ -76,7 +79,6 @@ export default function Poll({
             </div>
           </div>
           <div
-            key={question.id}
             className={classNames('flex flex-col items-center justify-center gap-4 p-4 h-[calc(100%_-_8rem)]', {
               'hidden': index !== currentIndex,
             })}
