@@ -1,41 +1,42 @@
 'use client';
 
 import classNames from 'classnames';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '../atoms/button';
 import { BsStarFill } from 'react-icons/bs';
-
-interface Answer {
-  questionId: string;
-  agree?: boolean;
-  rating?: number;
-}
+import { Answer } from '@/types';
+import { savePoll } from '@/utils/server-actions';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { Simplify } from 'kysely';
+import { Category, Locality, Question } from '@/db/database';
 
 export default function Poll({
   questions,
 }: {
-  questions: {
-    id: string;
-    localityId: string;
-    categoryId: string;
-    question: string;
-    locality: {
-      id: string;
-      name: string;
-      position: number | null;
-    } | null;
-    category: {
-      id: string;
-      name: string;
-    } | null;
-  }[];
+  questions: Simplify<Question & {
+    locality: Simplify<Locality> | null,
+    category: Simplify<Category> | null,
+    answer: Simplify<Answer> | null,
+  }>[];
 }) {
+  const router = useRouter();
+
+  const { data: session, status } = useSession();
+
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [agree, setAgree] = useState<boolean>();
-  const [rating, setRating] = useState<number>();
-  const [answers, setAnswers] = useState<Answer[]>(questions.map((q) => ({
+  const [agree, setAgree] = useState<boolean | undefined>(questions[0]?.answer?.agree);
+  const [rating, setRating] = useState<number | undefined>(questions[0]?.answer?.rating);
+  const [answers, setAnswers] = useState<Answer[]>(questions.map((q) => (q.answer || {
     questionId: q.id,
   })));
+
+  if (!session || !session.user) {
+    if (status !== 'loading') {
+      router.push('/');
+      return null;
+    }
+  }
 
   return (
     <section className='grid grid-cols-1'>
@@ -91,17 +92,17 @@ export default function Poll({
             </div>
           </div>
           <div
-            className={classNames('flex flex-col items-center justify-between gap-4 p-4 h-[calc(100%_-_8rem)]', {
+            className={classNames('flex flex-col items-center justify-between gap-4 p-4 h-[calc(100%_-_7rem)]', {
               'hidden': index !== currentIndex,
             })}
           >
             <div>
               {question.category &&
-                <h1 className='font-bold text-2xl'>
+                <h1 className='font-bold text-2xl text-center'>
                   {question.category.name}
                 </h1>
               }
-              <h2>
+              <h2 className='text-center'>
                 {question.question}
               </h2>
             </div>
@@ -189,14 +190,25 @@ export default function Poll({
                 <Button
                   className='text-2xl'
                   disabled={agree === undefined || rating === undefined}
-                  onClick={() => {
+                  onClick={async () => {
                     const newAnswers = [...answers];
                     newAnswers[index].agree = agree;
                     newAnswers[index].rating = rating;
                     setAnswers(newAnswers);
-                    setCurrentIndex(currentIndex + 1);
-                    setAgree(answers[currentIndex + 1].agree);
-                    setRating(answers[currentIndex + 1].rating);
+                    const nextIndex = currentIndex + 1;
+                    if (nextIndex < questions.length) {
+                      setCurrentIndex(currentIndex + 1);
+                      setAgree(answers[currentIndex + 1].agree);
+                      setRating(answers[currentIndex + 1].rating);
+                    } else {
+                      setAnswers((answers) => {
+                        (async () => {
+                          await savePoll(session.user, answers);
+                          router.push('/dashboard');
+                        })().catch(console.error);
+                        return answers;
+                      })
+                    }
                   }}
                 >
                   Continue

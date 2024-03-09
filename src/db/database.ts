@@ -10,6 +10,7 @@ interface Database {
   Question: QuestionTable;
   Locality: LocalityTable;
   Category: CategoryTable;
+  Answer: AnswerTable;
 }
 
 export interface UserTable {
@@ -107,6 +108,18 @@ export interface CategoryTable {
 export type Category = Selectable<CategoryTable>;
 export type NewCategory = Insertable<CategoryTable>;
 export type CategoryUpdate = Updateable<CategoryTable>;
+
+export interface AnswerTable {
+  id: GeneratedAlways<string>;
+  userId: string;
+  questionId: string;
+  agree: boolean;
+  rating: number;
+}
+
+export type Answer = Selectable<AnswerTable>;
+export type NewAnswer = Insertable<AnswerTable>;
+export type AnswerUpdate = Updateable<AnswerTable>;
 
 const dialect = new PostgresDialect({
   pool: new Pool({

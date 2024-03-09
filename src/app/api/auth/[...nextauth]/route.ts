@@ -1,12 +1,12 @@
 import { db } from '@/db/database';
 import { Database, KyselyAdapter } from '@auth/kysely-adapter';
 import { Kysely } from 'kysely';
-import NextAuth from 'next-auth';
+import NextAuth, { AuthOptions } from 'next-auth';
 import { Adapter } from 'next-auth/adapters';
 import Email from 'next-auth/providers/email';
 import Google from 'next-auth/providers/google';
 
-const handler = NextAuth({
+export const authOptions: AuthOptions = {
   adapter: KyselyAdapter(db as unknown as Kysely<Database>) as Adapter,
   providers: [
     Google({
@@ -20,6 +20,8 @@ const handler = NextAuth({
     brandColor: '#22c064',
     logo: 'https://fourscore.app/images/home/logo.svg',
   },
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST }

@@ -1,7 +1,8 @@
 'use server';
 
 import { NewAddress, db } from '@/db/database';
-import { jsonObjectFrom } from 'kysely/helpers/postgres';
+import { Answer } from '@/types';
+import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/postgres';
 import { DefaultSession } from 'next-auth';
 
 export const saveAddress = async (user: DefaultSession['user'], {
@@ -17,7 +18,7 @@ export const saveAddress = async (user: DefaultSession['user'], {
     .executeTakeFirst();
 
   if (!existingUser) {
-    return false;
+    throw new Error('Not logged in.');
   }
 
   const existingAddress = await db.selectFrom('Address')
@@ -51,9 +52,18 @@ export const saveAddress = async (user: DefaultSession['user'], {
     .where('userId', '=', existingUser.id)
     .selectAll()
     .executeTakeFirst();
-}
+};
 
-export const getPoll = async () => {
+export const getPoll = async (user: DefaultSession['user']) => {
+  const existingUser = await db.selectFrom('User')
+    .where('email', '=', user?.email!)
+    .selectAll()
+    .executeTakeFirst();
+
+  if (!existingUser) {
+    throw new Error('Not logged in.');
+  }
+
   const questions = await db.selectFrom('Question')
     .innerJoin('Locality', 'Locality.id', 'Question.localityId')
     .innerJoin('Category', 'Category.id', 'Question.categoryId')
@@ -71,9 +81,63 @@ export const getPoll = async () => {
           .selectAll('Category')
           .whereRef('Category.id', '=', 'Question.categoryId')
       ).as('category'),
+      jsonObjectFrom(
+        eb
+          .selectFrom('Answer')
+          .selectAll('Answer')
+          .where('Answer.userId', '=', existingUser.id)
+          .whereRef('Answer.questionId', '=', 'Question.id')
+      ).as('answer'),
     ])
     .orderBy(['Locality.position asc', 'Category.name asc'])
     .execute();
 
   return questions;
-}
+};
+
+export const savePoll = async (user: DefaultSession['user'], answers: Answer[]) => {
+  const existingUser = await db.selectFrom('User')
+    .where('email', '=', user?.email!)
+    .selectAll()
+    .executeTakeFirst();
+
+  if (!existingUser) {
+    throw new Error('Not logged in.');
+  }
+
+  const existingAnswers = await db.selectFrom('Answer')
+    .selectAll()
+    .where('userId', '=', existingUser.id)
+    .execute();
+
+  const oldAnswers = answers.filter((a) => existingAnswers.find((ea) => ea.questionId === a.questionId));
+  const obsoleteAnswers = existingAnswers.filter((a) => !answers.find((ea) => ea.questionId === a.questionId));
+  const newAnswers = answers.filter((a) => !existingAnswers.find((ea) => ea.questionId === a.questionId))
+    .filter((a) => a.agree && a.rating);
+
+  for (const oldAnswer of oldAnswers) {
+    await db.updateTable('Answer')
+      .set(oldAnswer)
+      .where('userId', '=', existingUser.id)
+      .where('questionId', '=', oldAnswer.questionId)
+      .execute();
+  }
+
+  if (obsoleteAnswers.length) {
+    await db.deleteFrom('Answer')
+      .where('userId', '=', existingUser.id)
+      .where('questionId', 'in', obsoleteAnswers.map((oa) => oa.questionId))
+      .execute();
+  }
+
+  if (newAnswers.length) {
+    await db.insertInto('Answer')
+      .values(newAnswers.map(({ questionId, agree, rating }) => ({
+        userId: existingUser.id,
+        questionId,
+        agree: agree!,
+        rating: rating!,
+      })))
+      .execute();
+  }
+};

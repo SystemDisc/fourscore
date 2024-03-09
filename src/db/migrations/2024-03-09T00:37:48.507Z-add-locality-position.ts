@@ -29,5 +29,5 @@ export async function up(db: Kysely<any>) {
 }
 
 export async function down(db: Kysely<any>) {
-  await db.schema.dropTable('Address').execute();
+  await db.updateTable('Locality').set({ position: null }).execute();
 }
