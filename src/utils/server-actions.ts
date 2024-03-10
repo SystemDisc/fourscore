@@ -277,5 +277,5 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
 
   console.dir(candidates, { depth: null });
 
-  return candidates;
+  return candidates.sort((a, b) => b.score - a.score);
 };

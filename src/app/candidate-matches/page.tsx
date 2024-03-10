@@ -43,7 +43,12 @@ export default async function Page() {
         </header>
       </section>
       <section className='p-4'>
-        <h2 className='text-2xl text-center mb-4'>President of The United States of America</h2>
+        <div className='grid [grid-template-columns:3rem_1fr] mb-2'>
+          <div className='flex justify-center text-center'>
+            Pledge Support
+          </div>
+          <h2 className='text-2xl text-center mb-4'>President of The United States of America</h2>
+        </div>
         <CandidateList candidates={candidates} />
       </section>
     </MainCard>

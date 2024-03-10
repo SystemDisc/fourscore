@@ -9,10 +9,10 @@ export default function CandidateList({
 }: {
   candidates: CandidateResult[]
 }) {
-  const [pledgedCandidate, setPledgedCandidate] = useState<CandidateResult>();
+  const [pledgedCandidate, setPledgedCandidate] = useState<CandidateResult>(candidates[0]);
 
   return (
-    <>
+    <div className='grid grid-cols-1 gap-4'>
       {candidates.map((candidate) => (
         <CandidateCard
           key={candidate.id}
@@ -21,6 +21,6 @@ export default function CandidateList({
           onSelect={(selectedCandidate) => setPledgedCandidate(selectedCandidate)}
         />
       ))}
-    </>
+    </div>
   );
 }
