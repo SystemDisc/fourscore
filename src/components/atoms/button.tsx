@@ -23,7 +23,7 @@ export default function Button({
       }
       {buttonType === 'white' &&
         <div className='inline-block p-[1px] from-[#69F7A5] to-[#22C064] bg-gradient-to-bl rounded-full'>
-          <ButtonClass className={classNames('inline-flex justify-center items-center px-4 py-2 rounded-full tracking-widest bg-white text-black shadow-[#000_0px_2px_2px] active:shadow-[inset_3px_3px_5px_0px_rgba(0,_0,_0,_0.3)] hover:text-neutral-700', className)} {...otherProps as any}>
+          <ButtonClass className={classNames('inline-flex justify-center items-center px-4 py-2 rounded-full tracking-widest bg-white text-black shadow-[#000_0px_2px_2px] active:shadow-[inset_3px_3px_5px_0px_rgba(0,_0,_0,_0.3)] hover:text-neutral-700 disabled:opacity-60 disabled:hover:text-black disabled:active:shadow-[#000_0px_2px_2px] disabled:cursor-not-allowed', className)} {...otherProps as any}>
             {children}
           </ButtonClass>
         </div>

@@ -25,7 +25,7 @@ export default function Home() {
         </header>
         <section className='pt-12 p-4 bg-white' id='3-steps'>
           <div className="grid grid-cols-3 max-w-2xl mx-auto text-center text-xl tracking-widest text-[#9b9b9b]">
-            <div className='col-span-3 lg:col-span-1 mb-4'>
+            <div className='col-span-3 md:col-span-1 mb-4'>
               <div className='mb-2'>
                 <Image className='inline-block' src="/images/home/address-icon.svg" width={100} height={100} alt='Address' />
               </div>
@@ -33,7 +33,7 @@ export default function Home() {
                 Enter the address where you&apos;re registered to vote
               </div>
             </div>
-            <div className='col-span-3 lg:col-span-1 mb-4'>
+            <div className='col-span-3 md:col-span-1 mb-4'>
               <div className='mb-2'>
                 <Image className='inline-block' src="/images/home/survey-icon.svg" width={100} height={100} alt='Survey' />
               </div>
@@ -41,7 +41,7 @@ export default function Home() {
                 Take the Local, State, and Federal poll
               </div>
             </div>
-            <div className='col-span-3 lg:col-span-1 mb-4'>
+            <div className='col-span-3 md:col-span-1 mb-4'>
               <div className='mb-2'>
                 <Image className='inline-block' src="/images/home/selection-icon.svg" width={100} height={100} alt='Favorite' />
               </div>
@@ -51,21 +51,21 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <section className='pt-16 lg:pl-8 pb-20 lg:grid-cols-2 bg-white'>
+        <section className='pt-16 md:pl-8 pb-20 md:grid-cols-2 bg-white'>
           <div className='p-4'>
             <h2 className='text-6xl font-light tracking-wide mb-8'>
-              We believe in the power <br className='hidden lg:inline-block' />
+              We believe in the power <br className='hidden md:inline-block' />
               of people and communities
             </h2>
             <p className='text-3xl tracking-wide text-[#9b9b9b]'>
-              FourScore seamlessly connects voters with candidates <br className='hidden lg:inline-block' />
-              through policy-based matching, making every vote <br className='hidden lg:inline-block' />
+              FourScore seamlessly connects voters with candidates <br className='hidden md:inline-block' />
+              through policy-based matching, making every vote <br className='hidden md:inline-block' />
               more informed and impactful.
             </p>
           </div>
         </section>
         <section className='from-[#9EA1A5] to-[#393C40] bg-gradient-to-b text-white pt-24 pb-36'>
-          <div className='max-w-4xl mx-auto lg:grid lg:grid-cols-2 lg:gap-8 px-4'>
+          <div className='max-w-4xl mx-auto md:grid md:grid-cols-2 md:gap-8 px-4'>
             <div>
               <Image src="/images/home/phone-preview.png" width={839} height={1106} alt='App Preview' />
             </div>
@@ -81,7 +81,7 @@ export default function Home() {
               </h2>
             </div>
           </div>
-          <div className='max-h-fit lg:columns-3 lg:col-span-2 gap-4 mx-4 lg:mx-16 [&>*:not(:last-child)]:mb-4'>
+          <div className='max-h-fit md:columns-3 md:col-span-2 gap-4 mx-4 md:mx-16 [&>*:not(:last-child)]:mb-4'>
             <Accordion isOpen header='What is FourScore?' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column break-after-column'>
               <p>FourScore is a non-partisian, online tool built to help voters: </p>
               <ul className='list-disc list-inside grid grid-cols-1 gap-4 mb-4'>
@@ -125,16 +125,16 @@ export default function Home() {
           </div>
         </section>
         <section className='relative text-6xl text-white bg-white py-9'>
-          <div className="flex lg:w-[calc(100%_-_150px_*_5)] items-center justify-center lg:justify-end bg-[#d3f2e0] h-24 px-4 mb-9">Schools</div>
-          <div className="flex lg:w-[calc(100%_-_150px_*_4)] items-center justify-center lg:justify-end bg-[#a7e6c1] h-24 px-4 mb-9">Jobs</div>
-          <div className="flex lg:w-[calc(100%_-_150px_*_3)] items-center justify-center lg:justify-end bg-[#7ad9a2] h-24 px-4 mb-9">Taxes</div>
-          <div className="flex lg:w-[calc(100%_-_150px_*_2)] items-center justify-center lg:justify-end bg-[#4ecd83] h-24 px-4 mb-9">Crime</div>
-          <div className="flex lg:w-[calc(100%_-_150px_*_1)] items-center justify-center lg:justify-end bg-[#22c064] h-24 px-4 mb-9 lg:mb-0">Traffic</div>
-          <div className="lg:max-w-[552px] text-5xl lg:absolute lg:top-9 lg:right-12 p-4 lg:p-0 text-center lg:text-right text-black lg:w-full font-light">
+          <div className="flex md:w-[calc(100%_-_150px_*_5)] items-center justify-center md:justify-end bg-[#d3f2e0] h-24 px-4 mb-9">Schools</div>
+          <div className="flex md:w-[calc(100%_-_150px_*_4)] items-center justify-center md:justify-end bg-[#a7e6c1] h-24 px-4 mb-9">Jobs</div>
+          <div className="flex md:w-[calc(100%_-_150px_*_3)] items-center justify-center md:justify-end bg-[#7ad9a2] h-24 px-4 mb-9">Taxes</div>
+          <div className="flex md:w-[calc(100%_-_150px_*_2)] items-center justify-center md:justify-end bg-[#4ecd83] h-24 px-4 mb-9">Crime</div>
+          <div className="flex md:w-[calc(100%_-_150px_*_1)] items-center justify-center md:justify-end bg-[#22c064] h-24 px-4 mb-9 md:mb-0">Traffic</div>
+          <div className="md:max-w-[552px] text-5xl md:absolute md:top-9 md:right-12 p-4 md:p-0 text-center md:text-right text-black md:w-full font-light">
             Tell your representatives exactly what they should be focused on
           </div>
         </section>
-        <section className='min-h-screen from-[#9EA1A5] to-[#393C40] bg-gradient-to-b text-white lg:flex items-center justify-center py-24 px-4 lg:px-24 hidden'>
+        <section className='min-h-screen from-[#9EA1A5] to-[#393C40] bg-gradient-to-b text-white md:flex items-center justify-center py-24 px-4 md:px-24 hidden'>
           <div className='grid grid-cols-2 text-4xl font-light'>
             <p className="pr-[153px]">
               The Voter takes the poll and generates anonymous
@@ -156,7 +156,7 @@ export default function Home() {
             </p>
           </div>
         </section>
-        <section className='from-[#9EA1A5] to-[#393C40] bg-gradient-to-b text-white lg:hidden items-center justify-center py-24 px-8 lg:px-24 flex'>
+        <section className='from-[#9EA1A5] to-[#393C40] bg-gradient-to-b text-white md:hidden items-center justify-center py-24 px-8 md:px-24 flex'>
           <ul className='list-disc list-inside text-2xl'>
             <li className='mb-4'>
               The Voter takes the poll and generates anonymous
@@ -176,11 +176,11 @@ export default function Home() {
           </ul>
         </section>
         <footer className='text-center bg-[#212224] py-16 text-white'>
-          <div className='lg:max-w-md lg:w-full lg:mx-auto'>
+          <div className='md:max-w-md md:w-full md:mx-auto'>
             <div className='text-center mb-2'>
               <Image className='inline-block' src="/images/home/footer.svg" width={332} height={60} alt='FourScore' />
             </div>
-            <div className="lg:grid lg:grid-cols-3">
+            <div className="md:grid md:grid-cols-3">
               <div className="col-xs-4 text-center disabledwrap-block">
                 <Link className='underline' href="/">FAQ</Link>
               </div>
@@ -190,7 +190,7 @@ export default function Home() {
               <div className="col-xs-4 text-center">
                 <a className='underline' href="https://termsfeed.com/privacy-policy/c4010971066e30d539b5d9103287de96" target="_blank" rel="noopener noreferrer">Privacy</a>
               </div>
-              <div className="col-xs-12 text-center contact lg:col-span-3">
+              <div className="col-xs-12 text-center contact md:col-span-3">
                 <Link className="text-uppercase underline" href='/contact-us'>Contact</Link>
               </div>
             </div>

@@ -11,6 +11,9 @@ interface Database {
   Locality: LocalityTable;
   Category: CategoryTable;
   Answer: AnswerTable;
+  Office: OfficeTable;
+  CandidateOffice: CandidateOfficeTable;
+  CandidateUserScore: CandidateUserScoreTable;
 }
 
 export interface UserTable {
@@ -115,11 +118,45 @@ export interface AnswerTable {
   questionId: string;
   agree: boolean;
   rating: number;
+  dateUpdated: Date;
 }
 
 export type Answer = Selectable<AnswerTable>;
 export type NewAnswer = Insertable<AnswerTable>;
 export type AnswerUpdate = Updateable<AnswerTable>;
+
+export interface OfficeTable {
+  id: GeneratedAlways<string>;
+  localityId: string;
+  location: string;
+  name: string;
+}
+
+export type Office = Selectable<OfficeTable>;
+export type NewOffice = Insertable<OfficeTable>;
+export type OfficeUpdate = Updateable<OfficeTable>;
+
+export interface CandidateOfficeTable {
+  id: GeneratedAlways<string>;
+  userId: string;
+  officeId: string;
+}
+
+export type CandidateOffice = Selectable<CandidateOfficeTable>;
+export type NewCandidateOffice = Insertable<CandidateOfficeTable>;
+export type CandidateOfficeUpdate = Updateable<CandidateOfficeTable>;
+
+export interface CandidateUserScoreTable {
+  id: GeneratedAlways<string>;
+  userId: string;
+  candidateId: string;
+  score: number;
+  dateUpdated: Date;
+}
+
+export type CandidateUserScore = Selectable<CandidateUserScoreTable>;
+export type NewCandidateUserScore = Insertable<CandidateUserScoreTable>;
+export type CandidateUserScoreUpdate = Updateable<CandidateUserScoreTable>;
 
 const dialect = new PostgresDialect({
   pool: new Pool({

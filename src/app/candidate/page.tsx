@@ -45,7 +45,7 @@ export default function Home() {
           <ChevronDown htmlFor='how-it-works' />
         </header>
         <section className='from-[#9EA1A5] to-[#393C40] bg-gradient-to-b text-white pt-12 pb-24' id='how-it-works'>
-          <div className='max-w-6xl mx-auto lg:grid lg:grid-cols-2 lg:gap-8 px-4'>
+          <div className='max-w-6xl mx-auto md:grid md:grid-cols-2 md:gap-8 px-4'>
             <div className='flex items-center justify-center'>
               <Image src="/images/home/phone-preview.png" width={839} height={1106} alt='App Preview' />
             </div>
@@ -73,14 +73,14 @@ export default function Home() {
               <p className='w-full mb-16'>
                 When you use FourScore to engage your community,  you&apos;re doing so with the ability to send voters a specific message based on the issues they have identified as most important to them.
               </p>
-              <p className='w-full mb-16 lg:mb-0'>
+              <p className='w-full mb-16 md:mb-0'>
                 Here is an example of a FourScore email, sent to undecided voters who have identified crime as their top concern.
               </p>
             </div>
             <div className='flex items-center justify-center'>
               <Image src="/images/home/candidate-email.png" width={839} height={1106} alt='App Preview' />
             </div>
-            <div className="text-3xl font-light flex items-center justify-start col-span-2 lg:max-w-2xl lg:mx-auto lg:text-center">
+            <div className="text-3xl font-light flex items-center justify-start col-span-2 md:max-w-2xl md:mx-auto md:text-center">
               <p className='w-full mb-16'>
                 When you engage voters about the issues they’re focused on, you will convert voters into supporters at a higher rate than the candidate who opts to make general statements while asking for money.
               </p>
@@ -90,7 +90,7 @@ export default function Home() {
                 FourScore Features
               </h2>
             </div>
-            <div className='max-h-fit lg:columns-3 lg:col-span-2 gap-4 mx-4 lg:mx-16 [&>*:not(:last-child)]:mb-4'>
+            <div className='max-h-fit md:columns-3 md:col-span-2 gap-4 mx-4 md:mx-16 [&>*:not(:last-child)]:mb-4'>
               <Accordion isOpen header='FourScore Rating' className='grid grid-cols-1 gap-4' wrapperClassname='break-inside-avoid-column'>
                 <p>
                   The FourScore rating helps voters find candidates who support the same issues they support. The more you align when with a voter on the issues, the higher your FourScore rating.
@@ -122,7 +122,7 @@ export default function Home() {
                 </p>
               </Accordion>
             </div>
-            <div className="text-3xl font-light flex items-center justify-start content-center flex-wrap lg:col-span-2">
+            <div className="text-3xl font-light flex items-center justify-start content-center flex-wrap md:col-span-2">
               <h2 className='text-4xl mb-8 mt-16 font-bold'>
                 Pricing
               </h2>
@@ -130,8 +130,8 @@ export default function Home() {
                 Using FourScore&apos;s basic features will forever be FREE  for Candidates and Voters.
               </p>
             </div>
-            <div className='max-h-fit flex justify-center items-center flex-wrap lg:col-span-2 gap-4 lg:mx-16 [&>*:not(:last-child)]:mb-4'>
-              <div className='max-w-3xl grid lg:grid-cols-2 gap-4'>
+            <div className='max-h-fit flex justify-center items-center flex-wrap md:col-span-2 gap-4 md:mx-16 [&>*:not(:last-child)]:mb-4'>
+              <div className='max-w-3xl grid md:grid-cols-2 gap-4'>
                 <Accordion header='Basic' className='grid grid-cols-1 gap-4' headerClassname='from-[#69F7A5] to-[#22C064] bg-gradient-to-bl text-center !text-white text-4xl' isOpen>
                   <p>
                     Receive a FourScore rating
@@ -187,11 +187,11 @@ export default function Home() {
           </div>
         </section>
         <footer className='text-center bg-[#212224] py-16 text-white'>
-          <div className='lg:max-w-md lg:w-full lg:mx-auto'>
+          <div className='md:max-w-md md:w-full md:mx-auto'>
             <div className='text-center mb-2'>
               <Image className='inline-block' src="/images/home/footer.svg" width={332} height={60} alt='FourScore' />
             </div>
-            <div className="lg:grid lg:grid-cols-3">
+            <div className="md:grid md:grid-cols-3">
               <div className="col-xs-4 text-center disabledwrap-block">
                 <Link className='underline' href="/">FAQ</Link>
               </div>
@@ -201,7 +201,7 @@ export default function Home() {
               <div className="col-xs-4 text-center">
                 <a className='underline' href="https://termsfeed.com/privacy-policy/c4010971066e30d539b5d9103287de96" target="_blank" rel="noopener noreferrer">Privacy</a>
               </div>
-              <div className="col-xs-12 text-center contact lg:col-span-3">
+              <div className="col-xs-12 text-center contact md:col-span-3">
                 <Link className="text-uppercase underline" href='/contact-us'>Contact</Link>
               </div>
             </div>

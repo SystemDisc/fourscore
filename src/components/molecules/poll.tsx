@@ -4,12 +4,11 @@ import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import Button from '../atoms/button';
 import { BsStarFill } from 'react-icons/bs';
-import { Answer } from '@/types';
 import { savePoll } from '@/utils/server-actions';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Simplify } from 'kysely';
-import { Category, Locality, Question } from '@/db/database';
+import { AnswerUpdate, Category, Locality, Question } from '@/db/database';
 
 export default function Poll({
   questions,
@@ -17,17 +16,18 @@ export default function Poll({
   questions: Simplify<Question & {
     locality: Simplify<Locality> | null,
     category: Simplify<Category> | null,
-    answer: Simplify<Answer> | null,
+    answer: Simplify<AnswerUpdate> | null,
   }>[];
 }) {
   const router = useRouter();
 
   const { data: session, status } = useSession();
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [agree, setAgree] = useState<boolean | undefined>(questions[0]?.answer?.agree);
-  const [rating, setRating] = useState<number | undefined>(questions[0]?.answer?.rating);
-  const [answers, setAnswers] = useState<Answer[]>(questions.map((q) => (q.answer || {
+  const foundIndex = questions.findIndex((q) => typeof q.answer?.agree === 'undefined');
+  const [currentIndex, setCurrentIndex] = useState(foundIndex >= 0 ? foundIndex : questions.length - 1);
+  const [agree, setAgree] = useState<boolean | undefined>(foundIndex >= 0 ? questions[foundIndex]?.answer?.agree : (questions.length > 0 ? questions[questions.length - 1]?.answer?.agree : undefined));
+  const [rating, setRating] = useState<number | undefined>(foundIndex >= 0 ? questions[foundIndex]?.answer?.rating : (questions.length > 0 ? questions[questions.length - 1]?.answer?.rating : undefined));
+  const [answers, setAnswers] = useState<Simplify<AnswerUpdate>[]>(questions.map((q) => (q.answer || {
     questionId: q.id,
   })));
 
@@ -56,7 +56,10 @@ export default function Poll({
           </Button>
         </div>
         <div>
-          <Button buttonType='flat' className='w-full'>
+          <Button buttonType='flat' className='w-full' onClick={async () => {
+            await savePoll(session?.user, answers);
+            router.push('/dashboard');
+          }}>
             Save &amp; Exit
           </Button>
         </div>
@@ -77,7 +80,7 @@ export default function Poll({
       {questions.map((question, index) => (
         <section
           key={question.id}
-          className={classNames('min-h-[calc(100dvh_-_3rem_-_42px)] lg:min-h-[calc(100dvh_-_5rem_-_44px)]', {
+          className={classNames('min-h-[calc(100dvh_-_3rem_-_42px)] md:min-h-[calc(100dvh_-_5rem_-_44px)]', {
             'hidden': index !== currentIndex,
           })}
         >
@@ -204,10 +207,10 @@ export default function Poll({
                       setAnswers((answers) => {
                         (async () => {
                           await savePoll(session?.user, answers);
-                          router.push('/dashboard');
+                          router.push('/candidate-matches');
                         })().catch(console.error);
                         return answers;
-                      })
+                      });
                     }
                   }}
                 >

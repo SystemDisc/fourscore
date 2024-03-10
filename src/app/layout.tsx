@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth';
 import NextAuthSessionProvider from '@/providers/session-provider';
 import classNames from 'classnames';
 import NotificationProvider from '@/providers/notification-provider';
-import { authOptions } from './api/auth/[...nextauth]/route';
+import authOptions from '@/utils/auth-options';
 
 const lato = Lato({ subsets: ['latin'], weight: ['300', '400', '700', '900'] });
 

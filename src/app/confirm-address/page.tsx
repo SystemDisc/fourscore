@@ -137,7 +137,7 @@ export default function Page() {
         <Loading />
       }
       {!isLoading &&
-        <section className='p-4 text-center flex flex-col gap-4 min-h-[calc(100dvh_-_300px)] lg:min-h-0'>
+        <section className='p-4 text-center flex flex-col gap-4 min-h-[calc(100dvh_-_300px)] md:min-h-0'>
           <p>
             Is this the address where you&apos;re registered to vote?
           </p>
