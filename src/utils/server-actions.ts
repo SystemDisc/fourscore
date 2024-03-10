@@ -196,10 +196,10 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
     .whereRef('CandidateOffice.userId', '=', 'User.id')
     .execute();
 
-  let sameScore = 0;
-  let diffScore = 0;
-
   for (const candidate of candidates) {
+    let sameScore = 0;
+    let diffScore = 0;
+
     const lastUpdatedUserAnswer = currentUser.answers.reduce(
       (max, answer) =>
         Math.max(answer.dateUpdated ? new Date(answer.dateUpdated).getTime() : 0, max),
@@ -274,8 +274,6 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
       candidate.score = candidate.candidateUserScore.score || 0;
     }
   }
-
-  console.dir(candidates, { depth: null });
 
   return candidates.sort((a, b) => b.score - a.score);
 };

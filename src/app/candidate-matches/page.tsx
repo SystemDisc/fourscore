@@ -51,6 +51,13 @@ export default async function Page() {
         </div>
         <CandidateList candidates={candidates} />
       </section>
+      <section className='p-4'>
+        <div className='flex justify-center'>
+          <Button isLink href='/dashboard'>
+            Go to Dashboard
+          </Button>
+        </div>
+      </section>
     </MainCard>
   );
 }

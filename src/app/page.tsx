@@ -2,10 +2,18 @@ import ChevronDown from '@/components/atoms/chevron-down';
 import Accordion from '@/components/molecules/accordion';
 import AuthButton from '@/components/molecules/auth-button';
 import LocationForm from '@/components/molecules/location-form';
+import authOptions from '@/utils/auth-options';
+import { getServerSession } from 'next-auth';
 import Image from 'next/image';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
-export default function Home() {
+export default async function Home() {
+  const session = await getServerSession(authOptions);
+  if (session) {
+    redirect('/dashboard');
+  }
+
   return (
     <>
       <div>
