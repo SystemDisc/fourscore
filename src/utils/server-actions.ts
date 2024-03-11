@@ -27,11 +27,11 @@ export const saveAddress = async (user: DefaultSession['user'], {
     .executeTakeFirst();
 
   if (existingAddress) {
-    existingAddress.streetNumber = streetNumber;
-    existingAddress.route = route;
-    existingAddress.city = city;
-    existingAddress.state = state;
-    existingAddress.zip = zip;
+    existingAddress.streetNumber = streetNumber || null;
+    existingAddress.route = route || null;
+    existingAddress.city = city || null;
+    existingAddress.state = state || null;
+    existingAddress.zip = zip || null;
 
     await db.updateTable('Address')
       .where('id', '=', existingAddress.id)
@@ -40,11 +40,11 @@ export const saveAddress = async (user: DefaultSession['user'], {
   } else {
     await db.insertInto('Address').values({
       userId: currentUser.id,
-      streetNumber,
-      route,
-      city,
-      state,
-      zip,
+      streetNumber: streetNumber || null,
+      route: route || null,
+      city: city || null,
+      state: state || null,
+      zip: zip || null,
     }).execute();
   }
 
@@ -116,6 +116,10 @@ export const savePoll = async (user: DefaultSession['user'], answers: Simplify<A
     .filter((a) => typeof a.agree !== 'undefined' && typeof a.rating !== 'undefined');
 
   for (const oldAnswer of oldAnswers) {
+    const existingAnswer = existingAnswers.find((a) => a.questionId === oldAnswer.questionId);
+    if (oldAnswer.agree === existingAnswer?.agree && oldAnswer.rating === existingAnswer?.rating) {
+      continue;
+    }
     await db.updateTable('Answer')
       .set({
         ...oldAnswer,

@@ -71,11 +71,11 @@ export type VerificationTokenUpdate = Updateable<VerificationTokenTable>;
 export interface AddressTable {
   id: GeneratedAlways<string>;
   userId: string;
-  streetNumber: string;
-  route: string;
-  city: string;
-  state: string;
-  zip: string;
+  streetNumber: string | null;
+  route: string | null;
+  city: string | null;
+  state: string | null;
+  zip: string | null;
 }
 
 export type Address = Selectable<AddressTable>;
