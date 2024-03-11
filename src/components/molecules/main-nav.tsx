@@ -9,7 +9,7 @@ export default function MainNav() {
       <Button isLink href='/poll'>
         Edit Poll
       </Button>
-      <Button isLink href='/ca ndidate-matches'>
+      <Button isLink href='/candidate-matches'>
         View Matches
       </Button>
       <Button onClick={() => signOut()}>
