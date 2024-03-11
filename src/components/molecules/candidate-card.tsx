@@ -13,6 +13,7 @@ export default function CandidateCard({
   selected?: boolean;
   onSelect?: (candidate: CandidateResult) => void
 }) {
+  console.log({ candidate, selected });
   return (
     <div key={candidate.id} className='grid [grid-template-columns:3rem_1fr] gap-4'>
       <div>

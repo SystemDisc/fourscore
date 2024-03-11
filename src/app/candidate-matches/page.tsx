@@ -44,7 +44,7 @@ export default async function Page() {
       </section>
       <section className='p-4'>
         <div className='grid [grid-template-columns:3rem_1fr] mb-2'>
-          <div className='flex justify-center text-center'>
+          <div className='flex justify-center items-end text-center'>
             Pledge Support
           </div>
           <h2 className='text-2xl text-center mb-4'>President of The United States of America</h2>

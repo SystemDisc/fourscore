@@ -10,7 +10,7 @@ export default function PledgeToggle({
   checked?: boolean,
   onToggle?: (checked: boolean) => void;
 }) {
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(checkedProp);
 
   useEffect(() => {
     setChecked(checkedProp || false);
