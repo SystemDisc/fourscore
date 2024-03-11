@@ -5,7 +5,10 @@ import { signOut } from 'next-auth/react';
 
 export default function MainNav() {
   return (
-    <nav className='flex justify-end p-4'>
+    <nav className='flex justify-between p-4'>
+      <Button isLink href='/poll'>
+        Edit Poll
+      </Button>
       <Button onClick={() => signOut()}>
         Sign Out
       </Button>

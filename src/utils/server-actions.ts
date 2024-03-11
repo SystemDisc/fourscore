@@ -210,11 +210,13 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
         Math.max(answer.dateUpdated ? new Date(answer.dateUpdated).getTime() : 0, max),
       0
     );
+
     const scoreUpdated = candidate.candidateUserScore ? new Date(candidate.candidateUserScore.dateUpdated).getTime() : 0;
+
     if (
       !candidate.candidateUserScore ||
-      scoreUpdated < lastUpdatedUserAnswer ||
-      scoreUpdated < lastUpdatedCandidateAnswer
+      scoreUpdated <= lastUpdatedUserAnswer ||
+      scoreUpdated <= lastUpdatedCandidateAnswer
     ) {
       if (candidate.answers.length === 0) {
         candidate.score = 0;
