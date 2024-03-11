@@ -12,7 +12,8 @@ export default function CandidateList({
   const [pledgedCandidate, setPledgedCandidate] = useState<CandidateResult>(candidates[0]);
 
   useEffect(() => {
-    if (pledgedCandidate !== candidates[0]) {
+    const selected = candidates.find((c) => c === pledgedCandidate);
+    if (!selected) {
       setPledgedCandidate(candidates[0]);
     }
   }, [candidates, pledgedCandidate])
