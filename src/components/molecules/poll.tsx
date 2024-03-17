@@ -21,8 +21,8 @@ export default function Poll({
   }>[];
   allAnswers: {
     questionId: string;
-    yesCount: number;
-    noCount: number;
+    yesCount: string;
+    noCount: string;
   }[];
 }) {
   const router = useRouter();
