@@ -4,6 +4,7 @@ import { Kysely } from 'kysely';
 import { AuthOptions } from 'next-auth';
 import { Adapter } from 'next-auth/adapters';
 import Google from 'next-auth/providers/google';
+import { cookies } from 'next/headers';
 
 const authOptions: AuthOptions = {
   adapter: KyselyAdapter(db as unknown as Kysely<Database>) as Adapter,
@@ -22,6 +23,7 @@ const authOptions: AuthOptions = {
   },
   events: {
     signIn: async ({ user, account, profile, isNewUser }) => {
+      const client_id = cookies().get('client-id')?.value || user.email;
       if (isNewUser) {
         const url = new URL('https://server-side-tagging-eta3rcf4fa-uc.a.run.app/mp/collect');
         url.searchParams.set('measurement_id', 'G-WHQGZ00D5B');
@@ -29,12 +31,13 @@ const authOptions: AuthOptions = {
         fetch(url.href, {
           method: 'POST',
           body: JSON.stringify({
-            client_id: 'app.fourscore.www',
+            client_id,
             events: [{
               name: 'sign_up',
               params: {
                 session_id: user.email,
                 engagement_time_msec: '100',
+                method: 'Google',
               },
             }],
           }),

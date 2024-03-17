@@ -32,6 +32,13 @@ export default async function RootLayout({
             gtag('js', new Date());
 
             gtag('config', 'AW-16497301357');
+
+            var date = new Date();
+            date.setTime(date.getTime() + (365*24*60*60*1000));
+
+            gtag('get', 'G-XXXXXXXXXX', 'client_id', (clientId) => {
+              document.cookie = "client-id=" + (encodeURIComponent(clientId)) + "; expires=" + date.toUTCString() + "; path=/";
+            });
           `,
         }} />
         <script dangerouslySetInnerHTML={{
