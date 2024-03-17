@@ -5,6 +5,7 @@ import NextAuthSessionProvider from '@/providers/session-provider';
 import classNames from 'classnames';
 import NotificationProvider from '@/providers/notification-provider';
 import authOptions from '@/utils/auth-options';
+import { Analytics } from '@vercel/analytics/react';
 
 const lato = Lato({ subsets: ['latin'], weight: ['300', '400', '700', '900'] });
 
