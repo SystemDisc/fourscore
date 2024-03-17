@@ -11,11 +11,11 @@ export default async function Page() {
   if (!session) {
     redirect('/');
   }
-  const questions = await getPoll(session?.user);
+  const data = await getPoll(session?.user);
 
   return (
     <MainCard>
-      <Poll questions={questions} />
+      <Poll questions={data.questions} allAnswers={data.allAnswers} />
     </MainCard>
   );
 }

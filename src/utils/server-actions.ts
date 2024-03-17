@@ -1,7 +1,7 @@
 'use server';
 
 import { AnswerUpdate, NewAddress, NewAnswer, db } from '@/db/database';
-import { Simplify } from 'kysely';
+import { Simplify, sql } from 'kysely';
 import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/postgres';
 import { DefaultSession } from 'next-auth';
 
@@ -92,7 +92,19 @@ export const getPoll = async (user: DefaultSession['user']) => {
     .orderBy(['Locality.position asc', 'Category.name asc'])
     .execute();
 
-  return questions;
+  const allAnswers = await db.selectFrom('Answer')
+    .select((eb) => [
+      'Answer.questionId',
+      eb.fn<string>('count', [sql`case when agree IS TRUE then agree end`]).as('yesCount'),
+      eb.fn<string>('count', [sql`case when agree IS FALSE then agree end`]).as('noCount'),
+    ])
+    .groupBy('questionId')
+    .execute();
+
+  return {
+    questions,
+    allAnswers,
+  };
 };
 
 export const savePoll = async (user: DefaultSession['user'], answers: Simplify<AnswerUpdate>[]) => {
