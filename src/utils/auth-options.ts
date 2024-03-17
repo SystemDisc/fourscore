@@ -28,9 +28,6 @@ const authOptions: AuthOptions = {
         url.searchParams.set('api_secret', process.env.MP_API_SECRET || '');
         fetch(url.href, {
           method: 'POST',
-          headers: {
-            'x-gtm-server-preview': 'ZW52LTZ8TFZaSVFQel9ld25OODZIalQ1Ym5kZ3wxOGU0YWYyMGU0ODc4NzA2MThhNzM=',
-          },
           body: JSON.stringify({
             client_id: 'app.fourscore.www',
             events: [{
