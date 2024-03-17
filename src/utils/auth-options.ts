@@ -19,6 +19,11 @@ const authOptions: AuthOptions = {
     brandColor: '#22c064',
     logo: 'https://fourscore.app/images/home/logo.svg',
   },
+  callbacks: {
+    jwt: async ({ token, user, account, profile, isNewUser }) => {
+      return token;
+    }
+  }
 };
 
 export default authOptions;

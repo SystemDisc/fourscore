@@ -33,8 +33,34 @@ export default async function RootLayout({
 
             gtag('config', 'AW-16497301357');
           `,
-        }}>
-        </script>
+        }} />
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            function gtag_report_conversion(url) {
+              var callback = function () {
+                if (typeof(url) != 'undefined') {
+                  window.location = url;
+                }
+              };
+              gtag('event', 'conversion', {
+                  'send_to': 'AW-16497301357/F2BPCMWh9pwZEO2uw7o9',
+                  'value': 1.0,
+                  'currency': 'USD',
+                  'event_callback': callback
+              });
+              return false;
+            }
+          `,
+        }} />
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-TK3ZT6B3');
+          `,
+        }} />
       </head>
       <body className={classNames(lato.className, 'bg-[#ececec]')}>
         <NextAuthSessionProvider session={session!}>
@@ -43,6 +69,12 @@ export default async function RootLayout({
           </NotificationProvider>
         </NextAuthSessionProvider>
         <Analytics debug={true} />
+        <noscript>
+          <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TK3ZT6B3"
+            height="0"
+            width="0"
+            style={{ display: 'none', visibility: 'hidden' }} />
+        </noscript>
       </body>
     </html>
   );
