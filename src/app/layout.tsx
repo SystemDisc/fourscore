@@ -30,7 +30,7 @@ export default async function RootLayout({
             {children}
           </NotificationProvider>
         </NextAuthSessionProvider>
-        <Analytics />
+        <Analytics debug={true} />
       </body>
     </html>
   );
