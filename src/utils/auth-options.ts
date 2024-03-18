@@ -17,6 +17,7 @@ const authOptions: AuthOptions = {
     }),
     Email({
       server: process.env.EMAIL_SERVER,
+      from: process.env.EMAIL_FROM,
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
