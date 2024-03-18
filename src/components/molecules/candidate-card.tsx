@@ -36,9 +36,11 @@ export default function CandidateCard({
             Four Score: {candidate.score}%
           </div>
           <div className='flex items-end text-[#22C064]'>
-            {Array(Math.round(candidate.score / 100 * 5)).fill(null).map((_, index) => (
-              <BsStarFill key={index}></BsStarFill>
-            ))}
+            {Math.round(candidate.score / 100 * 5) > 0 &&
+              Array(Math.round(candidate.score / 100 * 5)).fill(null).map((_, index) => (
+                <BsStarFill key={index}></BsStarFill>
+              ))
+            }
             {Array(5 - Math.round(candidate.score / 100 * 5)).fill(null).map((_, index) => (
               <BsStar key={index}></BsStar>
             ))}
