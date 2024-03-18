@@ -23,7 +23,9 @@ const authOptions: AuthOptions = {
   },
   events: {
     signIn: async ({ user, account, profile, isNewUser }) => {
-      const client_id = cookies().get('client-id')?.value || user.email;
+      const cookieStore = cookies();
+      const client_id = cookieStore.get('client-id')?.value || user.email;
+      const session_id = cookieStore.get('session-id')?.value || user.email;
       if (isNewUser) {
         const url = new URL('https://server-side-tagging-eta3rcf4fa-uc.a.run.app/mp/collect');
         url.searchParams.set('measurement_id', 'G-WHQGZ00D5B');
@@ -35,7 +37,7 @@ const authOptions: AuthOptions = {
             events: [{
               name: 'sign_up',
               params: {
-                session_id: user.email,
+                session_id,
                 engagement_time_msec: '100',
                 method: 'Google',
               },

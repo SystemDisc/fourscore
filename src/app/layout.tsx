@@ -36,8 +36,12 @@ export default async function RootLayout({
             var date = new Date();
             date.setTime(date.getTime() + (365*24*60*60*1000));
 
-            gtag('get', 'G-XXXXXXXXXX', 'client_id', (clientId) => {
+            gtag('get', 'G-WHQGZ00D5B', 'client_id', (clientId) => {
               document.cookie = "client-id=" + (encodeURIComponent(clientId)) + "; expires=" + date.toUTCString() + "; path=/";
+            });
+
+            gtag('get', 'G-WHQGZ00D5B', 'session_id', (sessionId) => {
+              document.cookie = "session-id=" + (encodeURIComponent(sessionId)) + "; expires=" + date.toUTCString() + "; path=/";
             });
           `,
         }} />
