@@ -41,9 +41,11 @@ export default function CandidateCard({
                 <BsStarFill key={index}></BsStarFill>
               ))
             }
-            {Array(5 - Math.round(candidate.score / 100 * 5)).fill(null).map((_, index) => (
-              <BsStar key={index}></BsStar>
-            ))}
+            {5 - Math.round(candidate.score / 100 * 5) > 0 &&
+              Array(5 - Math.round(candidate.score / 100 * 5)).fill(null).map((_, index) => (
+                <BsStar key={index}></BsStar>
+              ))
+            }
           </div>
         </div>
       </div>
