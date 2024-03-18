@@ -26,6 +26,7 @@ const authOptions: AuthOptions = {
       const cookieStore = cookies();
       const client_id = cookieStore.get('client-id')?.value || user.email;
       const session_id = cookieStore.get('session-id')?.value || user.email;
+      const gclid = cookieStore.get('gclid')?.value;
       if (isNewUser) {
         const url = new URL('https://server-side-tagging-eta3rcf4fa-uc.a.run.app/mp/collect');
         url.searchParams.set('measurement_id', 'G-WHQGZ00D5B');
@@ -34,12 +35,14 @@ const authOptions: AuthOptions = {
           method: 'POST',
           body: JSON.stringify({
             client_id,
+            gclid,
             events: [{
               name: 'sign_up',
               params: {
                 session_id,
                 engagement_time_msec: '100',
                 method: 'Google',
+                gclid,
               },
             }],
           }),
