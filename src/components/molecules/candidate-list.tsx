@@ -3,12 +3,15 @@
 import { CandidateResult } from '@/types';
 import CandidateCard from './candidate-card';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function CandidateList({
   candidates
 }: {
   candidates: CandidateResult[]
 }) {
+  const router = useRouter();
+
   const [pledgedCandidate, setPledgedCandidate] = useState<CandidateResult>(candidates[0]);
 
   useEffect(() => {
@@ -16,7 +19,17 @@ export default function CandidateList({
     if (!selected) {
       setPledgedCandidate(candidates[0]);
     }
-  }, [candidates, pledgedCandidate])
+  }, [candidates, pledgedCandidate]);
+
+
+  useEffect(() => {
+    if (!localStorage.getItem('refresh-candidates')) {
+      localStorage.setItem('refresh-candidates', 'true');
+      router.refresh();
+    } else {
+      localStorage.removeItem('refresh-candidates');
+    }
+  }, []);
 
   return (
     <div className='grid grid-cols-1 gap-4'>

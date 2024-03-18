@@ -9,6 +9,10 @@ import PledgeToggle from '@/components/molecules/pledge-toggle';
 import CandidateCard from '@/components/molecules/candidate-card';
 import CandidateList from '@/components/molecules/candidate-list';
 import authOptions from '@/utils/auth-options';
+import { useEffect } from 'react';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function Page() {
   const session = await getServerSession(authOptions);
@@ -16,7 +20,9 @@ export default async function Page() {
     redirect('/');
   }
 
-  const candidates = await calculateMatches(session.user);
+  const { candidates, currentUser } = await calculateMatches(session.user);
+
+  const pollPercentage = Math.round(currentUser.questionsAnswered / currentUser.questionsTotal * 100);
 
   return (
     <MainCard>
@@ -30,12 +36,12 @@ export default async function Page() {
               <div className='inline-flex flex-col items-center'>
                 <h4>Poll Complete</h4>
                 <span>
-                  100%
+                  {pollPercentage}%
                 </span>
               </div>
             </div>
             <div className='flex justify-end'>
-              <Button buttonType='white' disabled>
+              <Button buttonType='white' disabled={pollPercentage === 100} isLink href='/poll'>
                 Finish Poll
               </Button>
             </div>

@@ -177,6 +177,8 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
           .selectAll('Answer')
           .whereRef('Answer.userId', '=', 'User.id'),
       ).as('answers'),
+      eb.val(0).as('questionsAnswered'),
+      eb.val(0).as('questionsTotal'),
     ])
     .where('User.email', '=', user.email)
     .executeTakeFirst();
@@ -184,6 +186,11 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
   if (!currentUser) {
     throw new Error('Not logged in.');
   }
+
+  const { questions } = await getPoll(user);
+
+  currentUser.questionsTotal = questions.length;
+  currentUser.questionsAnswered = questions.map((q) => q.answer).filter((a) => a).length;
 
   const candidates = await db.selectFrom(['User', 'CandidateOffice'])
     .selectAll('User')
@@ -289,9 +296,12 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
         candidate.candidateUserScore = candidateUserScore!;
       }
     } else {
-      candidate.score = candidate.candidateUserScore.score || 0;
+      candidate.score = isNaN(candidate.candidateUserScore.score) ? 0 : candidate.candidateUserScore.score;
     }
   }
 
-  return candidates.sort((a, b) => b.score - a.score);
+  return {
+    currentUser,
+    candidates: candidates.sort((a, b) => b.score - a.score),
+  };
 };
