@@ -14,7 +14,7 @@ export default function AuthButton({
     <>
       {!session && !isCandidate &&
         <Button buttonType='flat' onClick={() => signIn()}>
-          Sign in
+          Sign in / Register
         </Button>
       }
       {session && !isCandidate &&
@@ -24,7 +24,7 @@ export default function AuthButton({
       }
       {!session && isCandidate &&
         <Button className='border-white text-white hover:!text-neutral-300' buttonType='flat' onClick={() => signIn()}>
-          Sign in
+          Sign in / Register
         </Button>
       }
       {session && isCandidate &&
