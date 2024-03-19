@@ -31,10 +31,12 @@ const authOptions: AuthOptions = {
       const cookieStore = cookies();
       const client_id = cookieStore.get('client-id')?.value || user.email;
       const session_id = cookieStore.get('session-id')?.value || user.email;
+      const gclid = cookieStore.get('gclid')?.value;
       if (isNewUser) {
         const url = new URL('https://server-side-tagging-eta3rcf4fa-uc.a.run.app/mp/collect');
         url.searchParams.set('measurement_id', 'G-WHQGZ00D5B');
         url.searchParams.set('api_secret', process.env.MP_API_SECRET || '');
+        gclid && url.searchParams.set('gclid', gclid);
         fetch(url.href, {
           method: 'POST',
           body: JSON.stringify({
@@ -44,11 +46,15 @@ const authOptions: AuthOptions = {
               name: 'sign_up',
               params: {
                 session_id,
+                ga_session_id: session_id,
+                ga_session_number: 1,
                 engagement_time_msec: '100',
                 method: user.name ? 'Google' : 'Email',
                 value: 1,
                 currency: 'USD',
-                email: user.email,
+                user_email: user.email,
+                campaign: '(organic)',
+                gclid,
               },
             }],
           }),

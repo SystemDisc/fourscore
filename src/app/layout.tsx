@@ -52,6 +52,10 @@ export default async function RootLayout({
             gtag('get', 'G-WHQGZ00D5B', 'session_id', (sessionId) => {
               document.cookie = "session-id=" + (encodeURIComponent(sessionId)) + "; expires=" + date.toUTCString() + "; path=/";
             });
+
+            gtag('get', 'AW-16497301357', 'gclid', (gclid) => {
+              document.cookie = "gclid=" + (encodeURIComponent(gclid || '')) + "; expires=" + date.toUTCString() + "; path=/";
+            });
           `,
         }} />
         <script dangerouslySetInnerHTML={{
