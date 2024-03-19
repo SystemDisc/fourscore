@@ -39,12 +39,16 @@ const authOptions: AuthOptions = {
           method: 'POST',
           body: JSON.stringify({
             client_id,
+            user_id: user.email,
             events: [{
               name: 'sign_up',
               params: {
                 session_id,
                 engagement_time_msec: '100',
-                method: 'Google',
+                method: user.name ? 'Google' : 'Email',
+                value: 1,
+                currency: 'USD',
+                user_id: user.email,
               },
             }],
           }),
