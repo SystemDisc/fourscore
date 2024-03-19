@@ -305,3 +305,42 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
     candidates: candidates.sort((a, b) => b.score - a.score),
   };
 };
+
+export const deleteUser = async (user: DefaultSession['user']) => {
+  const currentUser = await db.selectFrom('User')
+    .where('email', '=', user?.email!)
+    .selectAll()
+    .executeTakeFirst();
+
+  if (!currentUser) {
+    throw new Error('Not logged in.');
+  }
+
+  await db.deleteFrom('User')
+    .where('id', '=', currentUser.id)
+    .execute();
+
+  await db.deleteFrom('Account')
+    .where('userId', '=', currentUser.id)
+    .execute();
+
+  await db.deleteFrom('Address')
+    .where('userId', '=', currentUser.id)
+    .execute();
+
+  await db.deleteFrom('Answer')
+    .where('userId', '=', currentUser.id)
+    .execute();
+
+  await db.deleteFrom('CandidateOffice')
+    .where('userId', '=', currentUser.id)
+    .execute();
+
+  await db.deleteFrom('CandidateUserScore')
+    .where('userId', '=', currentUser.id)
+    .execute();
+
+  await db.deleteFrom('Session')
+    .where('userId', '=', currentUser.id)
+    .execute();
+}
