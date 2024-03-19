@@ -37,7 +37,7 @@ const authOptions: AuthOptions = {
         url.searchParams.set('measurement_id', 'G-WHQGZ00D5B');
         url.searchParams.set('api_secret', process.env.MP_API_SECRET || '');
         gclid && url.searchParams.set('gclid', gclid);
-        fetch(url.href, {
+        const res = await fetch(url.href, {
           method: 'POST',
           body: JSON.stringify({
             client_id,
@@ -59,6 +59,7 @@ const authOptions: AuthOptions = {
             }],
           }),
         });
+        await res.arrayBuffer();
       }
     }
   },
