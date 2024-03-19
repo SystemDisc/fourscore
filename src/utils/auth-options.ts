@@ -48,7 +48,7 @@ const authOptions: AuthOptions = {
                 method: user.name ? 'Google' : 'Email',
                 value: 1,
                 currency: 'USD',
-                user_id: user.email,
+                email: user.email,
               },
             }],
           }),
