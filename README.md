@@ -1,6 +1,6 @@
 ## FourScore
 
-The FourScore app concept you're describing focuses on improving the political engagement process by directly matching voters with political candidates based on their policy preferences. This digital platform seeks to simplify the voting decision process by providing a tangible metric, the "Four Score," representing the degree of alignment between a voter's and a candidate's views on various issues across local, state, and federal levels.
+The FourScore app focuses on improving the political engagement process by directly matching voters with political candidates based on their policy preferences. This digital platform seeks to simplify the voting decision process by providing a tangible metric, the "Four Score," representing the degree of alignment between a voter's and a candidate's views on various issues across local, state, and federal levels.
 
 Here's a brief overview of how it works for both parties:
 
