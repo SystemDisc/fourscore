@@ -1,4 +1,5 @@
 import ChevronDown from '@/components/atoms/chevron-down';
+import Disclaimer from '@/components/atoms/disclaimer';
 import Accordion from '@/components/molecules/accordion';
 import AuthButton from '@/components/molecules/auth-button';
 import LocationForm from '@/components/molecules/location-form';
@@ -202,6 +203,7 @@ export default async function Home() {
                 <Link className="text-uppercase underline" href='/contact-us'>Contact</Link>
               </div>
             </div>
+            <Disclaimer className='text-justify text-xs my-2' />
             <small className="copyright">&copy; All Rights Reserved FourScore Tech Inc. <span>2024</span></small>
           </div>
         </footer>

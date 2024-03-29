@@ -10,6 +10,7 @@ import CandidateCard from '@/components/molecules/candidate-card';
 import CandidateList from '@/components/molecules/candidate-list';
 import authOptions from '@/utils/auth-options';
 import { useEffect } from 'react';
+import Disclaimer from '@/components/atoms/disclaimer';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -57,13 +58,14 @@ export default async function Page() {
         </div>
         <CandidateList candidates={candidates} />
       </section>
-      <section className='p-4'>
+      <section className='p-4 pt-0'>
         <div className='flex justify-center'>
           <Button isLink href='/dashboard'>
             Go to Dashboard
           </Button>
         </div>
       </section>
+      <Disclaimer className='text-justify text-sm p-4 pt-0' />
     </MainCard>
   );
 }
