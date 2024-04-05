@@ -118,6 +118,7 @@ export interface AnswerTable {
   questionId: string;
   agree: boolean;
   rating: number;
+  notes: string | null;
   dateUpdated: Date;
 }
 
