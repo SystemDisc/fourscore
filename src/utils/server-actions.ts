@@ -344,3 +344,30 @@ export const deleteUser = async (user: DefaultSession['user']) => {
     .where('userId', '=', currentUser.id)
     .execute();
 }
+
+export const getUser = async (user: DefaultSession['user']) => {
+  const currentUser = await db.selectFrom('User')
+    .where('email', '=', user?.email!)
+    .selectAll()
+    .executeTakeFirst();
+
+  return currentUser;
+}
+
+export const markTutorialShown = async (user: DefaultSession['user']) => {
+  if (!user?.email) {
+    return {
+      error: 'Issue with logged in user.',
+    };
+  }
+
+  await db.updateTable('User')
+    .set({
+      seenVotingTutorial: true,
+    }).where('email', '=', user.email)
+    .execute();
+
+  return {
+    success: 'User updated.',
+  };
+}

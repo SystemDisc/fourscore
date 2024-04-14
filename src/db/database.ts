@@ -22,6 +22,7 @@ export interface UserTable {
   email: string;
   emailVerified: Date | null;
   image: string | null;
+  seenVotingTutorial: boolean;
 }
 
 export type User = Selectable<UserTable>;
@@ -118,6 +119,7 @@ export interface AnswerTable {
   questionId: string;
   agree: boolean;
   rating: number;
+  notes: string | null;
   dateUpdated: Date;
 }
 

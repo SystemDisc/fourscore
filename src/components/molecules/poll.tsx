@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import Button from '../atoms/button';
 import { BsStarFill } from 'react-icons/bs';
-import { savePoll } from '@/utils/server-actions';
+import { markTutorialShown, savePoll } from '@/utils/server-actions';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Simplify } from 'kysely';
@@ -12,7 +12,8 @@ import { AnswerUpdate, Category, Locality, Question } from '@/db/database';
 
 export default function Poll({
   questions,
-  allAnswers
+  allAnswers,
+  seenVotingTutorial,
 }: {
   questions: Simplify<Question & {
     locality: Simplify<Locality> | null,
@@ -24,6 +25,7 @@ export default function Poll({
     yesCount: string;
     noCount: string;
   }[];
+  seenVotingTutorial?: boolean;
 }) {
   const router = useRouter();
 
@@ -36,6 +38,24 @@ export default function Poll({
   const [answers, setAnswers] = useState<Simplify<AnswerUpdate>[]>(questions.map((q) => (q.answer || {
     questionId: q.id,
   })));
+  const [showTutorial, setShowTutorial] = useState(false);
+  const [tutorialShown, setTutorialShown] = useState(!!seenVotingTutorial);
+
+  useEffect(() => {
+    if (agree !== undefined && !tutorialShown) {
+      setTutorialShown(true);
+      setShowTutorial(true);
+    }
+  }, [agree, tutorialShown, rating]);
+
+  useEffect(() => {
+    if (showTutorial && rating !== undefined) {
+      setShowTutorial(false);
+      (async () => {
+        await markTutorialShown(session?.user);
+      })().catch(console.error);
+    }
+  }, [showTutorial, rating]);
 
   if (!session || !session.user) {
     if (status !== 'loading') {
@@ -45,7 +65,22 @@ export default function Poll({
   }
 
   return (
-    <section className='grid grid-cols-1'>
+    <section className='grid grid-cols-1 relative'>
+      {showTutorial &&
+        <>
+          <div className='absolute flex flex-col gap-4 left-0 top-0 right-0 bottom-0 z-50 text-white justify-center max-w-lg mx-auto p-4 pointer-events-none'>
+            <p>
+              Now that you&apos;ve answered the question, how important is this issue to you?
+            </p>
+            <p>
+              1 =  Not Important<br />
+              4 =  Important<br />
+              STAR = Super Important
+            </p>
+          </div>
+          <div className='absolute h-16 w-[20rem] shadow-[rgba(0_0_0_/_0.85)_0_0_0_1000px] bottom-[7.375rem] left-[50%] translate-x-[-50%] rounded-full z-40 pointer-events-none' />
+        </>
+      }
       <div className='grid grid-cols-2 gap-4 p-4'>
         <div>
           <Button
@@ -85,8 +120,6 @@ export default function Poll({
       </div>
       {questions.map((question, index) => {
         const answerData = allAnswers.find((a) => a.questionId === question.id);
-
-        console.log(allAnswers);
 
         return (
           <section
@@ -128,7 +161,7 @@ export default function Poll({
                   <div className='flex h-full gap-4'>
                     <div className='w-16'>Yes <span className='text-xs'>({answerData.yesCount})</span></div>
                     <div className='flex-1 flex items-center h-full'>
-                      <div className='w-full relative h-4'>
+                      <div className='w-full relative h-4 overflow-hidden rounded-full'>
                         <div
                           className='bg-gradient-to-tr from-[#899ED4] to-[#A389D4] h-full rounded-full absolute top-0 left-0 z-0'
                           style={{
@@ -146,7 +179,7 @@ export default function Poll({
                   <div className='flex h-full gap-4'>
                     <div className='w-16'>No <span className='text-xs'>({answerData.noCount})</span></div>
                     <div className='flex-1 flex items-center h-full'>
-                      <div className='w-full relative h-4'>
+                      <div className='w-full relative h-4 overflow-hidden rounded-full'>
                         <div
                           className='bg-gradient-to-tr from-[#899ED4] to-[#A389D4] h-full rounded-full absolute top-0 left-0 z-0'
                           style={{
