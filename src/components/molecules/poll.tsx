@@ -33,8 +33,8 @@ export default function Poll({
 
   const foundIndex = questions.findIndex((q) => typeof q.answer?.agree === 'undefined');
   const [currentIndex, setCurrentIndex] = useState(foundIndex >= 0 ? foundIndex : questions.length - 1);
-  const [agree, setAgree] = useState<boolean | undefined>(foundIndex >= 0 ? questions[foundIndex]?.answer?.agree : (questions.length > 0 ? questions[questions.length - 1]?.answer?.agree : undefined));
-  const [rating, setRating] = useState<number | undefined>(foundIndex >= 0 ? questions[foundIndex]?.answer?.rating : (questions.length > 0 ? questions[questions.length - 1]?.answer?.rating : undefined));
+  const [agree, setAgree] = useState<boolean | undefined>(foundIndex >= 0 ? questions[foundIndex]?.answer?.agree || undefined : (questions.length > 0 ? questions[questions.length - 1]?.answer?.agree || undefined : undefined));
+  const [rating, setRating] = useState<number | undefined>(foundIndex >= 0 ? questions[foundIndex]?.answer?.rating || undefined : (questions.length > 0 ? questions[questions.length - 1]?.answer?.rating || undefined : undefined));
   const [answers, setAnswers] = useState<Simplify<AnswerUpdate>[]>(questions.map((q) => (q.answer || {
     questionId: q.id,
   })));
@@ -64,6 +64,8 @@ export default function Poll({
     }
   }
 
+  const numAnswers = answers.reduce((sum, a) => !!questions.find((q) => q.id === a.questionId) && a.agree !== undefined && a.rating !== undefined ? sum + 1 : sum, 0);
+
   return (
     <section className='grid grid-cols-1 relative'>
       {showTutorial &&
@@ -89,8 +91,8 @@ export default function Poll({
             disabled={currentIndex === 0}
             onClick={() => {
               setCurrentIndex(currentIndex - 1);
-              setAgree(answers[currentIndex - 1].agree);
-              setRating(answers[currentIndex - 1].rating);
+              setAgree(answers[currentIndex - 1].agree || undefined);
+              setRating(answers[currentIndex - 1].rating || undefined);
             }}
           >
             Back
@@ -108,15 +110,26 @@ export default function Poll({
       <div className='h-4 border-y border-black relative'>
         <div
           className={classNames('bg-[#22C064] h-full', {
-            'rounded-r-full': currentIndex + 1 !== questions.length,
+            'rounded-r-full': numAnswers !== questions.length,
           })}
           style={{
-            width: `${(currentIndex + 1) / questions.length * 100}%`,
+            width: `${numAnswers / questions.length * 100}%`,
           }}
         />
         <div className='absolute top-0 left-0 right-0 bottom-0 flex justify-center text-xs font-bold'>
-          {Math.round((currentIndex + 1) / questions.length * 100).toFixed(0)}%
+          {Math.round(numAnswers / questions.length * 100).toFixed(0)}%
         </div>
+      </div>
+      <div>
+        <input className='w-full' type='range' value={currentIndex} min={0} max={questions.length - 1} onChange={(e) => {
+          const newAnswers = [...answers];
+          newAnswers[currentIndex].agree = agree;
+          newAnswers[currentIndex].rating = rating;
+          setAnswers(newAnswers);
+          setCurrentIndex(+e.target.value);
+          setAgree(answers[+e.target.value].agree || undefined);
+          setRating(answers[+e.target.value].rating || undefined);
+        }} />
       </div>
       {questions.map((question, index) => {
         const answerData = allAnswers.find((a) => a.questionId === question.id);
@@ -128,14 +141,16 @@ export default function Poll({
               'hidden': index !== currentIndex,
             })}
           >
-            <div className='h-28 bg-gradient-to-bl from-[#6932D1] to-[#899ED4] flex items-end justify-between p-4'>
-              <div className='text-4xl text-white'>
-                {question.locality?.name}
-              </div>
-              <div className='grid grid-cols-3 gap-4 pb-1'>
-                <img src='/images/house.svg' width={44} height={39} />
-                <img src='/images/house.svg' width={44} height={39} />
-                <img src='/images/house.svg' width={44} height={39} />
+            <div className='h-28 bg-gradient-to-bl from-[#6932D1] to-[#899ED4]'>
+              <div className='flex items-end justify-between p-4'>
+                <div className='text-4xl text-white'>
+                  {question.locality?.name}
+                </div>
+                <div className='grid grid-cols-3 gap-4 pb-1'>
+                  <img src='/images/house.svg' width={44} height={39} />
+                  <img src='/images/house.svg' width={44} height={39} />
+                  <img src='/images/house.svg' width={44} height={39} />
+                </div>
               </div>
             </div>
             <div
@@ -284,12 +299,18 @@ export default function Poll({
                       const newAnswers = [...answers];
                       newAnswers[index].agree = agree;
                       newAnswers[index].rating = rating;
+                      newAnswers[index].skipped = false;
                       setAnswers(newAnswers);
-                      const nextIndex = currentIndex + 1;
-                      if (nextIndex < questions.length) {
-                        setCurrentIndex(currentIndex + 1);
-                        setAgree(answers[currentIndex + 1].agree);
-                        setRating(answers[currentIndex + 1].rating);
+                      let nextIndex = questions.findIndex((q) => q.id !== question.id && answers.find((a) => a.questionId === q.id && (a.rating === undefined || a.agree === undefined) && !a.skipped));
+                      if (nextIndex === -1 && currentIndex < questions.length - 1) {
+                        nextIndex = currentIndex + 1;
+                      }
+                      if (nextIndex >= 0 && nextIndex < questions.length) {
+                        console.log(answers);
+                        console.log();
+                        setCurrentIndex(nextIndex);
+                        setAgree(answers[nextIndex].agree || undefined);
+                        setRating(answers[nextIndex].rating || undefined);
                       } else {
                         setAnswers((answers) => {
                           (async () => {
@@ -302,6 +323,35 @@ export default function Poll({
                     }}
                   >
                     Continue
+                  </Button>
+                  <Button
+                    buttonType='flat'
+                    onClick={async () => {
+                      const newAnswers = [...answers];
+                      newAnswers[index].skipped = true;
+                      setAnswers(newAnswers);
+                      let nextIndex = questions.findIndex((q) => q.id !== question.id && answers.find((a) => a.questionId === q.id && (a.rating === undefined || a.agree === undefined) && !a.skipped));
+                      if (nextIndex === -1 && currentIndex < questions.length - 1) {
+                        nextIndex = currentIndex + 1;
+                      }
+                      if (nextIndex >= 0 && nextIndex < questions.length) {
+                        console.log(answers);
+                        console.log();
+                        setCurrentIndex(nextIndex);
+                        setAgree(answers[nextIndex].agree || undefined);
+                        setRating(answers[nextIndex].rating || undefined);
+                      } else {
+                        setAnswers((answers) => {
+                          (async () => {
+                            await savePoll(session?.user, answers);
+                            router.push('/candidate-matches');
+                          })().catch(console.error);
+                          return answers;
+                        });
+                      }
+                    }}
+                  >
+                    Skip
                   </Button>
                 </div>
               </div>

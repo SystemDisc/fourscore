@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "migrate": "tsx migrate.ts"
+    "migrate": "tsx migrate.ts",
+    "rollback": "tsx rollback.ts"
   },
   "dependencies": {
     "@auth/kysely-adapter": "^0.6.0",

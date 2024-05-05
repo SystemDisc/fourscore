@@ -117,8 +117,9 @@ export interface AnswerTable {
   id: GeneratedAlways<string>;
   userId: string;
   questionId: string;
-  agree: boolean;
-  rating: number;
+  agree: boolean | null;
+  rating: number | null;
+  skipped: boolean;
   notes: string | null;
   dateUpdated: Date;
 }
