@@ -107,6 +107,59 @@ export const getPoll = async (user: DefaultSession['user']) => {
   };
 };
 
+export const getPollFromEmail = async (email: string) => {
+  const currentUser = await db.selectFrom('User')
+    .where('email', '=', email!)
+    .selectAll()
+    .executeTakeFirst();
+
+  if (!currentUser) {
+    throw new Error('Not logged in.');
+  }
+
+  const questions = await db.selectFrom('Question')
+    .innerJoin('Locality', 'Locality.id', 'Question.localityId')
+    .innerJoin('Category', 'Category.id', 'Question.categoryId')
+    .selectAll('Question')
+    .select((eb) => [
+      jsonObjectFrom(
+        eb
+          .selectFrom('Locality')
+          .selectAll('Locality')
+          .whereRef('Locality.id', '=', 'Question.localityId')
+      ).as('locality'),
+      jsonObjectFrom(
+        eb
+          .selectFrom('Category')
+          .selectAll('Category')
+          .whereRef('Category.id', '=', 'Question.categoryId')
+      ).as('category'),
+      jsonObjectFrom(
+        eb
+          .selectFrom('Answer')
+          .selectAll('Answer')
+          .where('Answer.userId', '=', currentUser.id)
+          .whereRef('Answer.questionId', '=', 'Question.id')
+      ).as('answer'),
+    ])
+    .orderBy(['Locality.position asc', 'Category.name asc'])
+    .execute();
+
+  const allAnswers = await db.selectFrom('Answer')
+    .select((eb) => [
+      'Answer.questionId',
+      eb.fn<string>('count', [sql`case when agree IS TRUE then agree end`]).as('yesCount'),
+      eb.fn<string>('count', [sql`case when agree IS FALSE then agree end`]).as('noCount'),
+    ])
+    .groupBy('questionId')
+    .execute();
+
+  return {
+    questions,
+    allAnswers,
+  };
+};
+
 export const savePoll = async (user: DefaultSession['user'], answers: Simplify<AnswerUpdate>[]) => {
   const currentUser = await db.selectFrom('User')
     .where('email', '=', user?.email!)
@@ -370,4 +423,155 @@ export const markTutorialShown = async (user: DefaultSession['user']) => {
   return {
     success: 'User updated.',
   };
+}
+
+
+export const getUserProfile = async (email: string) => {
+  const currentUser = await db.selectFrom('User')
+    .selectAll('User')
+    .leftJoin('Answer', 'Answer.userId', 'User.id')
+    .select((eb) => [
+      jsonArrayFrom(
+        eb
+          .selectFrom('Answer')
+          .selectAll('Answer')
+          .whereRef('Answer.userId', '=', 'User.id'),
+      ).as('answers'),
+      eb.val(0).as('questionsAnswered'),
+      eb.val(0).as('questionsTotal'),
+    ])
+    .where('User.email', '=', email)
+    .executeTakeFirst();
+  
+  if (!currentUser) {
+    throw new Error('Not logged in.');
+  }
+
+  // Subquery to get the total number of questions in each category
+  const totalQuestionsSubquery = db
+    .selectFrom('Question')
+    .select(['categoryId', db.fn.count('id').as('totalQuestions')])
+    .groupBy('categoryId')
+    .as('totalQuestions');
+
+  // Subquery to get the number of questions answered by the user in each category
+  const answeredQuestionsSubquery = db
+    .selectFrom('Question')
+    .innerJoin('Answer', 'Question.id', 'Answer.questionId')
+    .select(['Question.categoryId', db.fn.count('Answer.id').as('answeredQuestions')])
+    .where('Answer.userId', '=', currentUser?.id)
+    .groupBy('Question.categoryId')
+    .as('answeredQuestions');
+
+  // Main query to calculate completeness for each category
+  const completeness = await db
+    .selectFrom(totalQuestionsSubquery)
+    .leftJoin(
+      answeredQuestionsSubquery,
+      'totalQuestions.categoryId',
+      'answeredQuestions.categoryId'
+    )
+    .leftJoin(
+      'Category',
+      'Category.id',
+      'totalQuestions.categoryId'
+    )
+    .select((eb) => [
+      'totalQuestions.categoryId',
+      'totalQuestions.categoryId',
+      'answeredQuestions.answeredQuestions',
+      'Category.name',
+      'totalQuestions.totalQuestions',
+    ])
+    .execute();
+
+  const answers = await db
+    .selectFrom('Answer')
+    .where('Answer.userId', '=', currentUser.id)
+    .leftJoin(
+      'Question',
+      'Question.id',
+      'Answer.questionId'
+    )
+    .leftJoin(
+      'Category',
+      'Category.id',
+      'Question.categoryId'
+    )
+    .select([
+      'Answer.userId',
+      'Answer.questionId',
+      'Category.id',
+      'Category.name',
+      'Answer.agree',
+      'Answer.rating'
+    ])
+    .execute()
+
+  const completenessWithScore = completeness.map(category => {
+    const totalQuestionsCount = Number(category.totalQuestions);
+    const answersForCategory = answers.filter((answer) => {
+      return answer.id == category.categoryId;
+    });
+
+    let similarityScore = 0;
+    answersForCategory.forEach(answer => {
+      const accum = answer.agree ? 1 : -1;
+      similarityScore += (accum * (answer.rating || 0));
+    })
+
+    similarityScore = similarityScore / (totalQuestionsCount * 5) * 100;
+    similarityScore = Math.max(similarityScore, 0);
+    
+    return {
+      ...category,
+      similarityScore,
+    }
+  })
+  
+  return {
+    completenessWithScore,
+    currentUser,
+    answers,
+  };
+}
+
+export const getAnswerForSingleCategory = async (email?: string, categoryId?: string) => {
+  const currentUser = await db.selectFrom('User')
+    .where('email', '=', email!)
+    .selectAll()
+    .executeTakeFirst();
+    
+  if (!currentUser || !categoryId) {
+    throw new Error('Incorrect request');
+  }
+
+  const answers = await db
+    .selectFrom('Answer')
+    .where('Answer.userId', '=', currentUser.id)
+    .leftJoin(
+      'Question',
+      'Question.id',
+      'Answer.questionId'
+    )
+    .leftJoin(
+      'Category',
+      'Category.id',
+      'Question.categoryId'
+    )
+    .where(
+      'Category.id', "=", categoryId
+    )
+    .select([
+      'Answer.id',
+      'Answer.agree',
+      'Question.question',
+      'Answer.rating',
+      'Answer.questionId',
+      'Answer.notes',
+      'Answer.dateUpdated'
+    ])
+    .execute()
+
+  return answers;
 }

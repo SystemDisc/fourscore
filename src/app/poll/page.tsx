@@ -12,7 +12,7 @@ export default async function Page() {
     redirect('/');
   }
   const data = await getPoll(session?.user);
-  const user = await getUser(session?.user)
+  const user = await getUser(session?.user);
 
   return (
     <MainCard>
