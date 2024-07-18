@@ -36,6 +36,7 @@ export default function ProfileAnswers() {
   return (
     <div className='flex flex-col justify-between gap-2 p-4'>
         <div className='text-4xl font-light	py-2'>
+            {loading && <LabelSkeleton len={200} height={10}/>}
             {profile?.name}&apos;s Answers
         </div>
         <div className='py-4'>

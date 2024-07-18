@@ -1,5 +1,3 @@
-'use client';
-
 import AnswerItem from '@/components/atoms/answer-item';
 
 export default function ProfileAnswer({

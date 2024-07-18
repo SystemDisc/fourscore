@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Star from '@/components/atoms/star';
-import { getSession } from "next-auth/react"
 import { calculateRateFromScore } from '@/utils/calc';
 
 const AnswerItem = ({ 

@@ -3,9 +3,7 @@
 import { useState, useEffect, ChangeEvent } from 'react';
 import Button from '@/components/atoms/button';
 import Star from '@/components/atoms/star';
-import { signOut } from 'next-auth/react';
-import ProfileAnswer from './profile-answer';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { calculateRateFromScore } from '@/utils/calc';
 import { getAnswerForSingleCategory, getCandidateSingleCategoryAnswerScore } from '@/utils/server-actions';
 import { SingleSkeleton, LabelSkeleton } from '../skeleton/single';
