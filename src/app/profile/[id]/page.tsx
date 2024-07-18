@@ -43,8 +43,8 @@ export default function Page({
   return (
     <MainCard>
       <MainNav />
-      <ProfileBanner id={params.id} />
-      <ProfileAnswers id={params.id}  name={profile?.name} completenessWithScore={completenessWithScore} />
+      <ProfileBanner />
+      <ProfileAnswers />
     </MainCard>
   );
 }

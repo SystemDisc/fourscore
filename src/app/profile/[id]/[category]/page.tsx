@@ -8,34 +8,21 @@ import ProfileBanner from '@/components/molecules/profile/profile-banner';
 import { useState, useEffect } from 'react';
 import ProfileCategory from '@/components/molecules/profile/profile-category';
 
-type categoryPageState = {
-  id: string,
-  categoryId: string,
-  email: string,
-  title: string,
-  score: number | null,
-}
 
-export default function Page() {
-  const myState = history.state;
-  const [routeState, setRouteState] = useState<categoryPageState>();
-  
-  useEffect(() => {
-    if (myState.email)
-      setRouteState(myState);
-  }, [myState]);
-
+export default function Page({
+  params
+}: {
+  params: {
+    id: string, category: string
+  }
+}) {
   return (
     <MainCard>
       <MainNav />
-      <ProfileBanner id={routeState?.id} />
-
+      <ProfileBanner />
       <ProfileCategory 
-        id={routeState?.id}
-        title={routeState?.title}
-        score={routeState?.score}
-        email={routeState?.email}
-        categoryId={routeState?.categoryId}
+        id={params.id}
+        categoryId={params?.category}
       />
     </MainCard>
   );

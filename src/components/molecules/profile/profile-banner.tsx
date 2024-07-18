@@ -7,11 +7,12 @@ import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { getUserProfile } from '@/utils/server-actions';
 
-export default function ProfileBanner({
-  id
-}: {
-  id?: string,
-}) {
+import { useParams } from 'next/navigation'
+
+export default function ProfileBanner() {
+  const params = useParams();
+  const id = params.id;
+
   const [profile, setProfile] = useState<any>(null);
   const [imageSrc, setImageSrc] = useState('https://via.placeholder.com/150');
 

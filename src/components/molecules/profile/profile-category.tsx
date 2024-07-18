@@ -7,7 +7,7 @@ import { signOut } from 'next-auth/react';
 import ProfileAnswer from './profile-answer';
 import { useRouter, usePathname } from 'next/navigation';
 import { calculateRateFromScore } from '@/utils/calc';
-import { getAnswerForSingleCategory } from '@/utils/server-actions';
+import { getAnswerForSingleCategory, getCandidateSingleCategoryAnswerScore } from '@/utils/server-actions';
 
 type Answer = {
     id: string;
@@ -21,34 +21,35 @@ type Answer = {
 
 export default function ProfileCategory({
     id,
-    title,
-    score,
-    email,
     categoryId,
 }: {
     id?: string,
-    title?: string,
-    score?: number | null,
-    email?: string,
     categoryId?: string,
 }) {
     const router = useRouter();
     const [answers, setAnswers] = useState<Answer[]>();
+    const [username, setUsername] = useState<string | null>();
+    const [category, setCategory] = useState<string | null>();
+    const [score, setScore] = useState<number>();
 
     useEffect(() => {
         async function getAnswers() {
-            if (email && categoryId) {
-                const answers = await getAnswerForSingleCategory(email, categoryId);
+            if (id && categoryId) {
+                const {currentUser, category, answers} = await getAnswerForSingleCategory(id, categoryId);
+                const score = await getCandidateSingleCategoryAnswerScore(id, categoryId);
+
                 setAnswers(answers);
+                setUsername(currentUser.name);
+                setCategory(category?.name);
+                setScore(score);
             }
             return;
         }
         getAnswers();
-    }, [email, categoryId]);
+    }, [id, categoryId]);
 
     const goCategories = () => {
         router.back();
-        // router.replace(`profile/${id}`)
     }
 
     const dateToFormattedString = (date: Date) => {
@@ -81,7 +82,7 @@ export default function ProfileCategory({
     return (
         <div className='flex flex-col justify-between gap-2 p-4'>
             <div className='text-4xl font-light	py-4'>
-                Lincoln&apos;s Answers
+                {username}&apos;s Answers
             </div>
 
             <Button onClick={goCategories} className='text-sm uppercase'>
@@ -90,7 +91,7 @@ export default function ProfileCategory({
 
             <div className='p-4'>
                 <div className='text-2xl font-light'>
-                    {title}
+                    {category}
                 </div>
                 <div className='flex flex-row gap-2 items-center'>
                   <div className='text-lg font-light'>

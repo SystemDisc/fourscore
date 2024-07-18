@@ -6,42 +6,20 @@ import { getSession } from "next-auth/react"
 import { calculateRateFromScore } from '@/utils/calc';
 
 const AnswerItem = ({ 
-  id,
   title, 
   score,
   categoryId,
 }: {
-  id: string,
   title: string | null,
   score: number | null,
   categoryId: string,
 }) => {
 
-  const [email, setEmail] = useState<string>();
   const router = useRouter();
   const pathname = usePathname();
 
-  useEffect(() => {
-    async function getEmail() {
-      const session = await getSession()
-      const email = session?.user?.email;
-
-      if (email)
-        setEmail(email);
-    }
-    getEmail();
-  }, [categoryId]);
-
   const goCategoryPage = () => {
-    history.pushState({
-      id: id,
-      categoryId: categoryId,
-      email: email,
-      title: title,
-      score: score,
-    }, "", pathname + `/${title}`)
-
-    router.push(`${title}`)
+    router.push(`${pathname}/${categoryId}`)
   }
 
   return (

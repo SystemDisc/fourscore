@@ -478,8 +478,7 @@ export const markTutorialShown = async (user: DefaultSession['user']) => {
   };
 }
 
-
-export const getUserProfile = async (email?: string | undefined, id?: string) => {
+export const getUserProfile = async (email?: string | undefined, id?: any) => {
   let currentUser = null;
 
   if (email) {
@@ -584,6 +583,27 @@ export const getCandidateAnswerScore = async (id: string) => {
   return completenessWithScore;
 }
 
+export const getCandidateSingleCategoryAnswerScore = async (id: string, categoryId: string) => { // category id
+  const answers = await getCandidateAnswersForCategory(id, categoryId);
+  const totalNumOfCategoryQuestions = await db
+    .selectFrom('Question')
+    .where('categoryId', '=', categoryId)
+    .execute();
+
+  const totalQuestionsCount = Number(totalNumOfCategoryQuestions.length);
+
+  let similarityScore = 0;
+  answers.forEach(answer => {
+    const accum = answer.agree ? 1 : -1;
+    similarityScore += (accum * (answer.rating || 0));
+  })
+
+  similarityScore = similarityScore / (totalQuestionsCount * 5) * 100;
+  similarityScore = Math.max(similarityScore, 0);
+  
+  return similarityScore;
+}
+
 export const getCandidateAnswers = async (id: string) => {
   const answers = await db
   .selectFrom('Answer')
@@ -611,15 +631,51 @@ export const getCandidateAnswers = async (id: string) => {
   return answers;
 }
 
-export const getAnswerForSingleCategory = async (email?: string, categoryId?: string) => {
+export const getCandidateAnswersForCategory = async (id: string, categoryId: string) => {
+  const answers = await db
+  .selectFrom('Answer')
+  .where('Answer.userId', '=', id)
+  .leftJoin(
+    'Question',
+    'Question.id',
+    'Answer.questionId'
+  )
+  .leftJoin(
+    'Category',
+    'Category.id',
+    'Question.categoryId'
+  )
+  .where(
+    'Question.categoryId', '=', categoryId
+  )
+  .select([
+    'Answer.userId',
+    'Answer.questionId',
+    'Category.id',
+    'Category.name',
+    'Answer.agree',
+    'Answer.rating'
+  ])
+  .execute()
+
+  return answers;
+}
+
+export const getAnswerForSingleCategory = async (id?: string, categoryId?: string) => {
   const currentUser = await db.selectFrom('User')
-    .where('email', '=', email!)
+    .where('id', '=', id!)
     .selectAll()
     .executeTakeFirst();
     
   if (!currentUser || !categoryId) {
     throw new Error('Incorrect request');
   }
+
+  const category = await db
+    .selectFrom('Category')
+    .where('Category.id', '=', categoryId)
+    .selectAll()
+    .executeTakeFirst();
 
   const answers = await db
     .selectFrom('Answer')
@@ -648,5 +704,9 @@ export const getAnswerForSingleCategory = async (email?: string, categoryId?: st
     ])
     .execute()
 
-  return answers;
+  return {
+    currentUser,
+    category,
+    answers
+  };
 }
