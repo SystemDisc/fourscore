@@ -14,7 +14,7 @@ export default function ProfileAnswer({
   }
 }) {
   return (
-    <div className='flex flex-col justify-between gap-6'>
+    <div className='flex flex-col justify-between gap-6 hover:cursor-pointer'>
         <AnswerItem title={data.name} score={data.similarityScore} categoryId={data.categoryId}/>
     </div>
   );

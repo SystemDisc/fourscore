@@ -594,7 +594,7 @@ export const getCandidateSingleCategoryAnswerScore = async (id: string, category
 
   let similarityScore = 0;
   answers.forEach(answer => {
-    const accum = answer.agree ? 1 : -1;
+    const accum = answer.agree ? 1 : 0;
     similarityScore += (accum * (answer.rating || 0));
   })
 

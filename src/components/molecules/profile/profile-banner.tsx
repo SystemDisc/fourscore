@@ -6,8 +6,8 @@ import Star from '@/components/atoms/star';
 import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { getUserProfile } from '@/utils/server-actions';
-
 import { useParams } from 'next/navigation'
+import { LabelSkeleton } from '../skeleton/single';
 
 export default function ProfileBanner() {
   const params = useParams();
@@ -15,6 +15,7 @@ export default function ProfileBanner() {
 
   const [profile, setProfile] = useState<any>(null);
   const [imageSrc, setImageSrc] = useState('https://via.placeholder.com/150');
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -23,6 +24,7 @@ export default function ProfileBanner() {
       }
       const profile = await getUserProfile(undefined, id);
       setProfile(profile);
+      setLoading(false);
     }
 
     fetchProfile()
@@ -56,6 +58,7 @@ export default function ProfileBanner() {
   return (
     <div className='flex flex-col justify-between gap-6 p-4' style={{background: "linear-gradient(45deg, rgb(33, 34, 37), rgb(67, 70, 74), rgb(33, 34, 37))"}}>
       <div className='flex flex-col'>
+        {loading && <LabelSkeleton len={200}/>}
         <div className='text-lg text-white'>
           {profile?.name}
         </div>
@@ -86,32 +89,39 @@ export default function ProfileBanner() {
         </div>
 
         <div className='flex flex-col gap-6'>
-          <div>
-            <div className='text-sm text-white uppercase'>
-              Poll complete
-            </div>
-            <div className='text-lg text-white uppercase'>
-              {pollCompleteness()}%
-            </div>
-          </div>
-          <div className='flex flex-col'>
-            <div className='text-sm text-white uppercase'>
-              Fourscore
-            </div>
-            <div className='flex flex-row items-center gap-2'>
-              <div className='text-lg text-white uppercase'>
-                {profile?.candidateUserScore?.score}%
+          {loading ? <div className='py-4'>
+              <div><LabelSkeleton len={200}/></div>
+              <div><LabelSkeleton len={100}/></div>
+              <div><LabelSkeleton len={200}/></div>
+              <div><LabelSkeleton len={100}/></div>
+            </div> :
+            <>
+              <div>
+                <div className='text-sm text-white uppercase'>
+                  Poll complete
+                </div>
+                <div className='text-lg text-white uppercase'>
+                  {pollCompleteness()}%
+                </div>
               </div>
-              <Star rate={4} />
-            </div>
-            
+              <div className='flex flex-col'>
+                <div className='text-sm text-white uppercase'>
+                  Fourscore
+                </div>
+                <div className='flex flex-row items-center gap-2'>
+                  <div className='text-lg text-white uppercase'>
+                    {profile?.candidateUserScore?.score}%
+                  </div>
+                  <Star rate={Math.round(profile?.candidateUserScore?.score / 20)} displayEmptyStar={true}/>
+                </div>
+              </div>
+            </>}
           </div>
-        </div>
       </div>
 
       <div className='flex flex-row justify-between'>
-        <Button isLink href='/candidate-matches' className='text-sm uppercase'>
-          Pledge
+        <Button isLink href='/candidate-matches' className='text-sm text-white uppercase'>
+            Pledge
         </Button>
 
         <Button onClick={() => signOut()} className='text-sm uppercase'>
