@@ -160,6 +160,59 @@ export const getPollFromEmail = async (email: string) => {
   };
 };
 
+export const getPollFromId = async (id: string) => {
+  const currentUser = await db.selectFrom('User')
+    .where('id', '=', id!)
+    .selectAll()
+    .executeTakeFirst();
+
+  if (!currentUser) {
+    throw new Error('Not logged in.');
+  }
+
+  const questions = await db.selectFrom('Question')
+    .innerJoin('Locality', 'Locality.id', 'Question.localityId')
+    .innerJoin('Category', 'Category.id', 'Question.categoryId')
+    .selectAll('Question')
+    .select((eb) => [
+      jsonObjectFrom(
+        eb
+          .selectFrom('Locality')
+          .selectAll('Locality')
+          .whereRef('Locality.id', '=', 'Question.localityId')
+      ).as('locality'),
+      jsonObjectFrom(
+        eb
+          .selectFrom('Category')
+          .selectAll('Category')
+          .whereRef('Category.id', '=', 'Question.categoryId')
+      ).as('category'),
+      jsonObjectFrom(
+        eb
+          .selectFrom('Answer')
+          .selectAll('Answer')
+          .where('Answer.userId', '=', currentUser.id)
+          .whereRef('Answer.questionId', '=', 'Question.id')
+      ).as('answer'),
+    ])
+    .orderBy(['Locality.position asc', 'Category.name asc'])
+    .execute();
+
+  const allAnswers = await db.selectFrom('Answer')
+    .select((eb) => [
+      'Answer.questionId',
+      eb.fn<string>('count', [sql`case when agree IS TRUE then agree end`]).as('yesCount'),
+      eb.fn<string>('count', [sql`case when agree IS FALSE then agree end`]).as('noCount'),
+    ])
+    .groupBy('questionId')
+    .execute();
+
+  return {
+    questions,
+    allAnswers,
+  };
+};
+
 export const savePoll = async (user: DefaultSession['user'], answers: Simplify<AnswerUpdate>[]) => {
   const currentUser = await db.selectFrom('User')
     .where('email', '=', user?.email!)
@@ -426,26 +479,37 @@ export const markTutorialShown = async (user: DefaultSession['user']) => {
 }
 
 
-export const getUserProfile = async (email: string) => {
-  const currentUser = await db.selectFrom('User')
-    .selectAll('User')
-    .leftJoin('Answer', 'Answer.userId', 'User.id')
-    .select((eb) => [
-      jsonArrayFrom(
-        eb
-          .selectFrom('Answer')
-          .selectAll('Answer')
-          .whereRef('Answer.userId', '=', 'User.id'),
-      ).as('answers'),
-      eb.val(0).as('questionsAnswered'),
-      eb.val(0).as('questionsTotal'),
-    ])
-    .where('User.email', '=', email)
-    .executeTakeFirst();
+export const getUserProfile = async (email?: string | undefined, id?: string) => {
+  let currentUser = null;
+
+  if (email) {
+    currentUser = await db.selectFrom('User')
+      .where('email', '=', email!)
+      .selectAll()
+      .executeTakeFirst();
+  } else if (id) {
+    currentUser = await db.selectFrom('User')
+      .where('id', '=', id!)
+      .selectAll()
+      .executeTakeFirst();
+  }
   
   if (!currentUser) {
     throw new Error('Not logged in.');
   }
+
+  const answeredQuestions = await db.selectFrom('Answer')
+    .select(db.fn.count('id').as('count'))
+    .where('Answer.userId', '=', currentUser.id)
+    .executeTakeFirst();
+  const totalQuestions = await db.selectFrom('Question')
+    .select(db.fn.count('id').as('count'))
+    .executeTakeFirst();
+  
+  const candidateUserScore = await db.selectFrom('CandidateUserScore')
+    .select('score')
+    .where('userId', '=', currentUser.id)
+    .executeTakeFirst()
 
   // Subquery to get the total number of questions in each category
   const totalQuestionsSubquery = db
@@ -531,7 +595,12 @@ export const getUserProfile = async (email: string) => {
   
   return {
     completenessWithScore,
-    currentUser,
+    currentUser: {
+      ...currentUser,
+      answeredQuestions,
+      totalQuestions,
+      candidateUserScore,
+    },
     answers,
   };
 }

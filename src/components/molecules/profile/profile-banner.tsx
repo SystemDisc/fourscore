@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import Button from '@/components/atoms/button';
 import Star from '@/components/atoms/star';
 import { signOut } from 'next-auth/react';
@@ -9,7 +9,23 @@ import Image from 'next/image';
 export default function ProfileBanner({
   profile
 }: {
-  profile?: any
+  profile?: {
+    answeredQuestions: {
+        count: string | number | bigint;
+    } | undefined;
+    totalQuestions: {
+        count: string | number | bigint;
+    } | undefined;
+    candidateUserScore: {
+      score: number;
+    } | undefined;
+    id: string;
+    name: string | null;
+    email: string;
+    emailVerified: Date | null;
+    image: string | null; 
+    seenVotingTutorial: boolean;
+  }
 }) {
   const [imageSrc, setImageSrc] = useState('https://via.placeholder.com/150');
 
@@ -25,6 +41,17 @@ export default function ProfileBanner({
       reader.readAsDataURL(file);
     }
   };
+
+  const pollCompleteness = ()  => {
+    if (profile?.totalQuestions?.count) {
+      return Math.round(Number(profile.answeredQuestions?.count || 0) * 100 / Number(profile.totalQuestions.count))
+    }
+    return 0;
+  }
+
+  useEffect(() => {
+    setImageSrc(profile?.image || 'https://via.placeholder.com/150')
+  }, [profile])
 
 
   return (
@@ -65,7 +92,7 @@ export default function ProfileBanner({
               Poll complete
             </div>
             <div className='text-lg text-white uppercase'>
-              18%
+              {pollCompleteness()}%
             </div>
           </div>
           <div className='flex flex-col'>
@@ -74,7 +101,7 @@ export default function ProfileBanner({
             </div>
             <div className='flex flex-row items-center gap-2'>
               <div className='text-lg text-white uppercase'>
-                68%
+                {profile?.candidateUserScore?.score}%
               </div>
               <Star rate={4} />
             </div>
