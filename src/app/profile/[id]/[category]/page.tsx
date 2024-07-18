@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
 import ProfileCategory from '@/components/molecules/profile/profile-category';
 
 type categoryPageState = {
+  id: string,
   categoryId: string,
   email: string,
   title: string,
@@ -27,9 +28,10 @@ export default function Page() {
   return (
     <MainCard>
       <MainNav />
-      <ProfileBanner />
+      <ProfileBanner id={routeState?.id} />
 
       <ProfileCategory 
+        id={routeState?.id}
         title={routeState?.title}
         score={routeState?.score}
         email={routeState?.email}

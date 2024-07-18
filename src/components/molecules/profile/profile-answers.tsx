@@ -8,8 +8,12 @@ import ProfileAnswer from './profile-answer';
 
 
 export default function ProfileAnswers({
+  id,
+  name,
   completenessWithScore
 }: {
+  id: string,
+  name: string,
   completenessWithScore?: {
     similarityScore: number;
     name: string | null;
@@ -21,11 +25,11 @@ export default function ProfileAnswers({
   return (
     <div className='flex flex-col justify-between gap-2 p-4'>
         <div className='text-4xl font-light	py-2'>
-            Lincoln&apos;s Answers
+            {name}&apos;s Answers
         </div>
         <div className='py-4'>
           {completenessWithScore?.map(category => (
-              <ProfileAnswer data={category} key={category.categoryId}/>
+              <ProfileAnswer id={id} data={category} key={category.categoryId}/>
           ))}
         </div>
         

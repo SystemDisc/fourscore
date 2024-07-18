@@ -7,12 +7,11 @@ import { useSearchParams } from 'next/navigation'
 import { getSession } from "next-auth/react"
 
 import { redirect } from 'next/navigation';
-import { getUserProfile, getPollFromId, calculateMatches } from '@/utils/server-actions';
+import { getUserProfile, getCandidateAnswerScore } from '@/utils/server-actions';
 
 import ProfileBanner from '@/components/molecules/profile/profile-banner';
 import ProfileAnswers from '@/components/molecules/profile/profile-answers';
 import { useEffect, useState } from 'react';
-import { match } from 'assert';
 
 
 export default function Page({
@@ -20,11 +19,8 @@ export default function Page({
 }: {
     params: { id: string }
 }) {
-  const searchParams = useSearchParams()
-
   const [profile, setProfile] = useState<any>(null);
-  const [questions, setQuestions] = useState<any>(null);
-  const [allAnswers, setAllAnswers] = useState<any>(null);
+  const [completenessWithScore, setCompletenessWithScore] = useState<any>(null);
 
   useEffect(() => {
     const id = params.id;
@@ -32,14 +28,12 @@ export default function Page({
       if (!id) {
         return;
       }
-      const data = await getPollFromId(id);
+      // const data = await getPollFromId(id);
       const profile = await getUserProfile(undefined, id);
-
-      console.log(profile)
+      const completenessWithScore = await getCandidateAnswerScore(id);
 
       setProfile(profile);
-      setQuestions(data.questions);
-      setAllAnswers(data.allAnswers);
+      setCompletenessWithScore(completenessWithScore);
     }
 
     fetchProfile()
@@ -49,8 +43,8 @@ export default function Page({
   return (
     <MainCard>
       <MainNav />
-      <ProfileBanner profile={profile?.currentUser} />
-      <ProfileAnswers completenessWithScore={profile?.completenessWithScore} />
+      <ProfileBanner id={params.id} />
+      <ProfileAnswers id={params.id}  name={profile?.name} completenessWithScore={completenessWithScore} />
     </MainCard>
   );
 }

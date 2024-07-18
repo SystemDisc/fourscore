@@ -5,29 +5,27 @@ import Button from '@/components/atoms/button';
 import Star from '@/components/atoms/star';
 import { signOut } from 'next-auth/react';
 import Image from 'next/image';
+import { getUserProfile } from '@/utils/server-actions';
 
 export default function ProfileBanner({
-  profile
+  id
 }: {
-  profile?: {
-    answeredQuestions: {
-        count: string | number | bigint;
-    } | undefined;
-    totalQuestions: {
-        count: string | number | bigint;
-    } | undefined;
-    candidateUserScore: {
-      score: number;
-    } | undefined;
-    id: string;
-    name: string | null;
-    email: string;
-    emailVerified: Date | null;
-    image: string | null; 
-    seenVotingTutorial: boolean;
-  }
+  id?: string,
 }) {
+  const [profile, setProfile] = useState<any>(null);
   const [imageSrc, setImageSrc] = useState('https://via.placeholder.com/150');
+
+  useEffect(() => {
+    async function fetchProfile() {
+      if (!id) {
+        return;
+      }
+      const profile = await getUserProfile(undefined, id);
+      setProfile(profile);
+    }
+
+    fetchProfile()
+  }, [id])
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -58,7 +56,7 @@ export default function ProfileBanner({
     <div className='flex flex-col justify-between gap-6 p-4' style={{background: "linear-gradient(45deg, rgb(33, 34, 37), rgb(67, 70, 74), rgb(33, 34, 37))"}}>
       <div className='flex flex-col'>
         <div className='text-lg text-white'>
-          Abe Lincoln
+          {profile?.name}
         </div>
         <div className='text-xs text-white'>
           For: Texas Railroad Commission

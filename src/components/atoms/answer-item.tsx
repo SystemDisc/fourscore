@@ -6,13 +6,15 @@ import { getSession } from "next-auth/react"
 import { calculateRateFromScore } from '@/utils/calc';
 
 const AnswerItem = ({ 
-    title, 
-    score,
-    categoryId,
+  id,
+  title, 
+  score,
+  categoryId,
 }: {
-    title: string | null,
-    score: number | null,
-    categoryId: string,
+  id: string,
+  title: string | null,
+  score: number | null,
+  categoryId: string,
 }) => {
 
   const [email, setEmail] = useState<string>();
@@ -32,13 +34,14 @@ const AnswerItem = ({
 
   const goCategoryPage = () => {
     history.pushState({
+      id: id,
       categoryId: categoryId,
       email: email,
       title: title,
       score: score,
-    }, "", pathname + "/category")
+    }, "", pathname + `/${title}`)
 
-    router.push("category")
+    router.push(`${title}`)
   }
 
   return (

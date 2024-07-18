@@ -20,11 +20,13 @@ type Answer = {
 }
 
 export default function ProfileCategory({
+    id,
     title,
     score,
     email,
     categoryId,
 }: {
+    id?: string,
     title?: string,
     score?: number | null,
     email?: string,
@@ -45,7 +47,8 @@ export default function ProfileCategory({
     }, [email, categoryId]);
 
     const goCategories = () => {
-        router.push('/profile')
+        router.back();
+        // router.replace(`profile/${id}`)
     }
 
     const dateToFormattedString = (date: Date) => {

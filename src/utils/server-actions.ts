@@ -510,7 +510,16 @@ export const getUserProfile = async (email?: string | undefined, id?: string) =>
     .select('score')
     .where('userId', '=', currentUser.id)
     .executeTakeFirst()
+  
+  return {
+    ...currentUser,
+    answeredQuestions,
+    totalQuestions,
+    candidateUserScore,
+  };
+}
 
+export const getCandidateAnswerScore = async (id: string) => {
   // Subquery to get the total number of questions in each category
   const totalQuestionsSubquery = db
     .selectFrom('Question')
@@ -523,7 +532,7 @@ export const getUserProfile = async (email?: string | undefined, id?: string) =>
     .selectFrom('Question')
     .innerJoin('Answer', 'Question.id', 'Answer.questionId')
     .select(['Question.categoryId', db.fn.count('Answer.id').as('answeredQuestions')])
-    .where('Answer.userId', '=', currentUser?.id)
+    .where('Answer.userId', '=', id)
     .groupBy('Question.categoryId')
     .as('answeredQuestions');
 
@@ -549,28 +558,7 @@ export const getUserProfile = async (email?: string | undefined, id?: string) =>
     ])
     .execute();
 
-  const answers = await db
-    .selectFrom('Answer')
-    .where('Answer.userId', '=', currentUser.id)
-    .leftJoin(
-      'Question',
-      'Question.id',
-      'Answer.questionId'
-    )
-    .leftJoin(
-      'Category',
-      'Category.id',
-      'Question.categoryId'
-    )
-    .select([
-      'Answer.userId',
-      'Answer.questionId',
-      'Category.id',
-      'Category.name',
-      'Answer.agree',
-      'Answer.rating'
-    ])
-    .execute()
+  const answers = await getCandidateAnswers(id);
 
   const completenessWithScore = completeness.map(category => {
     const totalQuestionsCount = Number(category.totalQuestions);
@@ -591,18 +579,36 @@ export const getUserProfile = async (email?: string | undefined, id?: string) =>
       ...category,
       similarityScore,
     }
-  })
+  });
   
-  return {
-    completenessWithScore,
-    currentUser: {
-      ...currentUser,
-      answeredQuestions,
-      totalQuestions,
-      candidateUserScore,
-    },
-    answers,
-  };
+  return completenessWithScore;
+}
+
+export const getCandidateAnswers = async (id: string) => {
+  const answers = await db
+  .selectFrom('Answer')
+  .where('Answer.userId', '=', id)
+  .leftJoin(
+    'Question',
+    'Question.id',
+    'Answer.questionId'
+  )
+  .leftJoin(
+    'Category',
+    'Category.id',
+    'Question.categoryId'
+  )
+  .select([
+    'Answer.userId',
+    'Answer.questionId',
+    'Category.id',
+    'Category.name',
+    'Answer.agree',
+    'Answer.rating'
+  ])
+  .execute()
+
+  return answers;
 }
 
 export const getAnswerForSingleCategory = async (email?: string, categoryId?: string) => {

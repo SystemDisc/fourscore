@@ -9,9 +9,6 @@ export default function MainNav() {
       <Button isLink href='/poll' className='text-sm'>
         View Poll
       </Button>
-      <Button isLink href='/profile' className='text-sm'>
-        Profile
-      </Button>
       <Button isLink href='/candidate-matches' className='text-sm'>
         Candidates
       </Button>
