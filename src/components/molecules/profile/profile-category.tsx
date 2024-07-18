@@ -78,7 +78,7 @@ export default function ProfileCategory({
     return (
         <div className='flex flex-col justify-between gap-2 p-4'>
             <div className='text-4xl font-light	py-4'>
-                Lincoln's Answers
+                Lincoln&apos;s Answers
             </div>
 
             <Button onClick={goCategories} className='text-sm uppercase'>

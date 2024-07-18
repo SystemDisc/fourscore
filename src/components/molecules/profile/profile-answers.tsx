@@ -21,7 +21,7 @@ export default function ProfileAnswers({
   return (
     <div className='flex flex-col justify-between gap-2 p-4'>
         <div className='text-4xl font-light	py-2'>
-            Lincoln's Answers
+            Lincoln&apos;s Answers
         </div>
         <div className='py-4'>
           {completenessWithScore?.map(category => (

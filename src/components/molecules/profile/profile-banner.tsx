@@ -4,6 +4,7 @@ import { useState, ChangeEvent } from 'react';
 import Button from '@/components/atoms/button';
 import Star from '@/components/atoms/star';
 import { signOut } from 'next-auth/react';
+import Image from 'next/image';
 
 export default function ProfileBanner({
   profile
@@ -39,7 +40,14 @@ export default function ProfileBanner({
 
       <div className='flex flex-row justify-around'>
         <div className="relative w-36 h-36 rounded-full overflow-hidden cursor-pointer group">
-          <img src={imageSrc} alt="Profile" className="w-full h-full object-cover" />
+          <Image 
+            loader={() => imageSrc}
+            src={imageSrc} 
+            alt="Profile" 
+            layout="fill"
+            objectFit="cover" 
+            className="w-full h-full"
+          />
           <input
             type="file"
             accept="image/*"
