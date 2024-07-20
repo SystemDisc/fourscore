@@ -17,5 +17,64 @@
       "sizes": "512x512",
       "type": "image/png"
     }
+  ],
+  "orientation": "any",
+  "scope": "/",
+  "categories": ["utilities", "productivity", "social"],
+  "screenshots": [
+    {
+      "src": "/images/screens/local-poll.png",
+      "type": "image/png",
+      "sizes": "1440x2560"
+    },
+    {
+      "src": "/images/screens/state-poll.png",
+      "type": "image/png",
+      "sizes": "1440x2560"
+    },
+    {
+      "src": "/images/screens/federal-poll.png",
+      "type": "image/png",
+      "sizes": "1440x2560"
+    },
+    {
+      "src": "/images/screens/my-ballot.png",
+      "type": "image/png",
+      "sizes": "1440x2560"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Poll",
+      "short_name": "Poll",
+      "description": "Fill out a comprehensive poll on key issues",
+      "url": "/poll",
+      "icons": [
+        {
+          "src": "/icons/android-chrome-512x512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Candidates",
+      "short_name": "Candidates",
+      "description": "View candidate profiles",
+      "url": "/candidates",
+      "icons": [
+        {
+          "src": "/icons/android-chrome-512x512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+fourscore",
+      "url": "/handle?url=%s"
+    }
   ]
 }
