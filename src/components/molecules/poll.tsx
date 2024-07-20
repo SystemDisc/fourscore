@@ -185,7 +185,7 @@ export default function Poll({
           <section
             key={question.id}
             className={classNames(
-              'min-h-[calc(100dvh_-_3.5rem_-_42px)] md:min-h-[calc(100dvh_-_5.5rem_-_42px)] relative z-10',
+              'min-h-[calc(100dvh_-_3.5rem_-_42px)] md:min-h-[calc(100dvh_-_5.5rem_-_42px_-_2px)] relative z-10',
               {
                 hidden: index !== currentIndex,
               }
