@@ -62,7 +62,7 @@ export default function Poll({
     )
   );
   const [showTutorial, setShowTutorial] = useState(false);
-  const [tutorialShown, setTutorialShown] = useState(false);
+  const [tutorialShown, setTutorialShown] = useState(!!seenVotingTutorial);
 
   useEffect(() => {
     if (agree !== undefined && agree !== null && !tutorialShown) {
@@ -116,7 +116,7 @@ export default function Poll({
               STAR = Super Important
             </p>
           </div>
-          <div className="absolute h-16 w-[20rem] shadow-[rgba(0_0_0_/_0.85)_0_0_0_1000px] bottom-[11rem] left-[50%] translate-x-[-50%] rounded-full z-40 pointer-events-none" />
+          <div className="absolute h-16 w-[20rem] shadow-[rgba(0_0_0_/_0.85)_0_0_0_1000px] bottom-[calc(28px_+_1rem_+_50px_+_1rem_+_42px_+_1rem)] left-[50%] translate-x-[-50%] rounded-full z-40 pointer-events-none" />
         </>
       )}
       <div className="grid grid-cols-2 gap-4 p-4">
@@ -191,7 +191,7 @@ export default function Poll({
               }
             )}
           >
-            <div className="bg-gradient-to-bl from-[#6932D1] to-[#899ED4]">
+            <div className="h-20 bg-gradient-to-bl from-[#6932D1] to-[#899ED4]">
               <div className="flex items-end justify-between p-4">
                 <div className="text-4xl text-white">
                   {question.locality?.name}
@@ -205,7 +205,7 @@ export default function Poll({
             </div>
             <div
               className={classNames(
-                'flex flex-col items-center justify-between gap-4 p-4 h-[calc(100%_-_7rem)] pt-2',
+                'flex flex-col items-center justify-between gap-4 p-4 h-[calc(100%_-_5rem)] pt-2',
                 {
                   hidden: index !== currentIndex,
                 }
