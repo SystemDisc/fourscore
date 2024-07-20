@@ -1,4 +1,11 @@
-import { GeneratedAlways, Insertable, Kysely, PostgresDialect, Selectable, Updateable } from 'kysely';
+import {
+  GeneratedAlways,
+  Insertable,
+  Kysely,
+  PostgresDialect,
+  Selectable,
+  Updateable,
+} from 'kysely';
 import { Pool } from 'pg';
 
 interface Database {
@@ -38,7 +45,7 @@ export interface AccountTable {
   refresh_token?: string;
   access_token?: string;
   expires_at?: number;
-  token_type?: "bearer" | "dpop" | Lowercase<string>;
+  token_type?: 'bearer' | 'dpop' | Lowercase<string>;
   scope?: string;
   id_token?: string;
   session_state: string | null;
@@ -179,4 +186,4 @@ const dialect = new PostgresDialect({
 // to communicate with your database.
 export const db = new Kysely<Database>({
   dialect,
-})
+});

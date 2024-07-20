@@ -5,7 +5,7 @@
  *
  * @type {ServiceWorkerGlobalScope & typeof globalThis} self
  */
-let swSelf = /** @type {any} */ (self);
+let swSelf = /** @type {any} */ self;
 
 /**
  *
@@ -77,26 +77,16 @@ const fetchFallback = async ({ request, fallbackUrl }) => {
   }
 };
 
-swSelf.addEventListener(
-  'install',
-  (event) => {
-    event.waitUntil(
-      addResourcesToCache([
-        './offline',
-      ]),
-    );
-  },
-);
+swSelf.addEventListener('install', (event) => {
+  event.waitUntil(addResourcesToCache(['./offline']));
+});
 
-swSelf.addEventListener(
-  'fetch',
-  (event) => {
-    event.respondWith(
-      fetchFallback({
-        request: event.request,
-        preloadResponsePromise: event.preloadResponse,
-        fallbackUrl: './offline',
-      }),
-    );
-  },
-);
+swSelf.addEventListener('fetch', (event) => {
+  event.respondWith(
+    fetchFallback({
+      request: event.request,
+      preloadResponsePromise: event.preloadResponse,
+      fallbackUrl: './offline',
+    }),
+  );
+});

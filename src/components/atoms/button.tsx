@@ -1,6 +1,10 @@
 import classNames from 'classnames';
 import Link from 'next/link';
-import { AnchorHTMLAttributes, ButtonHTMLAttributes, HTMLAttributes } from 'react';
+import {
+  AnchorHTMLAttributes,
+  ButtonHTMLAttributes,
+  HTMLAttributes,
+} from 'react';
 
 export default function Button({
   buttonType = 'default',
@@ -11,33 +15,60 @@ export default function Button({
 }: {
   buttonType?: 'red' | 'default' | 'flat' | 'white';
   isLink?: boolean;
-} & ButtonHTMLAttributes<HTMLButtonElement> & AnchorHTMLAttributes<HTMLAnchorElement>) {
+} & ButtonHTMLAttributes<HTMLButtonElement> &
+  AnchorHTMLAttributes<HTMLAnchorElement>) {
   const ButtonClass = isLink ? Link : 'button';
-  const otherProps = isLink ? props as HTMLAttributes<HTMLAnchorElement> : props as HTMLAttributes<HTMLButtonElement>;
+  const otherProps = isLink
+    ? (props as HTMLAttributes<HTMLAnchorElement>)
+    : (props as HTMLAttributes<HTMLButtonElement>);
   return (
     <>
-      {buttonType === 'default' &&
-        <ButtonClass className={classNames('inline-flex justify-center items-center px-4 py-2 border border-white rounded-full tracking-widest from-[#69F7A5] to-[#22C064] bg-gradient-to-bl shadow-[#000_0px_2px_2px] text-white active:shadow-[inset_3px_3px_5px_0px_rgba(0,_0,_0,_0.3)] hover:text-neutral-200 disabled:opacity-60 disabled:hover:text-white disabled:cursor-not-allowed disabled:active:shadow-[#000_0px_2px_2px]', className)} {...otherProps as any}>
+      {buttonType === 'default' && (
+        <ButtonClass
+          className={classNames(
+            'inline-flex justify-center items-center px-3 py-2 border border-white rounded-full tracking-wider from-[#69F7A5] to-[#22C064] bg-gradient-to-bl shadow-[#000_0px_2px_2px] text-white active:shadow-[inset_3px_3px_5px_0px_rgba(0,_0,_0,_0.3)] hover:text-neutral-200 disabled:opacity-60 disabled:hover:text-white disabled:cursor-not-allowed disabled:active:shadow-[#000_0px_2px_2px]',
+            className
+          )}
+          {...(otherProps as any)}
+        >
           {children}
         </ButtonClass>
-      }
-      {buttonType === 'white' &&
+      )}
+      {buttonType === 'white' && (
         <div className='inline-block p-[1px] from-[#69F7A5] to-[#22C064] bg-gradient-to-bl rounded-full'>
-          <ButtonClass className={classNames('inline-flex justify-center items-center px-4 py-2 rounded-full tracking-widest bg-white text-black shadow-[#000_0px_2px_2px] active:shadow-[inset_3px_3px_5px_0px_rgba(0,_0,_0,_0.3)] hover:text-neutral-700 disabled:opacity-60 disabled:hover:text-black disabled:active:shadow-[#000_0px_2px_2px] disabled:cursor-not-allowed', className)} {...otherProps as any}>
+          <ButtonClass
+            className={classNames(
+              'inline-flex justify-center items-center px-3 py-2 rounded-full tracking-widest bg-white text-black shadow-[#000_0px_2px_2px] active:shadow-[inset_3px_3px_5px_0px_rgba(0,_0,_0,_0.3)] hover:text-neutral-700 disabled:opacity-60 disabled:hover:text-black disabled:active:shadow-[#000_0px_2px_2px] disabled:cursor-not-allowed',
+              className
+            )}
+            {...(otherProps as any)}
+          >
             {children}
           </ButtonClass>
         </div>
-      }
-      {buttonType === 'red' &&
-        <ButtonClass className={classNames('inline-flex justify-center items-center px-4 py-2 border border-white rounded-full tracking-widest from-red-500 to-red-800 bg-gradient-to-bl shadow-[#000_0px_2px_2px] text-white active:shadow-[inset_3px_3px_5px_0px_rgba(0,_0,_0,_0.3)] hover:text-neutral-200 disabled:opacity-60 disabled:hover:text-white disabled:cursor-not-allowed disabled:active:shadow-[#000_0px_2px_2px]', className)} {...otherProps as any}>
+      )}
+      {buttonType === 'red' && (
+        <ButtonClass
+          className={classNames(
+            'inline-flex justify-center items-center px-3 py-2 border border-white rounded-full tracking-widest from-red-500 to-red-800 bg-gradient-to-bl shadow-[#000_0px_2px_2px] text-white active:shadow-[inset_3px_3px_5px_0px_rgba(0,_0,_0,_0.3)] hover:text-neutral-200 disabled:opacity-60 disabled:hover:text-white disabled:cursor-not-allowed disabled:active:shadow-[#000_0px_2px_2px]',
+            className
+          )}
+          {...(otherProps as any)}
+        >
           {children}
         </ButtonClass>
-      }
-      {buttonType === 'flat' &&
-        <ButtonClass className={classNames('inline-flex justify-center items-center px-4 py-2 border border-black rounded-full tracking-widest bg-transparent text-black active:shadow-[inset_3px_3px_5px_0px_rgba(0,_0,_0,_0.3)] hover:text-neutral-700 disabled:opacity-30 disabled:cursor-not-allowed disabled:active:shadow-none', className)} {...otherProps as any}>
+      )}
+      {buttonType === 'flat' && (
+        <ButtonClass
+          className={classNames(
+            'inline-flex justify-center items-center px-3 py-2 border border-black rounded-full tracking-widest bg-transparent text-black active:shadow-[inset_3px_3px_5px_0px_rgba(0,_0,_0,_0.3)] hover:text-neutral-700 disabled:opacity-30 disabled:cursor-not-allowed disabled:active:shadow-none',
+            className
+          )}
+          {...(otherProps as any)}
+        >
           {children}
         </ButtonClass>
-      }
+      )}
     </>
   );
 }

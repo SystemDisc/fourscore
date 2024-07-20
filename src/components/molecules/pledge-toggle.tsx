@@ -7,7 +7,7 @@ export default function PledgeToggle({
   checked: checkedProp,
   onToggle,
 }: {
-  checked?: boolean,
+  checked?: boolean;
   onToggle?: (checked: boolean) => void;
 }) {
   const [checked, setChecked] = useState(checkedProp);
@@ -17,9 +17,12 @@ export default function PledgeToggle({
   }, [checkedProp]);
 
   return (
-    <ToggleSwitch checked={checked} onClick={() => {
-      setChecked(!checked);
-      onToggle?.(!checked);
-    }} />
+    <ToggleSwitch
+      checked={checked}
+      onClick={() => {
+        setChecked(!checked);
+        onToggle?.(!checked);
+      }}
+    />
   );
 }

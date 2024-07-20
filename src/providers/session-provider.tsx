@@ -10,11 +10,7 @@ type sessionProps = {
 };
 
 function NextAuthSessionProvider({ children, session }: sessionProps) {
-  return (
-    <SessionProvider session={session}>
-      {children}
-    </SessionProvider>
-  );
+  return <SessionProvider session={session}>{children}</SessionProvider>;
 }
 
 export default NextAuthSessionProvider;

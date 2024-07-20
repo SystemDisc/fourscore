@@ -1,10 +1,7 @@
 import 'dotenv-flow/config';
 import * as path from 'path';
 import { promises as fs } from 'fs';
-import {
-  Migrator,
-  FileMigrationProvider,
-} from 'kysely';
+import { Migrator, FileMigrationProvider } from 'kysely';
 import { db } from './src/db/database';
 
 async function migrateDown() {
@@ -22,9 +19,9 @@ async function migrateDown() {
 
   results?.forEach((it) => {
     if (it.status === 'Success') {
-      console.log(`rollback "${it.migrationName}" was executed successfully`)
+      console.log(`rollback "${it.migrationName}" was executed successfully`);
     } else if (it.status === 'Error') {
-      console.error(`failed to execute rollback "${it.migrationName}"`)
+      console.error(`failed to execute rollback "${it.migrationName}"`);
     }
   });
 
@@ -38,4 +35,3 @@ async function migrateDown() {
 }
 
 migrateDown();
-

@@ -6,13 +6,15 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function CandidateList({
-  candidates
+  candidates,
 }: {
-  candidates: CandidateResult[]
+  candidates: CandidateResult[];
 }) {
   const router = useRouter();
 
-  const [pledgedCandidate, setPledgedCandidate] = useState<CandidateResult>(candidates[0]);
+  const [pledgedCandidate, setPledgedCandidate] = useState<CandidateResult>(
+    candidates[0],
+  );
 
   useEffect(() => {
     const selected = candidates.find((c) => c === pledgedCandidate);
@@ -20,7 +22,6 @@ export default function CandidateList({
       setPledgedCandidate(candidates[0]);
     }
   }, [candidates, pledgedCandidate]);
-
 
   useEffect(() => {
     if (!localStorage.getItem('refresh-candidates')) {
@@ -38,7 +39,9 @@ export default function CandidateList({
           key={candidate.id}
           candidate={candidate}
           selected={pledgedCandidate === candidate}
-          onSelect={(selectedCandidate) => setPledgedCandidate(selectedCandidate)}
+          onSelect={(selectedCandidate) =>
+            setPledgedCandidate(selectedCandidate)
+          }
         />
       ))}
     </div>

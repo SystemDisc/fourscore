@@ -5,14 +5,12 @@ import { Simplify, sql } from 'kysely';
 import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/postgres';
 import { DefaultSession } from 'next-auth';
 
-export const saveAddress = async (user: DefaultSession['user'], {
-  streetNumber,
-  route,
-  city,
-  state,
-  zip,
-}: NewAddress) => {
-  const currentUser = await db.selectFrom('User')
+export const saveAddress = async (
+  user: DefaultSession['user'],
+  { streetNumber, route, city, state, zip }: NewAddress,
+) => {
+  const currentUser = await db
+    .selectFrom('User')
     .where('email', '=', user?.email!)
     .selectAll()
     .executeTakeFirst();
@@ -21,7 +19,8 @@ export const saveAddress = async (user: DefaultSession['user'], {
     throw new Error('Not logged in.');
   }
 
-  const existingAddress = await db.selectFrom('Address')
+  const existingAddress = await db
+    .selectFrom('Address')
     .where('userId', '=', currentUser.id)
     .selectAll()
     .executeTakeFirst();
@@ -33,29 +32,35 @@ export const saveAddress = async (user: DefaultSession['user'], {
     existingAddress.state = state || null;
     existingAddress.zip = zip || null;
 
-    await db.updateTable('Address')
+    await db
+      .updateTable('Address')
       .where('id', '=', existingAddress.id)
       .set(existingAddress)
       .execute();
   } else {
-    await db.insertInto('Address').values({
-      userId: currentUser.id,
-      streetNumber: streetNumber || null,
-      route: route || null,
-      city: city || null,
-      state: state || null,
-      zip: zip || null,
-    }).execute();
+    await db
+      .insertInto('Address')
+      .values({
+        userId: currentUser.id,
+        streetNumber: streetNumber || null,
+        route: route || null,
+        city: city || null,
+        state: state || null,
+        zip: zip || null,
+      })
+      .execute();
   }
 
-  return await db.selectFrom('Address')
+  return await db
+    .selectFrom('Address')
     .where('userId', '=', currentUser.id)
     .selectAll()
     .executeTakeFirst();
 };
 
 export const getPoll = async (user: DefaultSession['user']) => {
-  const currentUser = await db.selectFrom('User')
+  const currentUser = await db
+    .selectFrom('User')
     .where('email', '=', user?.email!)
     .selectAll()
     .executeTakeFirst();
@@ -64,7 +69,8 @@ export const getPoll = async (user: DefaultSession['user']) => {
     throw new Error('Not logged in.');
   }
 
-  const questions = await db.selectFrom('Question')
+  const questions = await db
+    .selectFrom('Question')
     .innerJoin('Locality', 'Locality.id', 'Question.localityId')
     .innerJoin('Category', 'Category.id', 'Question.categoryId')
     .selectAll('Question')
@@ -73,30 +79,35 @@ export const getPoll = async (user: DefaultSession['user']) => {
         eb
           .selectFrom('Locality')
           .selectAll('Locality')
-          .whereRef('Locality.id', '=', 'Question.localityId')
+          .whereRef('Locality.id', '=', 'Question.localityId'),
       ).as('locality'),
       jsonObjectFrom(
         eb
           .selectFrom('Category')
           .selectAll('Category')
-          .whereRef('Category.id', '=', 'Question.categoryId')
+          .whereRef('Category.id', '=', 'Question.categoryId'),
       ).as('category'),
       jsonObjectFrom(
         eb
           .selectFrom('Answer')
           .selectAll('Answer')
           .where('Answer.userId', '=', currentUser.id)
-          .whereRef('Answer.questionId', '=', 'Question.id')
+          .whereRef('Answer.questionId', '=', 'Question.id'),
       ).as('answer'),
     ])
     .orderBy(['Locality.position asc', 'Category.name asc'])
     .execute();
 
-  const allAnswers = await db.selectFrom('Answer')
+  const allAnswers = await db
+    .selectFrom('Answer')
     .select((eb) => [
       'Answer.questionId',
-      eb.fn<string>('count', [sql`case when agree IS TRUE then agree end`]).as('yesCount'),
-      eb.fn<string>('count', [sql`case when agree IS FALSE then agree end`]).as('noCount'),
+      eb
+        .fn<string>('count', [sql`case when agree IS TRUE then agree end`])
+        .as('yesCount'),
+      eb
+        .fn<string>('count', [sql`case when agree IS FALSE then agree end`])
+        .as('noCount'),
     ])
     .groupBy('questionId')
     .execute();
@@ -107,8 +118,12 @@ export const getPoll = async (user: DefaultSession['user']) => {
   };
 };
 
-export const savePoll = async (user: DefaultSession['user'], answers: Simplify<AnswerUpdate>[]) => {
-  const currentUser = await db.selectFrom('User')
+export const savePoll = async (
+  user: DefaultSession['user'],
+  answers: Simplify<AnswerUpdate>[],
+) => {
+  const currentUser = await db
+    .selectFrom('User')
     .where('email', '=', user?.email!)
     .selectAll()
     .executeTakeFirst();
@@ -117,22 +132,38 @@ export const savePoll = async (user: DefaultSession['user'], answers: Simplify<A
     throw new Error('Not logged in.');
   }
 
-  const existingAnswers = await db.selectFrom('Answer')
+  const existingAnswers = await db
+    .selectFrom('Answer')
     .selectAll()
     .where('userId', '=', currentUser.id)
     .execute();
 
-  const oldAnswers = answers.filter((a) => existingAnswers.find((ea) => ea.questionId === a.questionId));
-  const obsoleteAnswers = existingAnswers.filter((a) => !answers.find((ea) => ea.questionId === a.questionId));
-  const newAnswers = answers.filter((a) => !existingAnswers.find((ea) => ea.questionId === a.questionId))
-    .filter((a) => typeof a.agree !== 'undefined' && typeof a.rating !== 'undefined');
+  const oldAnswers = answers.filter((a) =>
+    existingAnswers.find((ea) => ea.questionId === a.questionId),
+  );
+  const obsoleteAnswers = existingAnswers.filter(
+    (a) => !answers.find((ea) => ea.questionId === a.questionId),
+  );
+  const newAnswers = answers
+    .filter(
+      (a) => !existingAnswers.find((ea) => ea.questionId === a.questionId),
+    )
+    .filter(
+      (a) => typeof a.agree !== 'undefined' && typeof a.rating !== 'undefined',
+    );
 
   for (const oldAnswer of oldAnswers) {
-    const existingAnswer = existingAnswers.find((a) => a.questionId === oldAnswer.questionId);
-    if (oldAnswer.agree === existingAnswer?.agree && oldAnswer.rating === existingAnswer?.rating) {
+    const existingAnswer = existingAnswers.find(
+      (a) => a.questionId === oldAnswer.questionId,
+    );
+    if (
+      oldAnswer.agree === existingAnswer?.agree &&
+      oldAnswer.rating === existingAnswer?.rating
+    ) {
       continue;
     }
-    await db.updateTable('Answer')
+    await db
+      .updateTable('Answer')
       .set({
         ...oldAnswer,
         dateUpdated: new Date(),
@@ -143,21 +174,32 @@ export const savePoll = async (user: DefaultSession['user'], answers: Simplify<A
   }
 
   if (obsoleteAnswers.length) {
-    await db.deleteFrom('Answer')
+    await db
+      .deleteFrom('Answer')
       .where('userId', '=', currentUser.id)
-      .where('questionId', 'in', obsoleteAnswers.map((oa) => oa.questionId))
+      .where(
+        'questionId',
+        'in',
+        obsoleteAnswers.map((oa) => oa.questionId),
+      )
       .execute();
   }
 
   if (newAnswers.length) {
-    await db.insertInto('Answer')
-      .values(newAnswers.map(({ questionId, agree, rating }) => ({
-        userId: currentUser.id,
-        questionId,
-        agree: agree!,
-        rating: rating!,
-        dateUpdated: new Date(),
-      } as NewAnswer)))
+    await db
+      .insertInto('Answer')
+      .values(
+        newAnswers.map(
+          ({ questionId, agree, rating }) =>
+            ({
+              userId: currentUser.id,
+              questionId,
+              agree: agree!,
+              rating: rating!,
+              dateUpdated: new Date(),
+            }) as NewAnswer,
+        ),
+      )
       .execute();
   }
 };
@@ -167,7 +209,8 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
     throw new Error('Not logged in.');
   }
 
-  const currentUser = await db.selectFrom('User')
+  const currentUser = await db
+    .selectFrom('User')
     .selectAll('User')
     .leftJoin('Answer', 'Answer.userId', 'User.id')
     .select((eb) => [
@@ -190,9 +233,12 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
   const { questions } = await getPoll(user);
 
   currentUser.questionsTotal = questions.length;
-  currentUser.questionsAnswered = questions.map((q) => q.answer).filter((a) => a).length;
+  currentUser.questionsAnswered = questions
+    .map((q) => q.answer)
+    .filter((a) => a).length;
 
-  const candidates = await db.selectFrom(['User', 'CandidateOffice'])
+  const candidates = await db
+    .selectFrom(['User', 'CandidateOffice'])
     .selectAll('User')
     .select((eb) => [
       jsonArrayFrom(
@@ -225,16 +271,24 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
 
     const lastUpdatedUserAnswer = currentUser.answers.reduce(
       (max, answer) =>
-        Math.max(answer.dateUpdated ? new Date(answer.dateUpdated).getTime() : 0, max),
-      0
+        Math.max(
+          answer.dateUpdated ? new Date(answer.dateUpdated).getTime() : 0,
+          max,
+        ),
+      0,
     );
     const lastUpdatedCandidateAnswer = candidate.answers.reduce(
       (max, answer) =>
-        Math.max(answer.dateUpdated ? new Date(answer.dateUpdated).getTime() : 0, max),
-      0
+        Math.max(
+          answer.dateUpdated ? new Date(answer.dateUpdated).getTime() : 0,
+          max,
+        ),
+      0,
     );
 
-    const scoreUpdated = candidate.candidateUserScore ? new Date(candidate.candidateUserScore.dateUpdated).getTime() : 0;
+    const scoreUpdated = candidate.candidateUserScore
+      ? new Date(candidate.candidateUserScore.dateUpdated).getTime()
+      : 0;
 
     if (
       !candidate.candidateUserScore ||
@@ -246,16 +300,18 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
       }
 
       for (const userAnswer of currentUser.answers) {
-        const candidateAnswer = candidate.answers.find((a) => a.questionId === userAnswer.questionId);
+        const candidateAnswer = candidate.answers.find(
+          (a) => a.questionId === userAnswer.questionId,
+        );
 
-        const userRating = (userAnswer.rating || 1);
+        const userRating = userAnswer.rating || 1;
 
         if (!candidateAnswer) {
           diffScore += userRating;
           continue;
         }
 
-        const candidateRating = (candidateAnswer.rating || 1);
+        const candidateRating = candidateAnswer.rating || 1;
 
         if (userAnswer.agree === candidateAnswer.agree) {
           sameScore += userRating;
@@ -268,10 +324,12 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
         }
       }
 
-      candidate.score = Math.round(sameScore / (sameScore + diffScore) * 10000) / 100;
+      candidate.score =
+        Math.round((sameScore / (sameScore + diffScore)) * 10000) / 100;
 
       if (candidate.candidateUserScore) {
-        const candidateUserScore = await db.updateTable('CandidateUserScore')
+        const candidateUserScore = await db
+          .updateTable('CandidateUserScore')
           .set({
             score: candidate.score,
             dateUpdated: new Date(),
@@ -283,7 +341,8 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
         candidateUserScore!.score = +candidateUserScore!.score;
         candidate.candidateUserScore = candidateUserScore!;
       } else {
-        const candidateUserScore = await db.insertInto('CandidateUserScore')
+        const candidateUserScore = await db
+          .insertInto('CandidateUserScore')
           .values({
             userId: currentUser.id,
             candidateId: candidate.id,
@@ -296,7 +355,9 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
         candidate.candidateUserScore = candidateUserScore!;
       }
     } else {
-      candidate.score = isNaN(candidate.candidateUserScore.score) ? 0 : candidate.candidateUserScore.score;
+      candidate.score = isNaN(candidate.candidateUserScore.score)
+        ? 0
+        : candidate.candidateUserScore.score;
     }
   }
 
@@ -307,7 +368,8 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
 };
 
 export const deleteUser = async (user: DefaultSession['user']) => {
-  const currentUser = await db.selectFrom('User')
+  const currentUser = await db
+    .selectFrom('User')
     .where('email', '=', user?.email!)
     .selectAll()
     .executeTakeFirst();
@@ -316,43 +378,36 @@ export const deleteUser = async (user: DefaultSession['user']) => {
     throw new Error('Not logged in.');
   }
 
-  await db.deleteFrom('User')
-    .where('id', '=', currentUser.id)
-    .execute();
+  await db.deleteFrom('User').where('id', '=', currentUser.id).execute();
 
-  await db.deleteFrom('Account')
+  await db.deleteFrom('Account').where('userId', '=', currentUser.id).execute();
+
+  await db.deleteFrom('Address').where('userId', '=', currentUser.id).execute();
+
+  await db.deleteFrom('Answer').where('userId', '=', currentUser.id).execute();
+
+  await db
+    .deleteFrom('CandidateOffice')
     .where('userId', '=', currentUser.id)
     .execute();
 
-  await db.deleteFrom('Address')
+  await db
+    .deleteFrom('CandidateUserScore')
     .where('userId', '=', currentUser.id)
     .execute();
 
-  await db.deleteFrom('Answer')
-    .where('userId', '=', currentUser.id)
-    .execute();
-
-  await db.deleteFrom('CandidateOffice')
-    .where('userId', '=', currentUser.id)
-    .execute();
-
-  await db.deleteFrom('CandidateUserScore')
-    .where('userId', '=', currentUser.id)
-    .execute();
-
-  await db.deleteFrom('Session')
-    .where('userId', '=', currentUser.id)
-    .execute();
-}
+  await db.deleteFrom('Session').where('userId', '=', currentUser.id).execute();
+};
 
 export const getUser = async (user: DefaultSession['user']) => {
-  const currentUser = await db.selectFrom('User')
+  const currentUser = await db
+    .selectFrom('User')
     .where('email', '=', user?.email!)
     .selectAll()
     .executeTakeFirst();
 
   return currentUser;
-}
+};
 
 export const markTutorialShown = async (user: DefaultSession['user']) => {
   if (!user?.email) {
@@ -361,13 +416,15 @@ export const markTutorialShown = async (user: DefaultSession['user']) => {
     };
   }
 
-  await db.updateTable('User')
+  await db
+    .updateTable('User')
     .set({
       seenVotingTutorial: true,
-    }).where('email', '=', user.email)
+    })
+    .where('email', '=', user.email)
     .execute();
 
   return {
     success: 'User updated.',
   };
-}
+};

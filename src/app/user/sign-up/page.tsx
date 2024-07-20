@@ -15,7 +15,8 @@ export default function Page() {
     <MainCard>
       <div className='grid grid-cols-1 gap-4 p-4'>
         <div className='text-center'>
-          Thank you for registering!<br />
+          Thank you for registering!
+          <br />
           Please proceed to the poll to find your candidate matches.
         </div>
         <div className='text-center'>

@@ -13,7 +13,7 @@ export default async function Page() {
   return (
     <MainCard>
       <MainNav />
-      <Disclaimer className="p-4 text-justify text-xs bg-neutral-100 border-t border-neutral-300" />
+      <Disclaimer className='p-4 text-justify text-xs bg-neutral-100 border-t border-neutral-300' />
     </MainCard>
   );
 }

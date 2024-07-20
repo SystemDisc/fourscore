@@ -34,32 +34,32 @@ export default function Poll({
   const { data: session, status } = useSession();
 
   const foundIndex = questions.findIndex(
-    (q) => q.answer?.agree === undefined || q.answer.agree === null
+    (q) => q.answer?.agree === undefined || q.answer.agree === null,
   );
   const [currentIndex, setCurrentIndex] = useState(
-    foundIndex >= 0 ? foundIndex : questions.length - 1
+    foundIndex >= 0 ? foundIndex : questions.length - 1,
   );
   const [agree, setAgree] = useState<boolean | null | undefined>(
     foundIndex >= 0
       ? questions[foundIndex]?.answer?.agree
       : questions.length > 0
-      ? questions[questions.length - 1]?.answer?.agree
-      : undefined
+        ? questions[questions.length - 1]?.answer?.agree
+        : undefined,
   );
   const [rating, setRating] = useState<number | null | undefined>(
     foundIndex >= 0
       ? questions[foundIndex]?.answer?.rating
       : questions.length > 0
-      ? questions[questions.length - 1]?.answer?.rating
-      : undefined
+        ? questions[questions.length - 1]?.answer?.rating
+        : undefined,
   );
   const [answers, setAnswers] = useState<Simplify<AnswerUpdate>[]>(
     questions.map(
       (q) =>
         q.answer || {
           questionId: q.id,
-        }
-    )
+        },
+    ),
   );
   const [showTutorial, setShowTutorial] = useState(false);
   const [tutorialShown, setTutorialShown] = useState(!!seenVotingTutorial);
@@ -96,14 +96,14 @@ export default function Poll({
       a.rating !== null
         ? sum + 1
         : sum,
-    0
+    0,
   );
 
   return (
-    <section className="grid grid-cols-1 relative">
+    <section className='grid grid-cols-1 relative'>
       {showTutorial && (
         <>
-          <div className="absolute flex flex-col gap-4 left-0 top-0 right-0 bottom-0 z-50 text-white justify-center max-w-lg mx-auto p-4 pointer-events-none">
+          <div className='absolute flex flex-col gap-4 left-0 top-0 right-0 bottom-0 z-50 text-white justify-center max-w-lg mx-auto p-4 pointer-events-none'>
             <p>
               Now that you&apos;ve answered the question, how important is this
               issue to you?
@@ -116,14 +116,14 @@ export default function Poll({
               STAR = Super Important
             </p>
           </div>
-          <div className="absolute h-16 w-[20rem] shadow-[rgba(0_0_0_/_0.85)_0_0_0_1000px] bottom-[calc(28px_+_1rem_+_50px_+_1rem_+_42px_+_1rem)] left-[50%] translate-x-[-50%] rounded-full z-40 pointer-events-none" />
+          <div className='absolute h-16 w-[20rem] shadow-[rgba(0_0_0_/_0.85)_0_0_0_1000px] bottom-[calc(28px_+_1rem_+_50px_+_1rem_+_42px_+_1rem)] left-[50%] translate-x-[-50%] rounded-full z-40 pointer-events-none' />
         </>
       )}
-      <div className="grid grid-cols-2 gap-4 p-4">
+      <div className='grid grid-cols-2 gap-4 p-4'>
         <div>
           <Button
-            buttonType="flat"
-            className="w-full"
+            buttonType='flat'
+            className='w-full'
             disabled={currentIndex === 0}
             onClick={() => {
               setCurrentIndex(currentIndex - 1);
@@ -136,8 +136,8 @@ export default function Poll({
         </div>
         <div>
           <Button
-            buttonType="flat"
-            className="w-full"
+            buttonType='flat'
+            className='w-full'
             onClick={async () => {
               await savePoll(session?.user, answers);
               router.push('/dashboard');
@@ -147,7 +147,7 @@ export default function Poll({
           </Button>
         </div>
       </div>
-      <div className="h-4 border-y border-black relative z-10">
+      <div className='h-4 border-y border-black relative z-10'>
         <div
           className={classNames('bg-[#22C064] h-full', {
             'rounded-r-full': numAnswers !== questions.length,
@@ -156,14 +156,14 @@ export default function Poll({
             width: `${(numAnswers / questions.length) * 100}%`,
           }}
         />
-        <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center text-xs font-bold">
+        <div className='absolute top-0 left-0 right-0 bottom-0 flex justify-center text-xs font-bold'>
           {Math.round((numAnswers / questions.length) * 100).toFixed(0)}%
         </div>
       </div>
-      <div className="flex items-center h-2 overflow-visible relative touch-none">
+      <div className='flex items-center h-2 overflow-visible relative touch-none'>
         <input
-          className="w-full"
-          type="range"
+          className='w-full'
+          type='range'
           value={currentIndex}
           min={0}
           max={questions.length - 1}
@@ -188,18 +188,18 @@ export default function Poll({
               'min-h-[calc(100dvh_-_3.5rem_-_42px)] md:min-h-[calc(100dvh_-_5.5rem_-_42px_-_2px)] relative z-10',
               {
                 hidden: index !== currentIndex,
-              }
+              },
             )}
           >
-            <div className="h-20 bg-gradient-to-bl from-[#6932D1] to-[#899ED4]">
-              <div className="flex items-end justify-between p-4">
-                <div className="text-4xl text-white">
+            <div className='h-20 bg-gradient-to-bl from-[#6932D1] to-[#899ED4]'>
+              <div className='flex items-end justify-between p-4'>
+                <div className='text-4xl text-white'>
                   {question.locality?.name}
                 </div>
-                <div className="grid grid-cols-3 gap-4 pb-1">
-                  <img src="/images/house.svg" width={44} height={39} />
-                  <img src="/images/house.svg" width={44} height={39} />
-                  <img src="/images/house.svg" width={44} height={39} />
+                <div className='grid grid-cols-3 gap-4 pb-1'>
+                  <img src='/images/house.svg' width={44} height={39} />
+                  <img src='/images/house.svg' width={44} height={39} />
+                  <img src='/images/house.svg' width={44} height={39} />
                 </div>
               </div>
             </div>
@@ -208,29 +208,29 @@ export default function Poll({
                 'flex flex-col items-center justify-between gap-4 p-4 h-[calc(100%_-_5rem)] pt-2',
                 {
                   hidden: index !== currentIndex,
-                }
+                },
               )}
             >
               <div>
                 {question.category && (
-                  <h1 className="font-bold text-xl text-center">
+                  <h1 className='font-bold text-xl text-center'>
                     {question.category.name}
                   </h1>
                 )}
-                <h2 className="text-center">{question.question}</h2>
+                <h2 className='text-center'>{question.question}</h2>
               </div>
               {answerData && (
-                <div className="grid grid-cols-1 w-full">
-                  <div className="flex text-[#7A7DB7] font-bold -mt-4">USA</div>
-                  <div className="flex h-full gap-4">
-                    <div className="w-16">
+                <div className='grid grid-cols-1 w-full'>
+                  <div className='flex text-[#7A7DB7] font-bold -mt-4'>USA</div>
+                  <div className='flex h-full gap-4'>
+                    <div className='w-16'>
                       Yes{' '}
-                      <span className="text-xs">({answerData.yesCount})</span>
+                      <span className='text-xs'>({answerData.yesCount})</span>
                     </div>
-                    <div className="flex-1 flex items-center h-full">
-                      <div className="w-full relative h-4 overflow-hidden rounded-full">
+                    <div className='flex-1 flex items-center h-full'>
+                      <div className='w-full relative h-4 overflow-hidden rounded-full'>
                         <div
-                          className="bg-gradient-to-tr from-[#899ED4] to-[#A389D4] h-full rounded-full absolute top-0 left-0 z-0"
+                          className='bg-gradient-to-tr from-[#899ED4] to-[#A389D4] h-full rounded-full absolute top-0 left-0 z-0'
                           style={{
                             width: `${
                               (+answerData.yesCount /
@@ -239,12 +239,12 @@ export default function Poll({
                             }%`,
                           }}
                         />
-                        <div className="w-full h-full border rounded-full border-neutral-300 bg-transparent shadow-[inset_0_1px_1px_1px_rgba(0,_0,_0,_0.5)] absolute top-0 left-0 z-10">
-                          <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center text-xs font-bold">
+                        <div className='w-full h-full border rounded-full border-neutral-300 bg-transparent shadow-[inset_0_1px_1px_1px_rgba(0,_0,_0,_0.5)] absolute top-0 left-0 z-10'>
+                          <div className='absolute top-0 left-0 right-0 bottom-0 flex justify-center text-xs font-bold'>
                             {Math.round(
                               (+answerData.yesCount /
                                 (+answerData.yesCount + +answerData.noCount)) *
-                                10000
+                                10000,
                             ) / 100}
                             %
                           </div>
@@ -252,14 +252,14 @@ export default function Poll({
                       </div>
                     </div>
                   </div>
-                  <div className="flex h-full gap-4">
-                    <div className="w-16">
-                      No <span className="text-xs">({answerData.noCount})</span>
+                  <div className='flex h-full gap-4'>
+                    <div className='w-16'>
+                      No <span className='text-xs'>({answerData.noCount})</span>
                     </div>
-                    <div className="flex-1 flex items-center h-full">
-                      <div className="w-full relative h-4 overflow-hidden rounded-full">
+                    <div className='flex-1 flex items-center h-full'>
+                      <div className='w-full relative h-4 overflow-hidden rounded-full'>
                         <div
-                          className="bg-gradient-to-tr from-[#899ED4] to-[#A389D4] h-full rounded-full absolute top-0 left-0 z-0"
+                          className='bg-gradient-to-tr from-[#899ED4] to-[#A389D4] h-full rounded-full absolute top-0 left-0 z-0'
                           style={{
                             width: `${
                               (+answerData.noCount /
@@ -268,12 +268,12 @@ export default function Poll({
                             }%`,
                           }}
                         />
-                        <div className="w-full h-full border rounded-full border-neutral-300 bg-transparent shadow-[inset_0_1px_1px_1px_rgba(0,_0,_0,_0.5)] absolute top-0 left-0 z-10">
-                          <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center text-xs font-bold">
+                        <div className='w-full h-full border rounded-full border-neutral-300 bg-transparent shadow-[inset_0_1px_1px_1px_rgba(0,_0,_0,_0.5)] absolute top-0 left-0 z-10'>
+                          <div className='absolute top-0 left-0 right-0 bottom-0 flex justify-center text-xs font-bold'>
                             {Math.round(
                               (+answerData.noCount /
                                 (+answerData.yesCount + +answerData.noCount)) *
-                                10000
+                                10000,
                             ) / 100}
                             %
                           </div>
@@ -283,8 +283,8 @@ export default function Poll({
                   </div>
                 </div>
               )}
-              <div className="flex flex-col gap-4">
-                <div className="flex justify-center gap-4">
+              <div className='flex flex-col gap-4'>
+                <div className='flex justify-center gap-4'>
                   <Button
                     className={classNames('rounded-full text-2xl h-16 w-16', {
                       'outline outline-4 outline-offset-2 outline-[#6932D1]':
@@ -304,8 +304,8 @@ export default function Poll({
                     No
                   </Button>
                 </div>
-                <div className="grid grid-cols-5 gap-4">
-                  <div className="flex flex-col items-center gap-2">
+                <div className='grid grid-cols-5 gap-4'>
+                  <div className='flex flex-col items-center gap-2'>
                     <Button
                       className={classNames('rounded-full text-2xl h-12 w-12', {
                         'outline outline-4 outline-offset-2 outline-[#6932D1]':
@@ -315,7 +315,7 @@ export default function Poll({
                     >
                       1
                     </Button>
-                    <span className="text-neutral-500 text-xl">Least</span>
+                    <span className='text-neutral-500 text-xl'>Least</span>
                   </div>
                   <div>
                     <Button
@@ -328,7 +328,7 @@ export default function Poll({
                       2
                     </Button>
                   </div>
-                  <div className="flex flex-col items-center gap-2">
+                  <div className='flex flex-col items-center gap-2'>
                     <Button
                       className={classNames('rounded-full text-2xl h-12 w-12', {
                         'outline outline-4 outline-offset-2 outline-[#6932D1]':
@@ -338,7 +338,7 @@ export default function Poll({
                     >
                       3
                     </Button>
-                    <span className="text-neutral-500 text-xl">Some</span>
+                    <span className='text-neutral-500 text-xl'>Some</span>
                   </div>
                   <div>
                     <Button
@@ -351,25 +351,25 @@ export default function Poll({
                       4
                     </Button>
                   </div>
-                  <div className="flex flex-col items-center gap-2">
+                  <div className='flex flex-col items-center gap-2'>
                     <Button
                       className={classNames(
                         'rounded-full text-2xl h-12 w-12 !p-0',
                         {
                           'outline outline-4 outline-offset-2 outline-[#6932D1]':
                             rating === 5,
-                        }
+                        },
                       )}
                       onClick={() => setRating(5)}
                     >
                       <BsStarFill />
                     </Button>
-                    <span className="text-neutral-500 text-xl">Most</span>
+                    <span className='text-neutral-500 text-xl'>Most</span>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 gap-4">
+                <div className='grid grid-cols-1 gap-4'>
                   <Button
-                    className="text-2xl"
+                    className='text-2xl'
                     disabled={
                       agree === undefined ||
                       agree === null ||
@@ -391,8 +391,8 @@ export default function Poll({
                                 a.agree === null ||
                                 a.rating === undefined ||
                                 a.rating === null) &&
-                              !a.skipped
-                          )
+                              !a.skipped,
+                          ),
                       );
                       if (
                         nextIndex === -1 &&
@@ -418,7 +418,7 @@ export default function Poll({
                     Continue
                   </Button>
                   <Button
-                    buttonType="flat"
+                    buttonType='flat'
                     onClick={async () => {
                       const newAnswers = [...answers];
                       newAnswers[index].skipped = true;
@@ -433,8 +433,8 @@ export default function Poll({
                                 a.agree === null ||
                                 a.rating === undefined ||
                                 a.rating === null) &&
-                              !a.skipped
-                          )
+                              !a.skipped,
+                          ),
                       );
                       if (
                         nextIndex === -1 &&

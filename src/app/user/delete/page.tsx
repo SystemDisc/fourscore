@@ -18,34 +18,33 @@ export default function Page() {
   return (
     <MainCard>
       <div className='p-4 flex justify-center gap-4'>
-        {(status === 'loading' || loading) &&
-          <Loading />
-        }
-        {status !== 'loading' && !loading &&
+        {(status === 'loading' || loading) && <Loading />}
+        {status !== 'loading' && !loading && (
           <>
-            {!session?.user &&
-              <Button onClick={() => signIn()}>
-                Sign in
-              </Button>
-            }
-            {session?.user &&
+            {!session?.user && (
+              <Button onClick={() => signIn()}>Sign in</Button>
+            )}
+            {session?.user && (
               <>
-                <Button buttonType='red' onClick={async () => {
-                  setLoading(true);
-                  await deleteUser(session.user);
-                  await signOut();
-                  setLoading(false);
-                  router.replace('/');
-                }}>
+                <Button
+                  buttonType='red'
+                  onClick={async () => {
+                    setLoading(true);
+                    await deleteUser(session.user);
+                    await signOut();
+                    setLoading(false);
+                    router.replace('/');
+                  }}
+                >
                   Delete account
                 </Button>
                 <Button isLink href='/dashboard'>
                   Dashboard
                 </Button>
               </>
-            }
+            )}
           </>
-        }
+        )}
       </div>
     </MainCard>
   );

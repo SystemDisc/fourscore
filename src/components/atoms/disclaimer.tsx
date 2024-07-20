@@ -22,17 +22,17 @@ export default function Disclaimer({
         in all its data but does not endorse any political candidates or
         parties.
       </p>
-      <div className="grid grid-cols-[min-content_1fr] gap-2">
+      <div className='grid grid-cols-[min-content_1fr] gap-2'>
         <p>Sources:</p>
-        <ul className="list-disc list-outside ml-3 text-left">
+        <ul className='list-disc list-outside ml-3 text-left'>
           <li>
             Voter registration information:
             <br />
             <Link
-              className="underline"
-              href="https://www.usa.gov/register-to-vote"
-              target="_blank"
-              rel="noopener noreferrer"
+              className='underline'
+              href='https://www.usa.gov/register-to-vote'
+              target='_blank'
+              rel='noopener noreferrer'
             >
               USA.gov
             </Link>
@@ -41,10 +41,10 @@ export default function Disclaimer({
             Election dates and details:
             <br />
             <Link
-              className="underline"
-              href="https://www.fec.gov/"
-              target="_blank"
-              rel="noopener noreferrer"
+              className='underline'
+              href='https://www.fec.gov/'
+              target='_blank'
+              rel='noopener noreferrer'
             >
               Federal Election Commission
             </Link>

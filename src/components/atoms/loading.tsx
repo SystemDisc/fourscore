@@ -3,5 +3,5 @@ export default function Loading() {
     <div className='flex justify-center items-center'>
       <img src='/images/loading.svg' alt='Loading...' />
     </div>
-  )
+  );
 }

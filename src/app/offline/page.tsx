@@ -13,9 +13,7 @@ export default async function Page() {
   }
   return (
     <MainCard>
-      <div className='text-center'>
-        You are currently offline.
-      </div>
+      <div className='text-center'>You are currently offline.</div>
     </MainCard>
   );
 }

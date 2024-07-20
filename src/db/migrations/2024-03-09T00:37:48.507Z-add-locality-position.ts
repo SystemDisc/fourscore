@@ -1,4 +1,4 @@
-import { Kysely, sql } from 'kysely'
+import { Kysely, sql } from 'kysely';
 
 export async function up(db: Kysely<any>) {
   await db.schema
@@ -6,21 +6,24 @@ export async function up(db: Kysely<any>) {
     .addColumn('position', 'integer')
     .execute();
 
-  await db.updateTable('Locality')
+  await db
+    .updateTable('Locality')
     .where('name', '=', 'Local')
     .set({
       position: 0,
     })
     .execute();
 
-  await db.updateTable('Locality')
+  await db
+    .updateTable('Locality')
     .where('name', '=', 'State')
     .set({
       position: 1,
     })
     .execute();
 
-  await db.updateTable('Locality')
+  await db
+    .updateTable('Locality')
     .where('name', '=', 'Federal')
     .set({
       position: 2,
