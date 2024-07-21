@@ -8,6 +8,7 @@ import Google from 'next-auth/providers/google';
 import { cookies } from 'next/headers';
 
 const authOptions: AuthOptions = {
+  debug: true,
   adapter: KyselyAdapter(db as unknown as Kysely<Database>) as Adapter,
   providers: [
     Google({
@@ -40,29 +41,30 @@ const authOptions: AuthOptions = {
         url.searchParams.set('measurement_id', 'G-WHQGZ00D5B');
         url.searchParams.set('api_secret', process.env.MP_API_SECRET || '');
         gclid && url.searchParams.set('gclid', gclid);
+        const postData = {
+          client_id,
+          user_id: user.email,
+          events: [
+            {
+              name: 'sign_up',
+              params: {
+                session_id,
+                ga_session_id: session_id,
+                ga_session_number: 1,
+                engagement_time_msec: '100',
+                method: user.name ? 'Google' : 'Email',
+                value: 1,
+                currency: 'USD',
+                user_email: user.email,
+                campaign: gclid ? '(paid)' : '(organic)',
+                gclid,
+              },
+            },
+          ],
+        };
         const res = await fetch(url.href, {
           method: 'POST',
-          body: JSON.stringify({
-            client_id,
-            user_id: user.email,
-            events: [
-              {
-                name: 'sign_up',
-                params: {
-                  session_id,
-                  ga_session_id: session_id,
-                  ga_session_number: 1,
-                  engagement_time_msec: '100',
-                  method: user.name ? 'Google' : 'Email',
-                  value: 1,
-                  currency: 'USD',
-                  user_email: user.email,
-                  campaign: '(organic)',
-                  gclid,
-                },
-              },
-            ],
-          }),
+          body: JSON.stringify(postData),
         });
         await res.arrayBuffer();
       }

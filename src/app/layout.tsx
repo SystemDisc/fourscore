@@ -1,3 +1,4 @@
+import Pageview from '@/components/atoms/pageview';
 import NotificationProvider from '@/providers/notification-provider';
 import NextAuthSessionProvider from '@/providers/session-provider';
 import authOptions from '@/utils/auth-options';
@@ -81,21 +82,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Script
           dangerouslySetInnerHTML={{
             __html: `
-            function gtag_report_conversion(url) {
-              var callback = function () {
-                if (typeof(url) != 'undefined') {
-                  window.location = url;
-                }
-              };
-              gtag('event', 'conversion', {'send_to': 'AW-16497301357/hwrOCPuNzZ0ZEO2uw7o9'});
-              return false;
-            }
-          `,
-          }}
-        />
-        <Script
-          dangerouslySetInnerHTML={{
-            __html: `
             const registerServiceWorker = async () => {
               if ("serviceWorker" in navigator) {
                 try {
@@ -120,6 +106,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
       </head>
       <body className={classNames(lato.className, 'bg-[#ececec]')}>
+        <Pageview />
         <NextAuthSessionProvider session={session!}>
           <NotificationProvider>{children}</NotificationProvider>
         </NextAuthSessionProvider>
