@@ -1,9 +1,7 @@
-'use client';
-
-import { useRouter, usePathname } from 'next/navigation';
-import PledgeToggle from './pledge-toggle';
-import { BsStar, BsStarFill } from 'react-icons/bs';
 import { CandidateResult } from '@/types';
+import Link from 'next/link';
+import { BsStar, BsStarFill } from 'react-icons/bs';
+import PledgeToggle from './pledge-toggle';
 
 export default function CandidateCard({
   candidate,
@@ -14,16 +12,11 @@ export default function CandidateCard({
   selected?: boolean;
   onSelect?: (candidate: CandidateResult) => void;
 }) {
-  const router = useRouter();
-  const goCandidateProfile = () => {
-    router.push(`profile/${candidate.id}`);
-  };
-
   return (
-    <div
+    <Link
       key={candidate.id}
       className='grid [grid-template-columns:3rem_1fr] gap-4 hover: cursor-pointer'
-      onClick={goCandidateProfile}
+      href={`/candidate-profile/${candidate.id}`}
     >
       <div>
         <PledgeToggle
@@ -60,6 +53,6 @@ export default function CandidateCard({
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

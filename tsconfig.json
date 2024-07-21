@@ -1,6 +1,11 @@
 {
   "extends": "./generic-tsconfig.json",
+  "forceConsistentCasingInFileNames": true,
+  "noEmit": true,
   "compilerOptions": {
+    "noImplicitAny": true,
+    "strict": true,
+    "strictNullChecks": true,
     "noEmit": true,
     "lib": [
       "ESNext",

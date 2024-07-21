@@ -1,29 +1,22 @@
-// AccordionItem.jsx
-import React, { useState, useEffect } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
 import Star from '@/components/atoms/star';
 import { calculateRateFromScore } from '@/utils/calc';
+import Link from 'next/link';
 
 const AnswerItem = ({
   title,
   score,
+  candidateId,
   categoryId,
 }: {
   title: string | null;
   score: number | null;
+  candidateId: string;
   categoryId: string;
 }) => {
-  const router = useRouter();
-  const pathname = usePathname();
-
-  const goCategoryPage = () => {
-    router.push(`${pathname}/${categoryId}`);
-  };
-
   return (
-    <div
+    <Link
       className='border mb-2 rounded-md shadow'
-      onClick={goCategoryPage}
+      href={`${candidateId}/category/${categoryId}`}
     >
       <div className='w-full text-left px-6 py-4 hover:bg-gray-200 focus:outline-none'>
         <div className='flex flex-row justify-between items-center'>
@@ -70,7 +63,7 @@ const AnswerItem = ({
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
