@@ -18,7 +18,7 @@ export default function ProfileAnswers({
           <ProfileAnswer
             key={category.id}
             candidateId={candidate.id}
-            data={category}
+            category={category}
           />
         ))}
       </div>

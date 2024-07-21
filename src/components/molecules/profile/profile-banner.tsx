@@ -29,11 +29,11 @@ export default function ProfileBanner({
       <div className='flex flex-row justify-around'>
         <div className='relative w-36 h-36 rounded-full overflow-hidden cursor-pointer group'>
           <Image
-            src={candidate.image}
+            className='w-full h-full object-cover'
+            src={candidate.image || 'https://via.placeholder.com/256'}
             alt='Profile'
-            layout='fill'
-            objectFit='cover'
-            className='w-full h-full'
+            width={256}
+            height={256}
           />
           <div className='absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200'>
             <span className='text-white'>Edit</span>
