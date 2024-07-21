@@ -1,4 +1,5 @@
 import { CandidateResult } from '@/types';
+import classNames from 'classnames';
 import Image from 'next/image';
 import Link from 'next/link';
 import { BsStar, BsStarFill } from 'react-icons/bs';
@@ -8,27 +9,34 @@ export default function CandidateCard({
   candidate,
   selected,
   onSelect,
+  hidePledge = false,
 }: {
   candidate: CandidateResult;
   selected?: boolean;
   onSelect?: (candidate: CandidateResult) => void;
+  hidePledge?: boolean;
 }) {
   return (
     <Link
       key={candidate.id}
-      className='grid [grid-template-columns:3rem_1fr] gap-4 hover: cursor-pointer'
+      className={classNames('grid gap-4 hover: cursor-pointer', {
+        'grid-cols-[3rem_1fr]': !hidePledge,
+        'grid-cols-1': hidePledge,
+      })}
       href={`/candidate-profile/${candidate.id}`}
     >
-      <div>
-        <PledgeToggle
-          checked={selected}
-          onToggle={(checked) => {
-            if (checked) {
-              onSelect?.(candidate);
-            }
-          }}
-        />
-      </div>
+      {!hidePledge && (
+        <div>
+          <PledgeToggle
+            checked={selected}
+            onToggle={(checked) => {
+              if (checked) {
+                onSelect?.(candidate);
+              }
+            }}
+          />
+        </div>
+      )}
       <div className='border border-neutral-300 rounded shadow-[#000_0px_2px_2px] grid [grid-template-columns:4rem_1fr] gap-2 p-2'>
         <div>
           {candidate.image && (
@@ -41,19 +49,33 @@ export default function CandidateCard({
             />
           )}
         </div>
-        <div className='[line-height:12px] grid grid-cols-1 grid-rows-3 gap-2'>
-          <div className='flex items-start'>{candidate.name}</div>
-          <div className='flex items-center'>Four Score: {candidate.score}%</div>
-          <div className='flex items-end text-[#22C064]'>
-            {Math.round((candidate.score / 100) * 5) > 0 &&
-              Array(Math.round((candidate.score / 100) * 5))
-                .fill(null)
-                .map((_, index) => <BsStarFill key={index}></BsStarFill>)}
-            {5 - Math.round((candidate.score / 100) * 5) > 0 &&
-              Array(5 - Math.round((candidate.score / 100) * 5))
-                .fill(null)
-                .map((_, index) => <BsStar key={index}></BsStar>)}
-          </div>
+        <div className='[line-height:12px] grid grid-cols-1 grid-rows-3 gap-1'>
+          <div className='flex items-start leading-none'>{candidate.name}</div>
+          {candidate.score ? (
+            <>
+              <div className='flex items-center'>Four Score: {candidate.score}%</div>
+              <div className='flex items-end text-[#22C064]'>
+                {Math.round((candidate.score / 100) * 5) > 0 &&
+                  Array(Math.round((candidate.score / 100) * 5))
+                    .fill(null)
+                    .map((_, index) => <BsStarFill key={index}></BsStarFill>)}
+                {5 - Math.round((candidate.score / 100) * 5) > 0 &&
+                  Array(5 - Math.round((candidate.score / 100) * 5))
+                    .fill(null)
+                    .map((_, index) => <BsStar key={index}></BsStar>)}
+              </div>
+            </>
+          ) : (
+            candidate.offices.length > 0 && (
+              <ul className='list-disc list-inside ml-1'>
+                {candidate.offices.map((office) => (
+                  <li className='text-xs text-neutral-500 leading-none'>
+                    Running for {office.name} of {office.location}
+                  </li>
+                ))}
+              </ul>
+            )
+          )}
         </div>
       </div>
     </Link>

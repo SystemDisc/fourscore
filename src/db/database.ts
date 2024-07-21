@@ -1,7 +1,8 @@
-import { GeneratedAlways, Insertable, Kysely, PostgresDialect, Selectable, Updateable } from 'kysely';
+import { Nullable } from '@/types';
+import { Generated, Insertable, Kysely, PostgresDialect, Selectable, Updateable } from 'kysely';
 import { Pool } from 'pg';
 
-interface Database {
+export interface Database {
   User: UserTable;
   Account: AccountTable;
   Session: SessionTable;
@@ -14,15 +15,16 @@ interface Database {
   Office: OfficeTable;
   CandidateOffice: CandidateOfficeTable;
   CandidateUserScore: CandidateUserScoreTable;
+  CandidateData: CandidateDataTable;
 }
 
 export interface UserTable {
-  id: GeneratedAlways<string>;
+  id: Generated<string>;
   name: string | null;
   email: string;
   emailVerified: Date | null;
   image: string | null;
-  seenVotingTutorial: boolean;
+  seenVotingTutorial: Generated<boolean>;
 }
 
 export type User = Selectable<UserTable>;
@@ -30,7 +32,7 @@ export type NewUser = Insertable<UserTable>;
 export type UserUpdate = Updateable<UserTable>;
 
 export interface AccountTable {
-  id: GeneratedAlways<string>;
+  id: Generated<string>;
   userId: string;
   type: 'oidc' | 'oauth' | 'email' | 'webauthn';
   provider: string;
@@ -49,7 +51,7 @@ export type NewAccount = Insertable<AccountTable>;
 export type AccountUpdate = Updateable<AccountTable>;
 
 export interface SessionTable {
-  id: GeneratedAlways<string>;
+  id: Generated<string>;
   userId: string;
   sessionToken: string;
   expires: Date;
@@ -70,7 +72,7 @@ export type NewVerificationToken = Insertable<VerificationTokenTable>;
 export type VerificationTokenUpdate = Updateable<VerificationTokenTable>;
 
 export interface AddressTable {
-  id: GeneratedAlways<string>;
+  id: Generated<string>;
   userId: string;
   streetNumber: string | null;
   route: string | null;
@@ -84,7 +86,7 @@ export type NewAddress = Insertable<AddressTable>;
 export type AddressUpdate = Updateable<AddressTable>;
 
 export interface QuestionTable {
-  id: GeneratedAlways<string>;
+  id: Generated<string>;
   localityId: string;
   categoryId: string;
   question: string;
@@ -95,7 +97,7 @@ export type NewQuestion = Insertable<QuestionTable>;
 export type QuestionUpdate = Updateable<QuestionTable>;
 
 export interface LocalityTable {
-  id: GeneratedAlways<string>;
+  id: Generated<string>;
   name: string;
   position: number | null;
 }
@@ -105,7 +107,7 @@ export type NewLocality = Insertable<LocalityTable>;
 export type LocalityUpdate = Updateable<LocalityTable>;
 
 export interface CategoryTable {
-  id: GeneratedAlways<string>;
+  id: Generated<string>;
   name: string;
 }
 
@@ -114,7 +116,7 @@ export type NewCategory = Insertable<CategoryTable>;
 export type CategoryUpdate = Updateable<CategoryTable>;
 
 export interface AnswerTable {
-  id: GeneratedAlways<string>;
+  id: Generated<string>;
   userId: string;
   questionId: string;
   agree: boolean | null;
@@ -129,7 +131,7 @@ export type NewAnswer = Insertable<AnswerTable>;
 export type AnswerUpdate = Updateable<AnswerTable>;
 
 export interface OfficeTable {
-  id: GeneratedAlways<string>;
+  id: Generated<string>;
   localityId: string;
   location: string;
   name: string;
@@ -140,7 +142,7 @@ export type NewOffice = Insertable<OfficeTable>;
 export type OfficeUpdate = Updateable<OfficeTable>;
 
 export interface CandidateOfficeTable {
-  id: GeneratedAlways<string>;
+  id: Generated<string>;
   userId: string;
   officeId: string;
 }
@@ -150,7 +152,7 @@ export type NewCandidateOffice = Insertable<CandidateOfficeTable>;
 export type CandidateOfficeUpdate = Updateable<CandidateOfficeTable>;
 
 export interface CandidateUserScoreTable {
-  id: GeneratedAlways<string>;
+  id: Generated<string>;
   userId: string;
   candidateId: string;
   score: number;
@@ -161,7 +163,20 @@ export type CandidateUserScore = Selectable<CandidateUserScoreTable>;
 export type NewCandidateUserScore = Insertable<CandidateUserScoreTable>;
 export type CandidateUserScoreUpdate = Updateable<CandidateUserScoreTable>;
 
-const dialect = new PostgresDialect({
+export interface CandidateDataTable {
+  id: Generated<string>;
+  userId: string;
+  description: string;
+  dateCreated: Generated<Date>;
+  dateUpdated: Nullable<Date>;
+  dateDeleted: Nullable<Date>;
+}
+
+export type CandidateData = Selectable<CandidateDataTable>;
+export type NewCandidateData = Insertable<CandidateDataTable>;
+export type CandidateDataUpdate = Updateable<CandidateDataTable>;
+
+export const dialect = new PostgresDialect({
   pool: new Pool({
     database: process.env.POSTGRES_DATABASE,
     host: process.env.POSTGRES_HOST,

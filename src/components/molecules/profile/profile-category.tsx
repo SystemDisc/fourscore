@@ -1,11 +1,10 @@
 import styles from '@/app/normalize.module.scss';
 import Button from '@/components/atoms/button';
 import Star from '@/components/atoms/star';
-import { CandidateResult, CategoryWithQuestionsAndScore, QuestionWithAnswer } from '@/types';
+import { CandidateResult, CategoryWithQuestions, CategoryWithQuestionsAndScore, QuestionWithAnswer } from '@/types';
 import { calculateRateFromScore } from '@/utils/calc';
+import { renderMarkdown } from '@/utils/markdown';
 import classNames from 'classnames';
-import DOMPurify from 'isomorphic-dompurify';
-import { marked } from 'marked';
 import moment from 'moment';
 import { ReactNode } from 'react';
 
@@ -14,7 +13,7 @@ export default async function ProfileCategory({
   category,
 }: {
   candidate: CandidateResult;
-  category: CategoryWithQuestionsAndScore;
+  category: CategoryWithQuestions & Partial<CategoryWithQuestionsAndScore>;
 }) {
   return (
     <div className='flex flex-col justify-between'>
@@ -30,10 +29,12 @@ export default async function ProfileCategory({
       </div>
       <div className='p-4 border-y border-neutral-300 bg-neutral-100'>
         <div className='text-2xl font-light'>{category.name}</div>
-        <div className='flex flex-row gap-2 items-center'>
-          <div className='text-lg font-light flex items-center'>{category.similarityScore}% Similar</div>
-          <Star rate={calculateRateFromScore(category.similarityScore)} />
-        </div>
+        {category.similarityScore && (
+          <div className='flex flex-row gap-2 items-center'>
+            <div className='text-lg font-light flex items-center'>{category.similarityScore}% Similar</div>
+            <Star rate={calculateRateFromScore(category.similarityScore)} />
+          </div>
+        )}
       </div>
       {await (category.questions.filter((q) => q.answer) as QuestionWithAnswer[]).reduce(
         async (nodes, question) => [
@@ -43,7 +44,7 @@ export default async function ProfileCategory({
             className='flex flex-col font-light'
           >
             <div
-              className='flex flex-col justify-between gap-6 p-4 min-h-[80px]'
+              className='flex flex-col justify-between gap-6 p-4'
               style={{ background: 'linear-gradient(-45deg, #7E8287, #474B4F' }}
             >
               <div className='text-lg text-white'>{question.question}</div>
@@ -59,7 +60,9 @@ export default async function ProfileCategory({
                     {question.answer.notes && (
                       <div
                         className={classNames('text-lg font-light', styles.normalize)}
-                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(await marked(question.answer.notes)) }}
+                        dangerouslySetInnerHTML={{
+                          __html: await renderMarkdown(question.answer.notes),
+                        }}
                       />
                     )}
                   </div>

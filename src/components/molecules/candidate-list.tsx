@@ -1,11 +1,17 @@
 'use client';
 
 import { CandidateResult } from '@/types';
-import CandidateCard from './candidate-card';
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import CandidateCard from './candidate-card';
 
-export default function CandidateList({ candidates }: { candidates: CandidateResult[] }) {
+export default function CandidateList({
+  candidates,
+  withoutPledging = false,
+}: {
+  candidates: CandidateResult[];
+  withoutPledging?: boolean;
+}) {
   const router = useRouter();
 
   const [pledgedCandidate, setPledgedCandidate] = useState<CandidateResult>(candidates[0]);
@@ -34,6 +40,7 @@ export default function CandidateList({ candidates }: { candidates: CandidateRes
           candidate={candidate}
           selected={pledgedCandidate === candidate}
           onSelect={(selectedCandidate) => setPledgedCandidate(selectedCandidate)}
+          hidePledge={withoutPledging}
         />
       ))}
     </div>

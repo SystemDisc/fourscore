@@ -1,6 +1,7 @@
 import { Kysely, sql } from 'kysely';
+import { Database } from '../database';
 
-export async function up(db: Kysely<any>) {
+export async function up(db: Kysely<Database>) {
   await db.schema
     .createTable('User')
     .addColumn('id', 'uuid', (col) => col.primaryKey().defaultTo(sql`gen_random_uuid()`))
@@ -42,7 +43,7 @@ export async function up(db: Kysely<any>) {
     .execute();
 }
 
-export async function down(db: Kysely<any>) {
+export async function down(db: Kysely<Database>) {
   await db.schema.dropTable('User').execute();
   await db.schema.dropTable('Account').execute();
   await db.schema.dropTable('Session').execute();

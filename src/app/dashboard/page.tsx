@@ -12,7 +12,7 @@ export default async function Page() {
   }
   return (
     <MainCard>
-      <MainNav />
+      <MainNav loggedIn={!!session.user} />
       <Disclaimer className='p-4 text-justify text-xs bg-neutral-100 border-t border-neutral-300' />
     </MainCard>
   );

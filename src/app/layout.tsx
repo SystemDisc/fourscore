@@ -71,12 +71,40 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           content="FourScore revolutionizes the voting experience by using a policy-based matching system to connect voters with political candidates. By filling out a comprehensive survey on key issues, both voters and candidates receive a personalized 'Four Score,' reflecting their alignment on local, state, and federal policies. This innovative approach ensures voters can make more informed decisions at the ballot box, while candidates can engage more effectively with their potential supporters, making democracy more accessible and aligned with individual values."
         />
         <meta
-          property='og:image'
-          content='https://fourscore.app/images/website-preview.png'
+          property='og:title'
+          content='FourScore: Match Your Vote with Your Values'
         />
         <meta
           property='og:description'
           content="FourScore revolutionizes the voting experience by using a policy-based matching system to connect voters with political candidates. By filling out a comprehensive survey on key issues, both voters and candidates receive a personalized 'Four Score,' reflecting their alignment on local, state, and federal policies. This innovative approach ensures voters can make more informed decisions at the ballot box, while candidates can engage more effectively with their potential supporters, making democracy more accessible and aligned with individual values."
+        />
+        <meta
+          property='og:image'
+          content='https://fourscore.app/images/website-preview.png'
+        />
+        <meta
+          property='og:url'
+          content='https://fourscore.app'
+        />
+        <meta
+          property='og:type'
+          content='website'
+        />
+        <meta
+          name='twitter:card'
+          content='summary_large_image'
+        />
+        <meta
+          name='twitter:title'
+          content='FourScore: Match Your Vote with Your Values'
+        />
+        <meta
+          name='twitter:description'
+          content="FourScore revolutionizes the voting experience by using a policy-based matching system to connect voters with political candidates. By filling out a comprehensive survey on key issues, both voters and candidates receive a personalized 'Four Score,' reflecting their alignment on local, state, and federal policies. This innovative approach ensures voters can make more informed decisions at the ballot box, while candidates can engage more effectively with their potential supporters, making democracy more accessible and aligned with individual values."
+        />
+        <meta
+          name='twitter:image'
+          content='https://fourscore.app/images/website-preview.png'
         />
         <GoogleTagManager gtmId='GTM-TK3ZT6B3' />
         <Script
@@ -97,12 +125,35 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                     console.log("Service worker active");
                   }
                 } catch (error) {
-                  console.error(\`Registration failed with \${error}\`);
+                  console.error(\`Registration failed with:\`, error);
                 }
               }
             };
             registerServiceWorker().catch(console.error);
           `,
+          }}
+        />
+        <Script
+          id='layout-ld'
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              url: 'https://fourscore.app',
+              name: 'FourScore',
+              description:
+                'FourScore revolutionizes the voting experience by using a policy-based matching system to connect voters with political candidates.',
+              potentialAction: {
+                '@type': 'SearchAction',
+                target: 'https://fourscore.app/search?q={search_term_string}',
+                'query-input': 'required name=search_term_string',
+              },
+              publisher: {
+                '@type': 'Organization',
+                name: 'FourScore',
+              },
+            }),
           }}
         />
       </head>

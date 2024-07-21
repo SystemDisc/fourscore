@@ -1,6 +1,7 @@
 import { db } from '@/db/database';
 import { Database, KyselyAdapter } from '@auth/kysely-adapter';
 import { Kysely } from 'kysely';
+import moment from 'moment';
 import { AuthOptions } from 'next-auth';
 import { Adapter } from 'next-auth/adapters';
 import Email from 'next-auth/providers/email';
@@ -58,6 +59,7 @@ const authOptions: AuthOptions = {
                 user_email: user.email,
                 campaign: gclid ? '(paid)' : '(organic)',
                 gclid,
+                dateCreated: moment().toISOString(),
               },
             },
           ],

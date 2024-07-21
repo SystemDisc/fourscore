@@ -1,8 +1,8 @@
 'use server';
 
-import { Answer, AnswerUpdate, NewAddress, NewAnswer, User, db } from '@/db/database';
+import { Answer, AnswerUpdate, Database, NewAddress, NewAnswer, User, db } from '@/db/database';
 import { CandidateResult, CategoryWithQuestionsAndScore, Nullable, UserWithAnswers } from '@/types';
-import { Simplify, sql } from 'kysely';
+import { ExpressionBuilder, Kysely, Simplify, sql } from 'kysely';
 import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/postgres';
 import { DefaultSession } from 'next-auth';
 
@@ -174,7 +174,7 @@ export const savePoll = async (user: DefaultSession['user'], answers: Simplify<A
               agree: agree!,
               rating: rating!,
               dateUpdated: new Date(),
-            }) as NewAnswer,
+            } as NewAnswer),
         ),
       )
       .execute();
@@ -242,6 +242,9 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
     .selectFrom(['User', 'CandidateOffice'])
     .selectAll('User')
     .select((eb) => [
+      jsonObjectFrom(
+        eb.selectFrom('CandidateData').selectAll('CandidateData').whereRef('CandidateData.userId', '=', 'User.id'),
+      ).as('candidateData'),
       jsonArrayFrom(
         eb
           .selectFrom(['Office', 'CandidateOffice'])
@@ -251,6 +254,7 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
       jsonArrayFrom(eb.selectFrom('Answer').selectAll('Answer').whereRef('Answer.userId', '=', 'User.id')).as(
         'answers',
       ),
+      jsonArrayFrom(eb.selectFrom('Question').selectAll('Question')).as('questions'),
       jsonObjectFrom(
         eb
           .selectFrom('CandidateUserScore')
@@ -319,7 +323,7 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
   return {
     questions,
     currentUser: currentUserWithAnswers,
-    candidates: candidates.sort((a, b) => b.score - a.score),
+    candidates: candidates.sort((a, b) => (b.score || 0) - (a.score || 0)),
   };
 };
 
@@ -371,53 +375,50 @@ export const markTutorialShown = async (user: DefaultSession['user']) => {
   };
 };
 
+function chainQuestionsByCategory<T extends keyof Database>(
+  qb: ExpressionBuilder<Database, T> | Kysely<Database>,
+  userId?: string,
+) {
+  return (qb as Kysely<Database>)
+    .selectFrom('Category')
+    .selectAll('Category')
+    .select((eb) => [
+      jsonArrayFrom(
+        eb
+          .selectFrom('Question')
+          .selectAll()
+          .whereRef('Question.categoryId', '=', 'Category.id')
+          .select((eb) => [
+            jsonObjectFrom(
+              userId
+                ? eb
+                    .selectFrom('Answer')
+                    .selectAll()
+                    .whereRef('Answer.questionId', '=', 'Question.id')
+                    .where('Answer.userId', '=', userId)
+                : eb
+                    .selectFrom('Answer')
+                    .selectAll()
+                    .whereRef('Answer.questionId', '=', 'Question.id')
+                    .whereRef('Answer.userId', '=', 'User.id' as any),
+            ).as('answer'),
+          ]),
+      ).as('questions'),
+    ])
+    .groupBy('Category.id');
+}
+
+export const getUserQuestionsByCategory = async (userId: string) => {
+  const userQuestionCategories = await chainQuestionsByCategory(db, userId).execute();
+  return userQuestionCategories;
+};
+
 export const getCandidateAnswerScore = async (user: DefaultSession['user'], candidateId: string) => {
   const currentUser = await getUserByEmail(user?.email);
 
-  const userQuestionCategories = await db
-    .selectFrom('Category')
-    .selectAll('Category')
-    .select((eb) => [
-      jsonArrayFrom(
-        eb
-          .selectFrom('Question')
-          .selectAll()
-          .whereRef('Question.categoryId', '=', 'Category.id')
-          .select((eb) => [
-            jsonObjectFrom(
-              eb
-                .selectFrom('Answer')
-                .selectAll()
-                .whereRef('Answer.questionId', '=', 'Question.id')
-                .where('Answer.userId', '=', currentUser.id),
-            ).as('answer'),
-          ]),
-      ).as('questions'),
-    ])
-    .groupBy('Category.id')
-    .execute();
+  const userQuestionCategories = await getUserQuestionsByCategory(currentUser.id);
 
-  const candidateQuestionCategories = await db
-    .selectFrom('Category')
-    .selectAll('Category')
-    .select((eb) => [
-      jsonArrayFrom(
-        eb
-          .selectFrom('Question')
-          .selectAll()
-          .whereRef('Question.categoryId', '=', 'Category.id')
-          .select((eb) => [
-            jsonObjectFrom(
-              eb
-                .selectFrom('Answer')
-                .selectAll()
-                .whereRef('Answer.questionId', '=', 'Question.id')
-                .where('Answer.userId', '=', candidateId),
-            ).as('answer'),
-          ]),
-      ).as('questions'),
-    ])
-    .execute();
+  const candidateQuestionCategories = await getUserQuestionsByCategory(candidateId);
 
   const candidateQuestionCategoriesWithScore = await candidateQuestionCategories.reduce(
     async (candidateCategories, candidateCategory) => {
@@ -516,4 +517,30 @@ export const getAnswerForSingleCategory = async (id?: string, categoryId?: strin
     category,
     answers,
   };
+};
+
+export const getCandidates = async () => {
+  const candidates: CandidateResult[] = await db
+    .selectFrom('User')
+    .selectAll('User')
+    .select((eb) => [
+      jsonObjectFrom(
+        eb.selectFrom('CandidateData').selectAll('CandidateData').whereRef('CandidateData.userId', '=', 'User.id'),
+      ).as('candidateData'),
+      jsonArrayFrom(
+        eb
+          .selectFrom('Office')
+          .selectAll('Office')
+          .whereRef('Office.id', 'in', sql`(SELECT "officeId" FROM "CandidateOffice" WHERE "userId" = "User"."id")`),
+      ).as('offices'),
+      jsonArrayFrom(eb.selectFrom('Answer').selectAll('Answer').whereRef('Answer.userId', '=', 'User.id')).as(
+        'answers',
+      ),
+      jsonArrayFrom(eb.selectFrom('Question').selectAll('Question')).as('questions'),
+      jsonArrayFrom(chainQuestionsByCategory(eb)).as('categories'),
+    ])
+    .whereRef('User.id', 'in', sql`(SELECT "userId" FROM "CandidateOffice")`)
+    .orderBy('User.name asc')
+    .execute();
+  return candidates;
 };

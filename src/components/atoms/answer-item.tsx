@@ -9,23 +9,25 @@ const AnswerItem = ({
   categoryId,
 }: {
   title: string;
-  score: number;
+  score?: number;
   candidateId: string;
   categoryId: string;
 }) => {
   return (
     <Link
-      className='border mb-2 rounded-md shadow'
+      className='block border border-neutral-300 rounded-md shadow'
       href={`${candidateId}/category/${categoryId}`}
     >
       <div className='w-full text-left px-6 py-4 hover:bg-gray-200 focus:outline-none'>
         <div className='flex flex-row justify-between items-center'>
           <div>
             <div className='text-2xl font-light'>{title}</div>
-            <div className='flex flex-row gap-2 items-center'>
-              <div className='text-lg font-light'>{Math.round(score || 0)}% Similar</div>
-              <Star rate={calculateRateFromScore(score)} />
-            </div>
+            {score !== undefined && (
+              <div className='flex flex-row gap-2 items-center'>
+                <div className='text-lg font-light'>{Math.round(score || 0)}% Similar</div>
+                <Star rate={calculateRateFromScore(score)} />
+              </div>
+            )}
           </div>
           <div>
             <svg

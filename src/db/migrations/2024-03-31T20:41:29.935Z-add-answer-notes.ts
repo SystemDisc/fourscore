@@ -1,9 +1,10 @@
-import { Kysely, sql } from 'kysely';
+import { Kysely } from 'kysely';
+import { Database } from '../database';
 
-export async function up(db: Kysely<any>) {
+export async function up(db: Kysely<Database>) {
   await db.schema.alterTable('Answer').addColumn('notes', 'text').execute();
 }
 
-export async function down(db: Kysely<any>) {
+export async function down(db: Kysely<Database>) {
   await db.schema.alterTable('Answer').dropColumn('notes').execute();
 }

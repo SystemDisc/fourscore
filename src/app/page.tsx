@@ -5,9 +5,11 @@ import AuthButton from '@/components/molecules/auth-button';
 import LocationForm from '@/components/molecules/location-form';
 import authOptions from '@/utils/auth-options';
 import { getServerSession } from 'next-auth';
+import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import Script from 'next/script';
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -17,6 +19,67 @@ export default async function Home() {
 
   return (
     <>
+      <Script
+        id='home-ld'
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebPage',
+            name: 'FourScore - Home',
+            url: 'https://fourscore.app',
+            description:
+              'FourScore helps voters find political candidates that align with their values through a comprehensive survey and personalized Four Score.',
+            publisher: {
+              '@type': 'Organization',
+              name: 'FourScore',
+            },
+          }),
+        }}
+      />
+      <Head>
+        <title>FourScore - Home</title>
+        <meta
+          name='description'
+          content='FourScore helps voters find political candidates that align with their values through a comprehensive survey and personalized Four Score.'
+        />
+        <meta
+          property='og:title'
+          content='FourScore - Home'
+        />
+        <meta
+          property='og:description'
+          content='FourScore helps voters find political candidates that align with their values through a comprehensive survey and personalized Four Score.'
+        />
+        <meta
+          property='og:image'
+          content='https://fourscore.app/images/website-preview.png'
+        />
+        <meta
+          property='og:url'
+          content='https://fourscore.app'
+        />
+        <meta
+          property='og:type'
+          content='website'
+        />
+        <meta
+          name='twitter:card'
+          content='summary_large_image'
+        />
+        <meta
+          name='twitter:title'
+          content='FourScore - Home'
+        />
+        <meta
+          name='twitter:description'
+          content='FourScore helps voters find political candidates that align with their values through a comprehensive survey and personalized Four Score.'
+        />
+        <meta
+          name='twitter:image'
+          content='https://fourscore.app/images/website-preview.png'
+        />
+      </Head>
       <div>
         <header className='p-4 min-h-[100dvh] bg-[url("/images/home/bg.png")] bg-cover bg-right-bottom'>
           <nav className='h-11 flex justify-between items-center gap-4'>
@@ -46,7 +109,7 @@ export default async function Home() {
                   src='/images/home/address-icon.svg'
                   width={100}
                   height={100}
-                  alt='Address'
+                  alt='Address Icon'
                 />
               </div>
               <div>Enter the address where you&apos;re registered to vote</div>
@@ -58,7 +121,7 @@ export default async function Home() {
                   src='/images/home/survey-icon.svg'
                   width={100}
                   height={100}
-                  alt='Survey'
+                  alt='Survey Icon'
                 />
               </div>
               <div>Take the Local, State, and Federal poll</div>
@@ -70,7 +133,7 @@ export default async function Home() {
                   src='/images/home/selection-icon.svg'
                   width={100}
                   height={100}
-                  alt='Favorite'
+                  alt='Selection Icon'
                 />
               </div>
               <div>Select your perfect candidates and love your vote</div>
@@ -259,10 +322,10 @@ export default async function Home() {
               />
             </div>
             <div className='md:grid md:grid-cols-3'>
-              <div className='col-xs-4 text-center disabledwrap-block'>
+              <div className='col-xs-4 text-center'>
                 <Link
                   className='underline'
-                  href='/'
+                  href='/faq'
                 >
                   FAQ
                 </Link>
@@ -287,7 +350,7 @@ export default async function Home() {
                   Privacy
                 </a>
               </div>
-              <div className='col-xs-12 text-center contact md:col-span-3'>
+              <div className='col-xs-12 text-center'>
                 <Link
                   className='text-uppercase underline'
                   href='/contact-us'

@@ -1,50 +1,66 @@
 import Star from '@/components/atoms/star';
 import { CandidateResult, UserWithAnswers } from '@/types';
 import Image from 'next/image';
+import Link from 'next/link';
 
-export default function ProfileBanner({
+export default async function ProfileBanner({
   currentUser,
   candidate,
 }: {
-  currentUser: UserWithAnswers;
+  currentUser?: UserWithAnswers;
   candidate: CandidateResult;
 }) {
   const pollCompleteness = () => {
     if (candidate.answers.length) {
-      return Math.round((candidate.answers.length / currentUser.questionsTotal) * 10000) / 100;
+      return currentUser ? Math.round((candidate.answers.length / currentUser.questionsTotal) * 10000) / 100 : 100;
     }
     return 0;
   };
 
   return (
     <div
-      className='flex flex-col justify-between gap-6 p-4'
+      className='flex flex-col justify-between gap-4 p-4'
       style={{ background: 'linear-gradient(45deg, rgb(33, 34, 37), rgb(67, 70, 74), rgb(33, 34, 37))' }}
     >
       <div className='flex flex-col'>
-        <div className='text-lg text-white'>{candidate.name}</div>
-        <div className='text-xs text-white'>For: President of The United States of America</div>
+        <div className='text-4xl text-white font-bold'>{candidate.name}</div>
+        <hr className='border border-white w-full' />
+        <div className='text-xs text-white mt-1'>For: President of The United States of America</div>
       </div>
 
-      <div className='flex flex-row justify-around'>
-        <div className='relative w-36 h-36 rounded-full overflow-hidden cursor-pointer group'>
-          <Image
-            className='w-full h-full object-cover'
-            src={candidate.image || 'https://via.placeholder.com/256'}
-            alt='Profile'
-            width={256}
-            height={256}
-          />
-          <div className='absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200'>
-            <span className='text-white'>Edit</span>
+      <div className='grid grid-cols-2'>
+        {candidate.image && (
+          <Link
+            className='block w-full h-full border-4 border-neutral-300 shadow-lg shadow-black rounded-full overflow-hidden'
+            href={candidate.image}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <Image
+              className='w-full h-full object-cover'
+              src={candidate.image}
+              alt='Profile'
+              width={1023}
+              height={1023}
+            />
+          </Link>
+        )}
+        {!candidate.image && (
+          <div className='w-full h-full border-4 border-neutral-300 shadow-lg shadow-black rounded-full overflow-hidden'>
+            <Image
+              className='w-full h-full object-cover'
+              src={'https://via.placeholder.com/256'}
+              alt='Profile'
+              width={256}
+              height={256}
+            />
           </div>
-        </div>
-
-        <div className='flex flex-col gap-6'>
-          <div>
-            <div className='text-sm text-white uppercase'>Poll complete</div>
-            <div className='text-lg text-white uppercase'>{pollCompleteness()}%</div>
+        )}
+        <div className='flex justify-end items-end content-end flex-col'>
+          <div className='w-full text-right'>
+            <div className='text-lg text-white uppercase'>Poll Complete: {pollCompleteness()}%</div>
           </div>
+          <hr className='border border-white w-full' />
           {candidate.candidateUserScore?.score && (
             <div className='flex flex-col'>
               <div className='text-sm text-white uppercase'>Four Score</div>

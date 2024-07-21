@@ -1,5 +1,5 @@
 .normalize {
-  /* Revert ~all elements */
+  /* Revert ~all tailwindcss modifications */
   * {
     all: revert;
     box-sizing: border-box;
@@ -16,27 +16,20 @@
     all: revert;
     box-sizing: border-box;
   }
-  *::cue {
+  *::-webkit-inner-spin-button,
+  *::-webkit-outer-spin-button {
     all: revert;
     box-sizing: border-box;
   }
-  *::file-selector-button {
+  *::-webkit-search-decoration {
     all: revert;
     box-sizing: border-box;
   }
-  *::first-letter {
+  *::-webkit-file-upload-button {
     all: revert;
     box-sizing: border-box;
   }
-  *::first-line {
-    all: revert;
-    box-sizing: border-box;
-  }
-  *::grammar-error {
-    all: revert;
-    box-sizing: border-box;
-  }
-  *::marker {
+  *::-moz-placeholder {
     all: revert;
     box-sizing: border-box;
   }
@@ -44,23 +37,39 @@
     all: revert;
     box-sizing: border-box;
   }
-  *::selection {
+  *::-webkit-slider-runnable-track {
     all: revert;
     box-sizing: border-box;
   }
-  *::spelling-error {
+  *::-moz-range-track {
     all: revert;
     box-sizing: border-box;
   }
-  *::target-text {
+  *::-webkit-slider-thumb {
     all: revert;
     box-sizing: border-box;
   }
-  *::view-transition {
+  *::-moz-range-thumb {
     all: revert;
     box-sizing: border-box;
   }
-  *:picture-in-picture {
+  *::-moz-range-track {
+    all: revert;
+    box-sizing: border-box;
+  }
+  *::-moz-range-track {
+    all: revert;
+    box-sizing: border-box;
+  }
+  *::-moz-range-track {
+    all: revert;
+    box-sizing: border-box;
+  }
+  *::-moz-range-track {
+    all: revert;
+    box-sizing: border-box;
+  }
+  *::-moz-range-track {
     all: revert;
     box-sizing: border-box;
   }

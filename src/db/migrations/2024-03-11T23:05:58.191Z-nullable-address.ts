@@ -1,6 +1,7 @@
-import { Kysely, sql } from 'kysely';
+import { Kysely } from 'kysely';
+import { Database } from '../database';
 
-export async function up(db: Kysely<any>) {
+export async function up(db: Kysely<Database>) {
   await db.schema
     .alterTable('Address')
     .alterColumn('streetNumber', (col) => col.dropNotNull())
@@ -11,7 +12,7 @@ export async function up(db: Kysely<any>) {
     .execute();
 }
 
-export async function down(db: Kysely<any>) {
+export async function down(db: Kysely<Database>) {
   await db
     .updateTable('Address')
     .set({

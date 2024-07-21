@@ -1,5 +1,5 @@
 import { Simplify } from 'kysely';
-import { Answer, CandidateUserScore, Category, Office, Question, User } from './db/database';
+import { Answer, CandidateData, CandidateUserScore, Category, Office, Question, User } from './db/database';
 
 export type NotificationType = 'error' | 'success';
 export type Notification = {
@@ -13,23 +13,29 @@ export type Nullable<T> = {
 };
 
 export type UserWithAnswers = Simplify<User> & {
-  answers: Nullable<Simplify<Answer>>[];
+  answers: Simplify<Answer>[];
   questionsAnswered: number;
   questionsTotal: number;
 };
 
 export type CandidateResult = Simplify<User> & {
-  answers: Nullable<Simplify<Answer>>[];
-  offices: Nullable<Simplify<Office>>[];
-  candidateUserScore: Nullable<Simplify<CandidateUserScore>> | null;
-  score: number;
+  candidateData: Simplify<CandidateData> | null;
+  answers: Simplify<Answer>[];
+  questions: Simplify<Question>[];
+  offices: Simplify<Office>[];
+  candidateUserScore?: Simplify<CandidateUserScore> | null;
+  score?: number;
+  categories?: CategoryWithQuestions[];
 };
 
 export type QuestionWithAnswer = Simplify<Question> & {
-  answer: Nullable<Simplify<Answer>>;
+  answer: Simplify<Answer>;
 };
 
-export type CategoryWithQuestionsAndScore = Simplify<Category> & {
+export type CategoryWithQuestions = Simplify<Category> & {
   questions: Nullable<QuestionWithAnswer>[];
+};
+
+export type CategoryWithQuestionsAndScore = CategoryWithQuestions & {
   similarityScore: number;
 };

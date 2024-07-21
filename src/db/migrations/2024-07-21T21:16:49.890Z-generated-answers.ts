@@ -3,12 +3,16 @@ import { Database } from '../database';
 
 export async function up(db: Kysely<Database>) {
   await db.schema
-    .alterTable('User')
+    .createTable('NewTable')
+    .addColumn('id', 'uuid', (col) => col.primaryKey().defaultTo(sql`gen_random_uuid()`))
+    .addColumn('name', 'varchar', (col) => col.notNull())
+    .addColumn('description', 'varchar', (col) => col.notNull())
     .addColumn('dateCreated', 'timestamptz', (col) => col.notNull().defaultTo(sql`clock_timestamp()`))
     .addColumn('dateUpdated', 'timestamptz')
+    .addColumn('dateDeleted', 'timestamptz')
     .execute();
 }
 
 export async function down(db: Kysely<Database>) {
-  await db.schema.alterTable('User').dropColumn('dateCreated').dropColumn('dateUpdated').execute();
+  await db.schema.dropTable('NewTable').execute();
 }
