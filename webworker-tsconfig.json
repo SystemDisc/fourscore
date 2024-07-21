@@ -1,13 +1,7 @@
 {
   "extends": "./generic-tsconfig.json",
   "compilerOptions": {
-    "lib": [
-      "ESNext",
-      "WebWorker"
-    ]
+    "lib": ["ESNext", "WebWorker"]
   },
-  "include": [
-    "public/sw.js",
-    "serviceworker.types.d.ts"
-  ]
+  "include": ["public/sw.js", "serviceworker.types.d.ts"]
 }

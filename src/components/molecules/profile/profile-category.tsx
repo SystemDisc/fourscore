@@ -68,7 +68,7 @@ export default async function ProfileCategory({
             </div>
           </div>,
         ],
-        Promise.resolve([] as ReactNode[])
+        Promise.resolve([] as ReactNode[]),
       )}
     </div>
   );

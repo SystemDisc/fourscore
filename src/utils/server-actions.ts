@@ -28,7 +28,7 @@ export const getUserByEmail = async (email?: string | null) => {
 
 export const saveAddress = async (
   user: DefaultSession['user'],
-  { streetNumber, route, city, state, zip }: NewAddress
+  { streetNumber, route, city, state, zip }: NewAddress,
 ) => {
   const currentUser = await getUserByEmail(user?.email);
 
@@ -77,17 +77,17 @@ export const getQuestions = async (user: DefaultSession['user']) => {
     .selectAll('Question')
     .select((eb) => [
       jsonObjectFrom(
-        eb.selectFrom('Locality').selectAll('Locality').whereRef('Locality.id', '=', 'Question.localityId')
+        eb.selectFrom('Locality').selectAll('Locality').whereRef('Locality.id', '=', 'Question.localityId'),
       ).as('locality'),
       jsonObjectFrom(
-        eb.selectFrom('Category').selectAll('Category').whereRef('Category.id', '=', 'Question.categoryId')
+        eb.selectFrom('Category').selectAll('Category').whereRef('Category.id', '=', 'Question.categoryId'),
       ).as('category'),
       jsonObjectFrom(
         eb
           .selectFrom('Answer')
           .selectAll('Answer')
           .where('Answer.userId', '=', currentUser.id)
-          .whereRef('Answer.questionId', '=', 'Question.id')
+          .whereRef('Answer.questionId', '=', 'Question.id'),
       ).as('answer'),
     ])
     .orderBy(['Locality.position asc', 'Category.name asc'])
@@ -157,7 +157,7 @@ export const savePoll = async (user: DefaultSession['user'], answers: Simplify<A
       .where(
         'questionId',
         'in',
-        obsoleteAnswers.map((oa) => oa.questionId)
+        obsoleteAnswers.map((oa) => oa.questionId),
       )
       .execute();
   }
@@ -174,8 +174,8 @@ export const savePoll = async (user: DefaultSession['user'], answers: Simplify<A
               agree: agree!,
               rating: rating!,
               dateUpdated: new Date(),
-            } as NewAnswer)
-        )
+            }) as NewAnswer,
+        ),
       )
       .execute();
   }
@@ -246,17 +246,17 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
         eb
           .selectFrom(['Office', 'CandidateOffice'])
           .selectAll('Office')
-          .whereRef('Office.id', '=', 'CandidateOffice.officeId')
+          .whereRef('Office.id', '=', 'CandidateOffice.officeId'),
       ).as('offices'),
       jsonArrayFrom(eb.selectFrom('Answer').selectAll('Answer').whereRef('Answer.userId', '=', 'User.id')).as(
-        'answers'
+        'answers',
       ),
       jsonObjectFrom(
         eb
           .selectFrom('CandidateUserScore')
           .selectAll('CandidateUserScore')
           .where('CandidateUserScore.userId', '=', currentUserWithAnswers.id)
-          .whereRef('CandidateUserScore.candidateId', '=', 'User.id')
+          .whereRef('CandidateUserScore.candidateId', '=', 'User.id'),
       ).as('candidateUserScore'),
       eb.val(0).as('score'),
     ])
@@ -266,11 +266,11 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
   for (const candidate of candidates) {
     const lastUpdatedUserAnswer = currentUserWithAnswers.answers.reduce(
       (max, answer) => Math.max(answer.dateUpdated ? new Date(answer.dateUpdated).getTime() : 0, max),
-      0
+      0,
     );
     const lastUpdatedCandidateAnswer = candidate.answers.reduce(
       (max, answer) => Math.max(answer.dateUpdated ? new Date(answer.dateUpdated).getTime() : 0, max),
-      0
+      0,
     );
 
     const scoreUpdated = candidate.candidateUserScore?.dateUpdated
@@ -389,9 +389,9 @@ export const getCandidateAnswerScore = async (user: DefaultSession['user'], cand
                 .selectFrom('Answer')
                 .selectAll()
                 .whereRef('Answer.questionId', '=', 'Question.id')
-                .where('Answer.userId', '=', currentUser.id)
+                .where('Answer.userId', '=', currentUser.id),
             ).as('answer'),
-          ])
+          ]),
       ).as('questions'),
     ])
     .groupBy('Category.id')
@@ -412,9 +412,9 @@ export const getCandidateAnswerScore = async (user: DefaultSession['user'], cand
                 .selectFrom('Answer')
                 .selectAll()
                 .whereRef('Answer.questionId', '=', 'Question.id')
-                .where('Answer.userId', '=', candidateId)
+                .where('Answer.userId', '=', candidateId),
             ).as('answer'),
-          ])
+          ]),
       ).as('questions'),
     ])
     .execute();
@@ -435,7 +435,7 @@ export const getCandidateAnswerScore = async (user: DefaultSession['user'], cand
         },
       ];
     },
-    Promise.resolve([] as CategoryWithQuestionsAndScore[])
+    Promise.resolve([] as CategoryWithQuestionsAndScore[]),
   );
 
   return candidateQuestionCategoriesWithScore;

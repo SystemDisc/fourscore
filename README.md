@@ -5,11 +5,13 @@ The FourScore app focuses on improving the political engagement process by direc
 Here's a brief overview of how it works for both parties:
 
 ### For Political Candidates:
+
 - **Sign-Up Process**: Candidates create a profile and fill out a detailed poll covering a broad spectrum of policy issues relevant to the jurisdictions they aim to serve (local, state, federal).
 - **Campaign Tools**: The platform offers a suite of tools for candidates to reach out to potential voters. They can send campaigns via letters, emails, phone calls, or text messages. This feature is monetized, providing the app with a revenue stream.
 - **Matchmaking with Voters**: Candidates have the opportunity to connect with voters who share similar policy views, potentially increasing the effectiveness of their campaign efforts.
 
 ### For Voters:
+
 - **Sign-Up Process**: Voters also fill out the same poll to gauge their policy preferences.
 - **Matching Algorithm**: Based on their responses, the app calculates a "Four Score" for each candidate on their ballot, indicating the percentage of policy alignment.
 - **Informed Decision-Making**: This score helps voters to easily identify and learn more about the candidates who closely match their own policy views, aiming to make the voting process more straightforward and personalized.
