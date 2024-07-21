@@ -34,32 +34,32 @@ export default function Poll({
   const { data: session, status } = useSession();
 
   const foundIndex = questions.findIndex(
-    (q) => q.answer?.agree === undefined || q.answer.agree === null,
+    (q) => q.answer?.agree === undefined || q.answer.agree === null
   );
   const [currentIndex, setCurrentIndex] = useState(
-    foundIndex >= 0 ? foundIndex : questions.length - 1,
+    foundIndex >= 0 ? foundIndex : questions.length - 1
   );
   const [agree, setAgree] = useState<boolean | null | undefined>(
     foundIndex >= 0
       ? questions[foundIndex]?.answer?.agree
       : questions.length > 0
-        ? questions[questions.length - 1]?.answer?.agree
-        : undefined,
+      ? questions[questions.length - 1]?.answer?.agree
+      : undefined
   );
   const [rating, setRating] = useState<number | null | undefined>(
     foundIndex >= 0
       ? questions[foundIndex]?.answer?.rating
       : questions.length > 0
-        ? questions[questions.length - 1]?.answer?.rating
-        : undefined,
+      ? questions[questions.length - 1]?.answer?.rating
+      : undefined
   );
   const [answers, setAnswers] = useState<Simplify<AnswerUpdate>[]>(
     questions.map(
       (q) =>
         q.answer || {
           questionId: q.id,
-        },
-    ),
+        }
+    )
   );
   const [showTutorial, setShowTutorial] = useState(false);
   const [tutorialShown, setTutorialShown] = useState(!!seenVotingTutorial);
@@ -96,7 +96,7 @@ export default function Poll({
       a.rating !== null
         ? sum + 1
         : sum,
-    0,
+    0
   );
 
   return (
@@ -140,7 +140,11 @@ export default function Poll({
             className='w-full'
             onClick={async () => {
               await savePoll(session?.user, answers);
-              router.push('/dashboard');
+              if (numAnswers === questions.length) {
+                router.push('/candidate-matches');
+              } else {
+                router.push('/dashboard');
+              }
             }}
           >
             Save &amp; Exit
@@ -188,7 +192,7 @@ export default function Poll({
               'min-h-[calc(100dvh_-_3.5rem_-_42px)] md:min-h-[calc(100dvh_-_5.5rem_-_42px_-_2px)] relative z-10',
               {
                 hidden: index !== currentIndex,
-              },
+              }
             )}
           >
             <div className='h-20 bg-gradient-to-bl from-[#6932D1] to-[#899ED4]'>
@@ -208,7 +212,7 @@ export default function Poll({
                 'flex flex-col items-center justify-between gap-4 p-4 h-[calc(100%_-_5rem)] pt-2',
                 {
                   hidden: index !== currentIndex,
-                },
+                }
               )}
             >
               <div>
@@ -244,7 +248,7 @@ export default function Poll({
                             {Math.round(
                               (+answerData.yesCount /
                                 (+answerData.yesCount + +answerData.noCount)) *
-                                10000,
+                                10000
                             ) / 100}
                             %
                           </div>
@@ -273,7 +277,7 @@ export default function Poll({
                             {Math.round(
                               (+answerData.noCount /
                                 (+answerData.yesCount + +answerData.noCount)) *
-                                10000,
+                                10000
                             ) / 100}
                             %
                           </div>
@@ -358,7 +362,7 @@ export default function Poll({
                         {
                           'outline outline-4 outline-offset-2 outline-[#6932D1]':
                             rating === 5,
-                        },
+                        }
                       )}
                       onClick={() => setRating(5)}
                     >
@@ -391,8 +395,8 @@ export default function Poll({
                                 a.agree === null ||
                                 a.rating === undefined ||
                                 a.rating === null) &&
-                              !a.skipped,
-                          ),
+                              !a.skipped
+                          )
                       );
                       if (
                         nextIndex === -1 &&
@@ -433,8 +437,8 @@ export default function Poll({
                                 a.agree === null ||
                                 a.rating === undefined ||
                                 a.rating === null) &&
-                              !a.skipped,
-                          ),
+                              !a.skipped
+                          )
                       );
                       if (
                         nextIndex === -1 &&
