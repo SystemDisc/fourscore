@@ -10,6 +10,8 @@ import { Analytics } from '@vercel/analytics/react';
 const lato = Lato({
   subsets: ['latin'],
   weight: ['300', '400', '700', '900'],
+  display: 'swap',
+  adjustFontFallback: false,
 });
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

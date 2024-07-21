@@ -1,15 +1,36 @@
 'use server';
 
-import { AnswerUpdate, NewAddress, NewAnswer, db } from '@/db/database';
+import { Answer, AnswerUpdate, NewAddress, NewAnswer, User, db } from '@/db/database';
+import { CandidateResult, CategoryWithQuestionsAndScore, Nullable, UserWithAnswers } from '@/types';
 import { Simplify, sql } from 'kysely';
 import { jsonArrayFrom, jsonObjectFrom } from 'kysely/helpers/postgres';
 import { DefaultSession } from 'next-auth';
+
+const userCache = new Map<string, Simplify<User>>();
+
+export const getUserByEmail = async (email?: string | null) => {
+  if (!email) {
+    throw new Error('User email missing.');
+  }
+
+  if (userCache.has(email)) {
+    return userCache.get(email)!;
+  } else {
+    const currentUser = await db.selectFrom('User').where('email', '=', email).selectAll().executeTakeFirst();
+
+    if (!currentUser) {
+      throw new Error('User not found.');
+    }
+
+    return currentUser;
+  }
+};
 
 export const saveAddress = async (
   user: DefaultSession['user'],
   { streetNumber, route, city, state, zip }: NewAddress,
 ) => {
-  const currentUser = await db.selectFrom('User').where('email', '=', user?.email!).selectAll().executeTakeFirst();
+  const currentUser = await getUserByEmail(user?.email);
 
   if (!currentUser) {
     throw new Error('Not logged in.');
@@ -46,14 +67,10 @@ export const saveAddress = async (
   return await db.selectFrom('Address').where('userId', '=', currentUser.id).selectAll().executeTakeFirst();
 };
 
-export const getPoll = async (user: DefaultSession['user']) => {
-  const currentUser = await db.selectFrom('User').where('email', '=', user?.email!).selectAll().executeTakeFirst();
+export const getQuestions = async (user: DefaultSession['user']) => {
+  const currentUser = await getUserByEmail(user?.email);
 
-  if (!currentUser) {
-    throw new Error('Not logged in.');
-  }
-
-  const questions = await db
+  return await db
     .selectFrom('Question')
     .innerJoin('Locality', 'Locality.id', 'Question.localityId')
     .innerJoin('Category', 'Category.id', 'Question.categoryId')
@@ -75,6 +92,16 @@ export const getPoll = async (user: DefaultSession['user']) => {
     ])
     .orderBy(['Locality.position asc', 'Category.name asc'])
     .execute();
+};
+
+export const getPoll = async (user: DefaultSession['user']) => {
+  const currentUser = await getUserByEmail(user?.email);
+
+  if (!currentUser) {
+    throw new Error('Not logged in.');
+  }
+
+  const questions = await getQuestions(currentUser);
 
   const allAnswers = await db
     .selectFrom('Answer')
@@ -93,7 +120,7 @@ export const getPoll = async (user: DefaultSession['user']) => {
 };
 
 export const savePoll = async (user: DefaultSession['user'], answers: Simplify<AnswerUpdate>[]) => {
-  const currentUser = await db.selectFrom('User').where('email', '=', user?.email!).selectAll().executeTakeFirst();
+  const currentUser = await getUserByEmail(user?.email);
 
   if (!currentUser) {
     throw new Error('Not logged in.');
@@ -154,35 +181,64 @@ export const savePoll = async (user: DefaultSession['user'], answers: Simplify<A
   }
 };
 
+export const calculateScore = async (userAnswers: Nullable<Answer>[], candidateAnswers: Nullable<Answer>[]) => {
+  let sameScore = 0;
+  let diffScore = 0;
+
+  if (candidateAnswers.length === 0) {
+    return 0;
+  }
+
+  for (const userAnswer of userAnswers) {
+    const candidateAnswer = candidateAnswers.find((a) => a.questionId === userAnswer.questionId);
+
+    const userRating = userAnswer.rating || 1;
+
+    if (!candidateAnswer) {
+      diffScore += userRating;
+      continue;
+    }
+
+    const candidateRating = candidateAnswer.rating || 1;
+
+    if (userAnswer.agree === candidateAnswer.agree) {
+      sameScore += userRating;
+      const ratingDiff = userRating - candidateRating;
+      if (ratingDiff > 0) {
+        diffScore += ratingDiff;
+      }
+    } else {
+      diffScore += userRating;
+    }
+  }
+
+  return Math.round((sameScore / (sameScore + diffScore)) * 10000) / 100;
+};
+
 export const calculateMatches = async (user: DefaultSession['user']) => {
   if (!user || !user.email) {
     throw new Error('Not logged in.');
   }
 
-  const currentUser = await db
-    .selectFrom('User')
-    .selectAll('User')
-    .leftJoin('Answer', 'Answer.userId', 'User.id')
-    .select((eb) => [
-      jsonArrayFrom(eb.selectFrom('Answer').selectAll('Answer').whereRef('Answer.userId', '=', 'User.id')).as(
-        'answers',
-      ),
-      eb.val(0).as('questionsAnswered'),
-      eb.val(0).as('questionsTotal'),
-    ])
-    .where('User.email', '=', user.email)
-    .executeTakeFirst();
+  const currentUser = await getUserByEmail(user?.email);
 
   if (!currentUser) {
     throw new Error('Not logged in.');
   }
 
-  const { questions } = await getPoll(user);
+  const currentUserWithAnswers: UserWithAnswers = {
+    ...currentUser,
+    answers: await db.selectFrom('Answer').selectAll().where('userId', '=', currentUser.id).execute(),
+    questionsAnswered: 0,
+    questionsTotal: 0,
+  };
 
-  currentUser.questionsTotal = questions.length;
-  currentUser.questionsAnswered = questions.map((q) => q.answer).filter((a) => a).length;
+  const questions = await getQuestions(user);
 
-  const candidates = await db
+  currentUserWithAnswers.questionsAnswered = questions.map((q) => q.answer).filter((a) => a).length;
+  currentUserWithAnswers.questionsTotal = questions.length;
+
+  const candidates: CandidateResult[] = await db
     .selectFrom(['User', 'CandidateOffice'])
     .selectAll('User')
     .select((eb) => [
@@ -199,7 +255,7 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
         eb
           .selectFrom('CandidateUserScore')
           .selectAll('CandidateUserScore')
-          .where('CandidateUserScore.userId', '=', currentUser.id)
+          .where('CandidateUserScore.userId', '=', currentUserWithAnswers.id)
           .whereRef('CandidateUserScore.candidateId', '=', 'User.id'),
       ).as('candidateUserScore'),
       eb.val(0).as('score'),
@@ -208,10 +264,7 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
     .execute();
 
   for (const candidate of candidates) {
-    let sameScore = 0;
-    let diffScore = 0;
-
-    const lastUpdatedUserAnswer = currentUser.answers.reduce(
+    const lastUpdatedUserAnswer = currentUserWithAnswers.answers.reduce(
       (max, answer) => Math.max(answer.dateUpdated ? new Date(answer.dateUpdated).getTime() : 0, max),
       0,
     );
@@ -220,7 +273,7 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
       0,
     );
 
-    const scoreUpdated = candidate.candidateUserScore
+    const scoreUpdated = candidate.candidateUserScore?.dateUpdated
       ? new Date(candidate.candidateUserScore.dateUpdated).getTime()
       : 0;
 
@@ -229,34 +282,7 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
       scoreUpdated <= lastUpdatedUserAnswer ||
       scoreUpdated <= lastUpdatedCandidateAnswer
     ) {
-      if (candidate.answers.length === 0) {
-        candidate.score = 0;
-      }
-
-      for (const userAnswer of currentUser.answers) {
-        const candidateAnswer = candidate.answers.find((a) => a.questionId === userAnswer.questionId);
-
-        const userRating = userAnswer.rating || 1;
-
-        if (!candidateAnswer) {
-          diffScore += userRating;
-          continue;
-        }
-
-        const candidateRating = candidateAnswer.rating || 1;
-
-        if (userAnswer.agree === candidateAnswer.agree) {
-          sameScore += userRating;
-          const ratingDiff = userRating - candidateRating;
-          if (ratingDiff > 0) {
-            diffScore += ratingDiff;
-          }
-        } else {
-          diffScore += userRating;
-        }
-      }
-
-      candidate.score = Math.round((sameScore / (sameScore + diffScore)) * 10000) / 100;
+      candidate.score = await calculateScore(currentUserWithAnswers.answers, candidate.answers);
 
       if (candidate.candidateUserScore) {
         const candidateUserScore = await db
@@ -265,7 +291,7 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
             score: candidate.score,
             dateUpdated: new Date(),
           })
-          .where('CandidateUserScore.userId', '=', currentUser.id)
+          .where('CandidateUserScore.userId', '=', currentUserWithAnswers.id)
           .where('CandidateUserScore.candidateId', '=', candidate.id)
           .returningAll()
           .executeTakeFirst();
@@ -275,7 +301,7 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
         const candidateUserScore = await db
           .insertInto('CandidateUserScore')
           .values({
-            userId: currentUser.id,
+            userId: currentUserWithAnswers.id,
             candidateId: candidate.id,
             score: candidate.score,
             dateUpdated: new Date(),
@@ -286,12 +312,13 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
         candidate.candidateUserScore = candidateUserScore!;
       }
     } else {
-      candidate.score = isNaN(candidate.candidateUserScore.score) ? 0 : candidate.candidateUserScore.score;
+      candidate.score = isNaN(candidate.candidateUserScore.score || 0) ? 0 : candidate.candidateUserScore.score || 0;
     }
   }
 
   return {
-    currentUser,
+    questions,
+    currentUser: currentUserWithAnswers,
     candidates: candidates.sort((a, b) => b.score - a.score),
   };
 };
@@ -341,5 +368,152 @@ export const markTutorialShown = async (user: DefaultSession['user']) => {
 
   return {
     success: 'User updated.',
+  };
+};
+
+export const getCandidateAnswerScore = async (user: DefaultSession['user'], candidateId: string) => {
+  const currentUser = await getUserByEmail(user?.email);
+
+  const userQuestionCategories = await db
+    .selectFrom('Category')
+    .selectAll('Category')
+    .select((eb) => [
+      jsonArrayFrom(
+        eb
+          .selectFrom('Question')
+          .selectAll()
+          .whereRef('Question.categoryId', '=', 'Category.id')
+          .select((eb) => [
+            jsonObjectFrom(
+              eb
+                .selectFrom('Answer')
+                .selectAll()
+                .whereRef('Answer.questionId', '=', 'Question.id')
+                .where('Answer.userId', '=', currentUser.id),
+            ).as('answer'),
+          ]),
+      ).as('questions'),
+    ])
+    .groupBy('Category.id')
+    .execute();
+
+  const candidateQuestionCategories = await db
+    .selectFrom('Category')
+    .selectAll('Category')
+    .select((eb) => [
+      jsonArrayFrom(
+        eb
+          .selectFrom('Question')
+          .selectAll()
+          .whereRef('Question.categoryId', '=', 'Category.id')
+          .select((eb) => [
+            jsonObjectFrom(
+              eb
+                .selectFrom('Answer')
+                .selectAll()
+                .whereRef('Answer.questionId', '=', 'Question.id')
+                .where('Answer.userId', '=', candidateId),
+            ).as('answer'),
+          ]),
+      ).as('questions'),
+    ])
+    .execute();
+
+  const candidateQuestionCategoriesWithScore = await candidateQuestionCategories.reduce(
+    async (candidateCategories, candidateCategory) => {
+      const userCategory = userQuestionCategories.find((c) => c.id === candidateCategory.id);
+      const userAnswers = userCategory?.questions.filter((q) => q.answer).map((q) => q.answer!) || [];
+      const candidateAnswers = candidateCategory.questions.filter((q) => q.answer).map((q) => q.answer!) || [];
+
+      const similarityScore = await calculateScore(userAnswers, candidateAnswers);
+
+      return [
+        ...(await candidateCategories),
+        {
+          ...candidateCategory,
+          similarityScore,
+        },
+      ];
+    },
+    Promise.resolve([] as CategoryWithQuestionsAndScore[]),
+  );
+
+  return candidateQuestionCategoriesWithScore;
+};
+
+export const getCandidateSingleCategoryAnswerScore = async (id: string, categoryId: string) => {
+  // category id
+  const answers = await getCandidateAnswersForCategory(id, categoryId);
+  const totalNumOfCategoryQuestions = await db.selectFrom('Question').where('categoryId', '=', categoryId).execute();
+
+  const totalQuestionsCount = Number(totalNumOfCategoryQuestions.length);
+
+  let similarityScore = 0;
+  answers.forEach((answer) => {
+    const accum = answer.agree ? 1 : 0;
+    similarityScore += accum * (answer.rating || 0);
+  });
+
+  similarityScore = (similarityScore / (totalQuestionsCount * 5)) * 100;
+  similarityScore = Math.max(similarityScore, 0);
+
+  return similarityScore;
+};
+
+export const getCandidateAnswers = async (id: string) => {
+  const answers = await db
+    .selectFrom('Answer')
+    .where('Answer.userId', '=', id)
+    .leftJoin('Question', 'Question.id', 'Answer.questionId')
+    .leftJoin('Category', 'Category.id', 'Question.categoryId')
+    .select(['Answer.userId', 'Answer.questionId', 'Category.id', 'Category.name', 'Answer.agree', 'Answer.rating'])
+    .execute();
+
+  return answers;
+};
+
+export const getCandidateAnswersForCategory = async (id: string, categoryId: string) => {
+  const answers = await db
+    .selectFrom('Answer')
+    .where('Answer.userId', '=', id)
+    .leftJoin('Question', 'Question.id', 'Answer.questionId')
+    .leftJoin('Category', 'Category.id', 'Question.categoryId')
+    .where('Question.categoryId', '=', categoryId)
+    .select(['Answer.userId', 'Answer.questionId', 'Category.id', 'Category.name', 'Answer.agree', 'Answer.rating'])
+    .execute();
+
+  return answers;
+};
+
+export const getAnswerForSingleCategory = async (id?: string, categoryId?: string) => {
+  const currentUser = await db.selectFrom('User').where('id', '=', id!).selectAll().executeTakeFirst();
+
+  if (!currentUser || !categoryId) {
+    throw new Error('Incorrect request');
+  }
+
+  const category = await db.selectFrom('Category').where('Category.id', '=', categoryId).selectAll().executeTakeFirst();
+
+  const answers = await db
+    .selectFrom('Answer')
+    .where('Answer.userId', '=', currentUser.id)
+    .leftJoin('Question', 'Question.id', 'Answer.questionId')
+    .leftJoin('Category', 'Category.id', 'Question.categoryId')
+    .where('Category.id', '=', categoryId)
+    .select([
+      'Answer.id',
+      'Answer.agree',
+      'Question.question',
+      'Answer.rating',
+      'Answer.questionId',
+      'Answer.notes',
+      'Answer.dateUpdated',
+    ])
+    .execute();
+
+  return {
+    currentUser,
+    category,
+    answers,
   };
 };

@@ -1,8 +1,8 @@
-'use client';
-
-import PledgeToggle from './pledge-toggle';
-import { BsStar, BsStarFill } from 'react-icons/bs';
 import { CandidateResult } from '@/types';
+import Image from 'next/image';
+import Link from 'next/link';
+import { BsStar, BsStarFill } from 'react-icons/bs';
+import PledgeToggle from './pledge-toggle';
 
 export default function CandidateCard({
   candidate,
@@ -14,9 +14,10 @@ export default function CandidateCard({
   onSelect?: (candidate: CandidateResult) => void;
 }) {
   return (
-    <div
+    <Link
       key={candidate.id}
-      className='grid [grid-template-columns:3rem_1fr] gap-4'
+      className='grid [grid-template-columns:3rem_1fr] gap-4 hover: cursor-pointer'
+      href={`/candidate-profile/${candidate.id}`}
     >
       <div>
         <PledgeToggle
@@ -31,9 +32,11 @@ export default function CandidateCard({
       <div className='border border-neutral-300 rounded shadow-[#000_0px_2px_2px] grid [grid-template-columns:4rem_1fr] gap-2 p-2'>
         <div>
           {candidate.image && (
-            <img
+            <Image
               src={candidate.image}
               className='h-16 w-16'
+              width={256}
+              height={256}
               alt={candidate.name || 'Candidate'}
             />
           )}
@@ -53,6 +56,6 @@ export default function CandidateCard({
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
