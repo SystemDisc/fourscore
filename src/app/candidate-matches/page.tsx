@@ -19,7 +19,7 @@ export default async function Page() {
   const { candidates, currentUser } = await calculateMatches(session.user);
 
   const pollPercentage = Math.round(
-    (currentUser.questionsAnswered / currentUser.questionsTotal) * 100,
+    (currentUser.questionsAnswered / currentUser.questionsTotal) * 100
   );
 
   return (
@@ -37,14 +37,15 @@ export default async function Page() {
               </div>
             </div>
             <div className='flex justify-end'>
-              <Button
-                buttonType='white'
-                disabled={pollPercentage === 100}
-                isLink
-                href='/poll'
-              >
-                Finish Poll
-              </Button>
+              {pollPercentage === 100 ? (
+                <Button buttonType='white' isLink href='/dashboard'>
+                  Go to Dashboard
+                </Button>
+              ) : (
+                <Button buttonType='white' isLink href='/poll'>
+                  Finish Poll
+                </Button>
+              )}
             </div>
           </div>
         </header>
