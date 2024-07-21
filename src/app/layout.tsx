@@ -1,11 +1,13 @@
-import { Lato } from 'next/font/google';
-import './globals.css';
-import { getServerSession } from 'next-auth';
-import NextAuthSessionProvider from '@/providers/session-provider';
-import classNames from 'classnames';
 import NotificationProvider from '@/providers/notification-provider';
+import NextAuthSessionProvider from '@/providers/session-provider';
 import authOptions from '@/utils/auth-options';
+import { GoogleTagManager } from '@next/third-parties/google';
 import { Analytics } from '@vercel/analytics/react';
+import classNames from 'classnames';
+import { getServerSession } from 'next-auth';
+import { Lato } from 'next/font/google';
+import Script from 'next/script';
+import './globals.css';
 
 const lato = Lato({
   subsets: ['latin'],
@@ -75,37 +77,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           property='og:description'
           content="FourScore revolutionizes the voting experience by using a policy-based matching system to connect voters with political candidates. By filling out a comprehensive survey on key issues, both voters and candidates receive a personalized 'Four Score,' reflecting their alignment on local, state, and federal policies. This innovative approach ensures voters can make more informed decisions at the ballot box, while candidates can engage more effectively with their potential supporters, making democracy more accessible and aligned with individual values."
         />
-        <script
-          async
-          src='https://www.googletagmanager.com/gtag/js?id=AW-16497301357'
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', 'AW-16497301357');
-
-            var date = new Date();
-            date.setTime(date.getTime() + (365*24*60*60*1000));
-
-            gtag('get', 'G-WHQGZ00D5B', 'client_id', (clientId) => {
-              document.cookie = "client-id=" + (encodeURIComponent(clientId)) + "; expires=" + date.toUTCString() + "; path=/";
-            });
-
-            gtag('get', 'G-WHQGZ00D5B', 'session_id', (sessionId) => {
-              document.cookie = "session-id=" + (encodeURIComponent(sessionId)) + "; expires=" + date.toUTCString() + "; path=/";
-            });
-
-            gtag('get', 'AW-16497301357', 'gclid', (gclid) => {
-              document.cookie = "gclid=" + (encodeURIComponent(gclid || '')) + "; expires=" + date.toUTCString() + "; path=/";
-            });
-          `,
-          }}
-        />
-        <script
+        <GoogleTagManager gtmId='GTM-TK3ZT6B3' />
+        <Script
           dangerouslySetInnerHTML={{
             __html: `
             function gtag_report_conversion(url) {
@@ -120,18 +93,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           `,
           }}
         />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','GTM-TK3ZT6B3');
-          `,
-          }}
-        />
-        <script
+        <Script
           dangerouslySetInnerHTML={{
             __html: `
             const registerServiceWorker = async () => {
