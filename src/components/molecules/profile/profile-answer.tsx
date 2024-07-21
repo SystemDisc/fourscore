@@ -3,18 +3,18 @@ import { CategoryWithQuestionsAndScore } from '@/types';
 
 export default function ProfileAnswer({
   candidateId,
-  data,
+  category,
 }: {
   candidateId: string;
-  data: CategoryWithQuestionsAndScore;
+  category: CategoryWithQuestionsAndScore;
 }) {
   return (
     <div className='flex flex-col justify-between gap-6 hover:cursor-pointer'>
       <AnswerItem
-        title={data.name}
-        score={data.similarityScore}
+        title={category.name}
+        score={category.similarityScore}
         candidateId={candidateId}
-        categoryId={data.id}
+        categoryId={category.id}
       />
     </div>
   );

@@ -8,8 +8,8 @@ const AnswerItem = ({
   candidateId,
   categoryId,
 }: {
-  title: string | null;
-  score: number | null;
+  title: string;
+  score: number;
   candidateId: string;
   categoryId: string;
 }) => {
