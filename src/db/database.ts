@@ -1,11 +1,4 @@
-import {
-  GeneratedAlways,
-  Insertable,
-  Kysely,
-  PostgresDialect,
-  Selectable,
-  Updateable,
-} from 'kysely';
+import { GeneratedAlways, Insertable, Kysely, PostgresDialect, Selectable, Updateable } from 'kysely';
 import { Pool } from 'pg';
 
 interface Database {

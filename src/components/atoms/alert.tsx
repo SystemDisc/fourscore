@@ -32,9 +32,7 @@ export default function Alert({
         'bg-green-700 text-white': notification.type === 'success',
       })}
     >
-      <div className='inline-block whitespace-pre-wrap w-[calc(100%_-_1rem)]'>
-        {notification.message}
-      </div>
+      <div className='inline-block whitespace-pre-wrap w-[calc(100%_-_1rem)]'>{notification.message}</div>
       <div className='w-4 text-right text-2xl inline-flex items-center'>
         <button
           onClick={() => {

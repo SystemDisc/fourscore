@@ -28,9 +28,7 @@ function NotificationProvider({ children }: PropsWithChildren<{}>) {
   const onDone = (uuid: string) => {
     setNotifications((prevNotifications) => {
       const newNotifications = [...prevNotifications];
-      const index = newNotifications.findIndex(
-        (notification) => notification.uuid === uuid,
-      );
+      const index = newNotifications.findIndex((notification) => notification.uuid === uuid);
 
       if (index >= 0) {
         newNotifications.splice(index, 1);
@@ -42,9 +40,16 @@ function NotificationProvider({ children }: PropsWithChildren<{}>) {
   };
 
   return (
-    <notificationContext.Provider value={{ addNotification }}>
+    <notificationContext.Provider
+      value={{
+        addNotification,
+      }}
+    >
       {children}
-      <NotificationPanel notifications={notifications} onDone={onDone} />
+      <NotificationPanel
+        notifications={notifications}
+        onDone={onDone}
+      />
     </notificationContext.Provider>
   );
 }

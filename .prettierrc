@@ -1,8 +1,7 @@
 {
   "parser": "typescript",
-  "useTabs": false,
-  "tabWidth": 2,
   "singleQuote": true,
-  "endOfLine": "lf",
-  "jsxSingleQuote": true
+  "jsxSingleQuote": true,
+  "printWidth": 120,
+  "singleAttributePerLine": true
 }

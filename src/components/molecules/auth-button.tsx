@@ -18,7 +18,10 @@ export default function AuthButton({ isCandidate }: { isCandidate?: boolean }) {
         </Button>
       )}
       {session && !isCandidate && (
-        <Button buttonType='flat' onClick={() => signOut()}>
+        <Button
+          buttonType='flat'
+          onClick={() => signOut()}
+        >
           Sign out
         </Button>
       )}

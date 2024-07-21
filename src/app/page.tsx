@@ -34,7 +34,10 @@ export default async function Home() {
           <LocationForm />
           <ChevronDown htmlFor='3-steps' />
         </header>
-        <section className='pt-12 p-4 bg-white' id='3-steps'>
+        <section
+          className='pt-12 p-4 bg-white'
+          id='3-steps'
+        >
           <div className='grid grid-cols-3 max-w-2xl mx-auto text-center text-xl tracking-widest text-[#9b9b9b]'>
             <div className='col-span-3 md:col-span-1 mb-4'>
               <div className='mb-2'>
@@ -81,10 +84,8 @@ export default async function Home() {
               of people and communities
             </h2>
             <p className='text-3xl tracking-wide text-[#9b9b9b]'>
-              FourScore seamlessly connects voters with candidates{' '}
-              <br className='hidden md:inline-block' />
-              through policy-based matching, making every vote{' '}
-              <br className='hidden md:inline-block' />
+              FourScore seamlessly connects voters with candidates <br className='hidden md:inline-block' />
+              through policy-based matching, making every vote <br className='hidden md:inline-block' />
               more informed and impactful.
             </p>
           </div>
@@ -101,12 +102,10 @@ export default async function Home() {
             </div>
             <div className='text-3xl font-light flex items-center justify-start content-center flex-wrap h-[585px]'>
               <p className='w-full mb-16'>
-                When you have a list of candidates and a FourScore next to each
-                name, picking who you&apos;re going to vote for is easy.
+                When you have a list of candidates and a FourScore next to each name, picking who you&apos;re going to
+                vote for is easy.
               </p>
-              <p className='w-full mb-16'>
-                No more wasted time searching endlessly for candidates online.
-              </p>
+              <p className='w-full mb-16'>No more wasted time searching endlessly for candidates online.</p>
               <h2 className='w-full text-6xl'>No more guessing.</h2>
             </div>
           </div>
@@ -117,37 +116,31 @@ export default async function Home() {
               className='grid grid-cols-1 gap-4'
               wrapperClassname='break-inside-avoid-column break-after-column'
             >
-              <p>
-                FourScore is a non-partisian, online tool built to help voters:{' '}
-              </p>
+              <p>FourScore is a non-partisian, online tool built to help voters: </p>
               <ul className='list-disc list-inside grid grid-cols-1 gap-4 mb-4'>
                 <li>
-                  Quickly and easily pick the candidates on their ballot who
-                  align with their most important issues
+                  Quickly and easily pick the candidates on their ballot who align with their most important issues
                 </li>
                 <li>
-                  Drive policy decisions in their community, state and nation by
-                  sending poll results to the official&apos;s public opinion
-                  dashboard
+                  Drive policy decisions in their community, state and nation by sending poll results to the
+                  official&apos;s public opinion dashboard
                 </li>
               </ul>
               <p>
-                FourScore also helps elected officials and candidates running
-                for office to better represent their community by:{' '}
+                FourScore also helps elected officials and candidates running for office to better represent their
+                community by:{' '}
               </p>
               <ul className='list-disc list-inside grid grid-cols-1 gap-4'>
                 <li>
-                  Saving them money by eliminating the need to hire teams of
-                  consultants and marketing professionals
+                  Saving them money by eliminating the need to hire teams of consultants and marketing professionals
                 </li>
                 <li>
-                  Providing them premium data and insight into their community
-                  on the issues the community has said are most important
+                  Providing them premium data and insight into their community on the issues the community has said are
+                  most important
                 </li>
                 <li>
-                  Giving them the ability to connect directly with individual
-                  voters, without the voter having to expose who they are or
-                  their personal contact info
+                  Giving them the ability to connect directly with individual voters, without the voter having to expose
+                  who they are or their personal contact info
                 </li>
               </ul>
             </Accordion>
@@ -158,10 +151,7 @@ export default async function Home() {
               wrapperClassname='break-inside-avoid-column'
             >
               <p>Yes.</p>
-              <p>
-                We are not in the business of selling yours, or anyone&apos;s
-                personal data.
-              </p>
+              <p>We are not in the business of selling yours, or anyone&apos;s personal data.</p>
             </Accordion>
             <Accordion
               isOpen
@@ -171,15 +161,11 @@ export default async function Home() {
             >
               <p>None.</p>
               <p>
-                FourScore is totally independent and non-partisian. We are not
-                affiliated with any political party or political organization of
-                any kind. We serve to empower communities and the voters within
-                those communities.
+                FourScore is totally independent and non-partisian. We are not affiliated with any political party or
+                political organization of any kind. We serve to empower communities and the voters within those
+                communities.
               </p>
-              <p>
-                Any candidate, elected official, or voter is welcome to utilize
-                the many benefits of FourScore.
-              </p>
+              <p>Any candidate, elected official, or voter is welcome to utilize the many benefits of FourScore.</p>
             </Accordion>
             <Accordion
               isOpen
@@ -188,10 +174,8 @@ export default async function Home() {
               wrapperClassname='break-inside-avoid-column'
             >
               <p>
-                FourScore makes money by charging elected officials and
-                candidates for real-time public opinion about their
-                community&apos;s greatest concerns, and connecting them with
-                their voters.
+                FourScore makes money by charging elected officials and candidates for real-time public opinion about
+                their community&apos;s greatest concerns, and connecting them with their voters.
               </p>
             </Accordion>
             <Accordion
@@ -203,9 +187,8 @@ export default async function Home() {
               <p>Nothing, nada, zero, zilch.</p>
               <p>FourScore is FREE forever for voters.</p>
               <p>
-                FourScore makes money by charging elected officials and
-                candidates for real-time insight on the public opinion within
-                their community, and connecting them with their voters.
+                FourScore makes money by charging elected officials and candidates for real-time insight on the public
+                opinion within their community, and connecting them with their voters.
               </p>
             </Accordion>
           </div>
@@ -233,12 +216,10 @@ export default async function Home() {
         <section className='min-h-screen from-[#9EA1A5] to-[#393C40] bg-gradient-to-b text-white md:flex items-center justify-center py-24 px-4 md:px-24 hidden'>
           <div className='grid grid-cols-2 text-4xl font-light'>
             <p className='pr-[153px]'>
-              The Voter takes the poll and generates anonymous data about the
-              community for their Representatives
+              The Voter takes the poll and generates anonymous data about the community for their Representatives
             </p>
             <p className='pl-[153px]'>
-              The Representatives develop plans to address the most important
-              issues facing their community
+              The Representatives develop plans to address the most important issues facing their community
             </p>
             <div className='flex items-center justify-center w-[242px] h-[273px] mx-auto -my-8 col-span-2'>
               <Image
@@ -248,32 +229,22 @@ export default async function Home() {
                 alt='Diagram'
               />
             </div>
-            <p className='pr-[153px]'>
-              The Voter rewards their Representative with another vote
-            </p>
+            <p className='pr-[153px]'>The Voter rewards their Representative with another vote</p>
             <p className='pl-[153px]'>
-              The Representative continues to reach out to Voters to get their
-              feedback about the community
+              The Representative continues to reach out to Voters to get their feedback about the community
             </p>
           </div>
         </section>
         <section className='from-[#9EA1A5] to-[#393C40] bg-gradient-to-b text-white md:hidden items-center justify-center py-24 px-8 md:px-24 flex'>
           <ul className='list-disc list-inside text-2xl'>
             <li className='mb-4'>
-              The Voter takes the poll and generates anonymous data about the
-              community for their Representatives
+              The Voter takes the poll and generates anonymous data about the community for their Representatives
             </li>
             <li className='mb-4'>
-              The Representatives develop plans to address the most important
-              issues facing their community
+              The Representatives develop plans to address the most important issues facing their community
             </li>
-            <li className='mb-4'>
-              The Voter rewards their Representative with another vote
-            </li>
-            <li>
-              The Representative continues to reach out to Voters to get their
-              feedback about the community
-            </li>
+            <li className='mb-4'>The Voter rewards their Representative with another vote</li>
+            <li>The Representative continues to reach out to Voters to get their feedback about the community</li>
           </ul>
         </section>
         <footer className='text-center bg-[#212224] py-16 text-white'>
@@ -289,7 +260,10 @@ export default async function Home() {
             </div>
             <div className='md:grid md:grid-cols-3'>
               <div className='col-xs-4 text-center disabledwrap-block'>
-                <Link className='underline' href='/'>
+                <Link
+                  className='underline'
+                  href='/'
+                >
                   FAQ
                 </Link>
               </div>
@@ -314,7 +288,10 @@ export default async function Home() {
                 </a>
               </div>
               <div className='col-xs-12 text-center contact md:col-span-3'>
-                <Link className='text-uppercase underline' href='/contact-us'>
+                <Link
+                  className='text-uppercase underline'
+                  href='/contact-us'
+                >
                   Contact
                 </Link>
               </div>

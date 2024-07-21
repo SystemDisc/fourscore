@@ -5,16 +5,10 @@ import CandidateCard from './candidate-card';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function CandidateList({
-  candidates,
-}: {
-  candidates: CandidateResult[];
-}) {
+export default function CandidateList({ candidates }: { candidates: CandidateResult[] }) {
   const router = useRouter();
 
-  const [pledgedCandidate, setPledgedCandidate] = useState<CandidateResult>(
-    candidates[0],
-  );
+  const [pledgedCandidate, setPledgedCandidate] = useState<CandidateResult>(candidates[0]);
 
   useEffect(() => {
     const selected = candidates.find((c) => c === pledgedCandidate);
@@ -39,9 +33,7 @@ export default function CandidateList({
           key={candidate.id}
           candidate={candidate}
           selected={pledgedCandidate === candidate}
-          onSelect={(selectedCandidate) =>
-            setPledgedCandidate(selectedCandidate)
-          }
+          onSelect={(selectedCandidate) => setPledgedCandidate(selectedCandidate)}
         />
       ))}
     </div>

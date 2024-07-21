@@ -28,9 +28,7 @@ export default function ConfirmAddress() {
   const [isLoading, setIsLoading] = useState(true);
   const [map, setMap] = useState<google.maps.Map>();
   const [center, setCenter] = useState<google.maps.LatLng>();
-  const [place, setPlace] = useState<google.maps.places.PlaceResult | null>(
-    null,
-  );
+  const [place, setPlace] = useState<google.maps.places.PlaceResult | null>(null);
   const [isNotExact, setIsNotExact] = useState(false);
 
   const onLoad = useCallback((map: google.maps.Map) => {
@@ -78,27 +76,13 @@ export default function ConfirmAddress() {
       const streetNumber = place?.address_components?.find((a) =>
         a.types.find((t) => t === 'street_number'),
       )?.long_name;
-      const route = place?.address_components?.find((a) =>
-        a.types.find((t) => t === 'route'),
-      )?.short_name;
-      const city = place?.address_components?.find((a) =>
-        a.types.find((t) => t === 'locality'),
-      )?.long_name;
+      const route = place?.address_components?.find((a) => a.types.find((t) => t === 'route'))?.short_name;
+      const city = place?.address_components?.find((a) => a.types.find((t) => t === 'locality'))?.long_name;
       const state = place?.address_components?.find((a) =>
         a.types.find((t) => t === 'administrative_area_level_1'),
       )?.short_name;
-      const zip = place?.address_components?.find((a) =>
-        a.types.find((t) => t === 'postal_code'),
-      )?.long_name;
-      if (
-        place &&
-        place.address_components &&
-        streetNumber &&
-        route &&
-        city &&
-        state &&
-        zip
-      ) {
+      const zip = place?.address_components?.find((a) => a.types.find((t) => t === 'postal_code'))?.long_name;
+      if (place && place.address_components && streetNumber && route && city && state && zip) {
         setStreetNumber(streetNumber);
         setRoute(route);
         setCity(city);
@@ -169,14 +153,11 @@ export default function ConfirmAddress() {
         <section className='p-4 text-center flex flex-col gap-4 min-h-[calc(100dvh_-_300px)] md:min-h-0'>
           {isNotExact && (
             <p className='text-red-500'>
-              You did not provide a street address. If you do not use your voter
-              registration address, you will not be able to utilize some
-              features.
+              You did not provide a street address. If you do not use your voter registration address, you will not be
+              able to utilize some features.
             </p>
           )}
-          {!isNotExact && (
-            <p>Is this the address where you&apos;re registered to vote?</p>
-          )}
+          {!isNotExact && <p>Is this the address where you&apos;re registered to vote?</p>}
           <address className='[font-style:normal] text-xl'>
             <div>
               {streetNumber} {route}
@@ -215,7 +196,11 @@ export default function ConfirmAddress() {
             >
               Yes
             </Button>
-            <Button buttonType='white' isLink href='/'>
+            <Button
+              buttonType='white'
+              isLink
+              href='/'
+            >
               Edit
             </Button>
           </div>

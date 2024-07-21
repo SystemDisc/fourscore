@@ -7,13 +7,12 @@ import NotificationProvider from '@/providers/notification-provider';
 import authOptions from '@/utils/auth-options';
 import { Analytics } from '@vercel/analytics/react';
 
-const lato = Lato({ subsets: ['latin'], weight: ['300', '400', '700', '900'] });
+const lato = Lato({
+  subsets: ['latin'],
+  weight: ['300', '400', '700', '900'],
+});
 
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
 
   return (
@@ -37,16 +36,31 @@ export default async function RootLayout({
           sizes='16x16'
           href='/icons/favicon-16x16.png'
         />
-        <link rel='manifest' href='/manifest.json' />
+        <link
+          rel='manifest'
+          href='/manifest.json'
+        />
         <link
           rel='mask-icon'
           href='/icons/safari-pinned-tab.svg'
           color='#5bbad5'
         />
-        <link rel='shortcut icon' href='/icons/favicon.ico' />
-        <meta name='msapplication-TileColor' content='#00a300' />
-        <meta name='msapplication-config' content='/browserconfig.xml' />
-        <meta name='theme-color' content='#ffffff' />
+        <link
+          rel='shortcut icon'
+          href='/icons/favicon.ico'
+        />
+        <meta
+          name='msapplication-TileColor'
+          content='#00a300'
+        />
+        <meta
+          name='msapplication-config'
+          content='/browserconfig.xml'
+        />
+        <meta
+          name='theme-color'
+          content='#ffffff'
+        />
         <meta
           name='description'
           content="FourScore revolutionizes the voting experience by using a policy-based matching system to connect voters with political candidates. By filling out a comprehensive survey on key issues, both voters and candidates receive a personalized 'Four Score,' reflecting their alignment on local, state, and federal policies. This innovative approach ensures voters can make more informed decisions at the ballot box, while candidates can engage more effectively with their potential supporters, making democracy more accessible and aligned with individual values."
@@ -151,7 +165,10 @@ export default async function RootLayout({
             src='https://www.googletagmanager.com/ns.html?id=GTM-TK3ZT6B3'
             height='0'
             width='0'
-            style={{ display: 'none', visibility: 'hidden' }}
+            style={{
+              display: 'none',
+              visibility: 'hidden',
+            }}
           />
         </noscript>
       </body>

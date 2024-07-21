@@ -4,25 +4,19 @@ import { v4 } from 'uuid';
 export async function up(db: Kysely<any>) {
   await db.schema
     .createTable('Question')
-    .addColumn('id', 'uuid', (col) =>
-      col.primaryKey().defaultTo(sql`gen_random_uuid()`),
-    )
+    .addColumn('id', 'uuid', (col) => col.primaryKey().defaultTo(sql`gen_random_uuid()`))
     .addColumn('localityId', 'uuid', (col) => col.notNull())
     .addColumn('categoryId', 'uuid', (col) => col.notNull())
     .addColumn('question', 'varchar', (col) => col.notNull())
     .execute();
   await db.schema
     .createTable('Locality')
-    .addColumn('id', 'uuid', (col) =>
-      col.primaryKey().defaultTo(sql`gen_random_uuid()`),
-    )
+    .addColumn('id', 'uuid', (col) => col.primaryKey().defaultTo(sql`gen_random_uuid()`))
     .addColumn('name', 'varchar', (col) => col.notNull())
     .execute();
   await db.schema
     .createTable('Category')
-    .addColumn('id', 'uuid', (col) =>
-      col.primaryKey().defaultTo(sql`gen_random_uuid()`),
-    )
+    .addColumn('id', 'uuid', (col) => col.primaryKey().defaultTo(sql`gen_random_uuid()`))
     .addColumn('name', 'varchar', (col) => col.notNull())
     .execute();
 
@@ -144,20 +138,17 @@ export async function up(db: Kysely<any>) {
       {
         localityId: localId,
         categoryId: publicId,
-        question:
-          'Should the city invest more in renewable energy sources for public buildings?',
+        question: 'Should the city invest more in renewable energy sources for public buildings?',
       },
       {
         localityId: localId,
         categoryId: publicId,
-        question:
-          'Do you support the expansion of public parks and green spaces within the city?',
+        question: 'Do you support the expansion of public parks and green spaces within the city?',
       },
       {
         localityId: localId,
         categoryId: economicId,
-        question:
-          'Should local government provide tax incentives to attract small businesses?',
+        question: 'Should local government provide tax incentives to attract small businesses?',
       },
       {
         localityId: localId,
@@ -168,56 +159,47 @@ export async function up(db: Kysely<any>) {
       {
         localityId: localId,
         categoryId: publicSafetyId,
-        question:
-          'Should the city increase funding for community policing initiatives?',
+        question: 'Should the city increase funding for community policing initiatives?',
       },
       {
         localityId: localId,
         categoryId: publicSafetyId,
-        question:
-          'Do you support the implementation of stricter gun control measures within city limits?',
+        question: 'Do you support the implementation of stricter gun control measures within city limits?',
       },
       {
         localityId: localId,
         categoryId: housingId,
-        question:
-          'Do you favor zoning changes to allow more affordable housing developments?',
+        question: 'Do you favor zoning changes to allow more affordable housing developments?',
       },
       {
         localityId: localId,
         categoryId: housingId,
-        question:
-          'Should the city invest in infrastructure improvements in underserved neighborhoods?',
+        question: 'Should the city invest in infrastructure improvements in underserved neighborhoods?',
       },
       {
         localityId: localId,
         categoryId: educationId,
-        question:
-          'Do you support the increase of local funding for public schools?',
+        question: 'Do you support the increase of local funding for public schools?',
       },
       {
         localityId: localId,
         categoryId: educationId,
-        question:
-          'Should the city offer free community college tuition to residents?',
+        question: 'Should the city offer free community college tuition to residents?',
       },
       {
         localityId: localId,
         categoryId: socialId,
-        question:
-          'Do you believe the city should expand mental health services accessible to the public?',
+        question: 'Do you believe the city should expand mental health services accessible to the public?',
       },
       {
         localityId: localId,
         categoryId: socialId,
-        question:
-          'Should local government increase support for homeless shelters and services?',
+        question: 'Should local government increase support for homeless shelters and services?',
       },
       {
         localityId: localId,
         categoryId: technologyId,
-        question:
-          'Do you support the initiative to provide free public Wi-Fi in key areas of the city?',
+        question: 'Do you support the initiative to provide free public Wi-Fi in key areas of the city?',
       },
       {
         localityId: localId,
@@ -228,26 +210,22 @@ export async function up(db: Kysely<any>) {
       {
         localityId: localId,
         categoryId: cultureId,
-        question:
-          'Do you believe in increasing funding for local arts and cultural programs?',
+        question: 'Do you believe in increasing funding for local arts and cultural programs?',
       },
       {
         localityId: localId,
         categoryId: cultureId,
-        question:
-          'Should the city sponsor annual community events to promote local businesses and tourism?',
+        question: 'Should the city sponsor annual community events to promote local businesses and tourism?',
       },
       {
         localityId: stateId,
         categoryId: educationId,
-        question:
-          'Should the state increase funding for K-12 public education?',
+        question: 'Should the state increase funding for K-12 public education?',
       },
       {
         localityId: stateId,
         categoryId: educationId,
-        question:
-          'Do you support state-funded scholarship programs for higher education?',
+        question: 'Do you support state-funded scholarship programs for higher education?',
       },
       {
         localityId: stateId,
@@ -258,32 +236,27 @@ export async function up(db: Kysely<any>) {
       {
         localityId: stateId,
         categoryId: healthId,
-        question:
-          'Do you believe in implementing state-level regulations to reduce prescription drug prices?',
+        question: 'Do you believe in implementing state-level regulations to reduce prescription drug prices?',
       },
       {
         localityId: stateId,
         categoryId: economicId,
-        question:
-          'Do you support raising the minimum wage to a livable standard within the state?',
+        question: 'Do you support raising the minimum wage to a livable standard within the state?',
       },
       {
         localityId: stateId,
         categoryId: economicId,
-        question:
-          'Should the state offer tax incentives to businesses that implement green technologies?',
+        question: 'Should the state offer tax incentives to businesses that implement green technologies?',
       },
       {
         localityId: stateId,
         categoryId: environmentId,
-        question:
-          'Do you support state-level initiatives to reduce carbon emissions and combat climate change?',
+        question: 'Do you support state-level initiatives to reduce carbon emissions and combat climate change?',
       },
       {
         localityId: stateId,
         categoryId: environmentId,
-        question:
-          'Should the state allocate funds to protect and restore natural habitats and wildlife?',
+        question: 'Should the state allocate funds to protect and restore natural habitats and wildlife?',
       },
       {
         localityId: stateId,
@@ -299,20 +272,17 @@ export async function up(db: Kysely<any>) {
       {
         localityId: stateId,
         categoryId: infrastructureId,
-        question:
-          'Do you support increased state investment in public transportation infrastructure?',
+        question: 'Do you support increased state investment in public transportation infrastructure?',
       },
       {
         localityId: stateId,
         categoryId: infrastructureId,
-        question:
-          'Should the state allocate more resources to improving broadband internet access in rural areas?',
+        question: 'Should the state allocate more resources to improving broadband internet access in rural areas?',
       },
       {
         localityId: stateId,
         categoryId: socialId,
-        question:
-          'Do you support the legalization of marijuana for recreational use?',
+        question: 'Do you support the legalization of marijuana for recreational use?',
       },
       {
         localityId: stateId,
@@ -322,32 +292,27 @@ export async function up(db: Kysely<any>) {
       {
         localityId: stateId,
         categoryId: employmentId,
-        question:
-          'Do you support state policies that encourage the creation of more union jobs?',
+        question: 'Do you support state policies that encourage the creation of more union jobs?',
       },
       {
         localityId: stateId,
         categoryId: employmentId,
-        question:
-          'Should the state require paid family leave for all employees?',
+        question: 'Should the state require paid family leave for all employees?',
       },
       {
         localityId: stateId,
         categoryId: taxesId,
-        question:
-          'Do you believe in increasing state taxes on the wealthy to fund public services?',
+        question: 'Do you believe in increasing state taxes on the wealthy to fund public services?',
       },
       {
         localityId: stateId,
         categoryId: taxesId,
-        question:
-          'Should the state prioritize funding for renewable energy projects over fossil fuels?',
+        question: 'Should the state prioritize funding for renewable energy projects over fossil fuels?',
       },
       {
         localityId: federalId,
         categoryId: economicId,
-        question:
-          'Do you support the implementation of a nationwide minimum wage increase?',
+        question: 'Do you support the implementation of a nationwide minimum wage increase?',
       },
       {
         localityId: federalId,
@@ -358,14 +323,12 @@ export async function up(db: Kysely<any>) {
       {
         localityId: federalId,
         categoryId: healthId,
-        question:
-          'Do you believe in a single-payer healthcare system as a solution for the United States?',
+        question: 'Do you believe in a single-payer healthcare system as a solution for the United States?',
       },
       {
         localityId: federalId,
         categoryId: healthId,
-        question:
-          'Should the federal government take steps to lower the cost of prescription drugs?',
+        question: 'Should the federal government take steps to lower the cost of prescription drugs?',
       },
       {
         localityId: federalId,
@@ -382,26 +345,22 @@ export async function up(db: Kysely<any>) {
       {
         localityId: federalId,
         categoryId: defenseId,
-        question:
-          'Do you believe in increasing the defense budget to enhance national security?',
+        question: 'Do you believe in increasing the defense budget to enhance national security?',
       },
       {
         localityId: federalId,
         categoryId: defenseId,
-        question:
-          'Should the United States reduce its military presence overseas?',
+        question: 'Should the United States reduce its military presence overseas?',
       },
       {
         localityId: federalId,
         categoryId: socialId,
-        question:
-          'Do you support nationwide legalization of same-sex marriage?',
+        question: 'Do you support nationwide legalization of same-sex marriage?',
       },
       {
         localityId: federalId,
         categoryId: socialId,
-        question:
-          'Should the federal government enforce stricter gun control laws?',
+        question: 'Should the federal government enforce stricter gun control laws?',
       },
       {
         localityId: federalId,
@@ -412,14 +371,12 @@ export async function up(db: Kysely<any>) {
       {
         localityId: federalId,
         categoryId: immigrationId,
-        question:
-          'Should the federal government increase funding for border security?',
+        question: 'Should the federal government increase funding for border security?',
       },
       {
         localityId: federalId,
         categoryId: educationId,
-        question:
-          'Do you believe in making public college tuition-free for all Americans?',
+        question: 'Do you believe in making public college tuition-free for all Americans?',
       },
       {
         localityId: federalId,
@@ -440,26 +397,22 @@ export async function up(db: Kysely<any>) {
       {
         localityId: federalId,
         categoryId: taxesId,
-        question:
-          'Do you support reforming the tax code to ensure higher taxes on the wealthiest Americans?',
+        question: 'Do you support reforming the tax code to ensure higher taxes on the wealthiest Americans?',
       },
       {
         localityId: federalId,
         categoryId: taxesId,
-        question:
-          'Should the federal government provide more tax incentives for small businesses?',
+        question: 'Should the federal government provide more tax incentives for small businesses?',
       },
       {
         localityId: federalId,
         categoryId: rightsId,
-        question:
-          'Do you believe the federal government should play a larger role in protecting voting rights?',
+        question: 'Do you believe the federal government should play a larger role in protecting voting rights?',
       },
       {
         localityId: federalId,
         categoryId: rightsId,
-        question:
-          'Should the federal government enact more comprehensive anti-discrimination laws?',
+        question: 'Should the federal government enact more comprehensive anti-discrimination laws?',
       },
     ])
     .execute();

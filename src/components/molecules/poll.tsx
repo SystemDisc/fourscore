@@ -33,33 +33,29 @@ export default function Poll({
 
   const { data: session, status } = useSession();
 
-  const foundIndex = questions.findIndex(
-    (q) => q.answer?.agree === undefined || q.answer.agree === null
-  );
-  const [currentIndex, setCurrentIndex] = useState(
-    foundIndex >= 0 ? foundIndex : questions.length - 1
-  );
+  const foundIndex = questions.findIndex((q) => q.answer?.agree === undefined || q.answer.agree === null);
+  const [currentIndex, setCurrentIndex] = useState(foundIndex >= 0 ? foundIndex : questions.length - 1);
   const [agree, setAgree] = useState<boolean | null | undefined>(
     foundIndex >= 0
       ? questions[foundIndex]?.answer?.agree
       : questions.length > 0
-      ? questions[questions.length - 1]?.answer?.agree
-      : undefined
+        ? questions[questions.length - 1]?.answer?.agree
+        : undefined,
   );
   const [rating, setRating] = useState<number | null | undefined>(
     foundIndex >= 0
       ? questions[foundIndex]?.answer?.rating
       : questions.length > 0
-      ? questions[questions.length - 1]?.answer?.rating
-      : undefined
+        ? questions[questions.length - 1]?.answer?.rating
+        : undefined,
   );
   const [answers, setAnswers] = useState<Simplify<AnswerUpdate>[]>(
     questions.map(
       (q) =>
         q.answer || {
           questionId: q.id,
-        }
-    )
+        },
+    ),
   );
   const [showTutorial, setShowTutorial] = useState(false);
   const [tutorialShown, setTutorialShown] = useState(!!seenVotingTutorial);
@@ -96,7 +92,7 @@ export default function Poll({
       a.rating !== null
         ? sum + 1
         : sum,
-    0
+    0,
   );
 
   return (
@@ -104,10 +100,7 @@ export default function Poll({
       {showTutorial && (
         <>
           <div className='absolute flex flex-col gap-4 left-0 top-0 right-0 bottom-0 z-50 text-white justify-center max-w-lg mx-auto p-4 pointer-events-none'>
-            <p>
-              Now that you&apos;ve answered the question, how important is this
-              issue to you?
-            </p>
+            <p>Now that you&apos;ve answered the question, how important is this issue to you?</p>
             <p>
               1 = Not Important
               <br />
@@ -192,35 +185,38 @@ export default function Poll({
               'min-h-[calc(100dvh_-_3.5rem_-_42px)] md:min-h-[calc(100dvh_-_5.5rem_-_42px_-_2px)] relative z-10',
               {
                 hidden: index !== currentIndex,
-              }
+              },
             )}
           >
             <div className='h-20 bg-gradient-to-bl from-[#6932D1] to-[#899ED4]'>
               <div className='flex items-end justify-between p-4'>
-                <div className='text-4xl text-white'>
-                  {question.locality?.name}
-                </div>
+                <div className='text-4xl text-white'>{question.locality?.name}</div>
                 <div className='grid grid-cols-3 gap-4 pb-1'>
-                  <img src='/images/house.svg' width={44} height={39} />
-                  <img src='/images/house.svg' width={44} height={39} />
-                  <img src='/images/house.svg' width={44} height={39} />
+                  <img
+                    src='/images/house.svg'
+                    width={44}
+                    height={39}
+                  />
+                  <img
+                    src='/images/house.svg'
+                    width={44}
+                    height={39}
+                  />
+                  <img
+                    src='/images/house.svg'
+                    width={44}
+                    height={39}
+                  />
                 </div>
               </div>
             </div>
             <div
-              className={classNames(
-                'flex flex-col items-center justify-between gap-4 p-4 h-[calc(100%_-_5rem)] pt-2',
-                {
-                  hidden: index !== currentIndex,
-                }
-              )}
+              className={classNames('flex flex-col items-center justify-between gap-4 p-4 h-[calc(100%_-_5rem)] pt-2', {
+                hidden: index !== currentIndex,
+              })}
             >
               <div>
-                {question.category && (
-                  <h1 className='font-bold text-xl text-center'>
-                    {question.category.name}
-                  </h1>
-                )}
+                {question.category && <h1 className='font-bold text-xl text-center'>{question.category.name}</h1>}
                 <h2 className='text-center'>{question.question}</h2>
               </div>
               {answerData && (
@@ -228,28 +224,20 @@ export default function Poll({
                   <div className='flex text-[#7A7DB7] font-bold -mt-4'>USA</div>
                   <div className='flex h-full gap-4'>
                     <div className='w-16'>
-                      Yes{' '}
-                      <span className='text-xs'>({answerData.yesCount})</span>
+                      Yes <span className='text-xs'>({answerData.yesCount})</span>
                     </div>
                     <div className='flex-1 flex items-center h-full'>
                       <div className='w-full relative h-4 overflow-hidden rounded-full'>
                         <div
                           className='bg-gradient-to-tr from-[#899ED4] to-[#A389D4] h-full rounded-full absolute top-0 left-0 z-0'
                           style={{
-                            width: `${
-                              (+answerData.yesCount /
-                                (+answerData.yesCount + +answerData.noCount)) *
-                              100
-                            }%`,
+                            width: `${(+answerData.yesCount / (+answerData.yesCount + +answerData.noCount)) * 100}%`,
                           }}
                         />
                         <div className='w-full h-full border rounded-full border-neutral-300 bg-transparent shadow-[inset_0_1px_1px_1px_rgba(0,_0,_0,_0.5)] absolute top-0 left-0 z-10'>
                           <div className='absolute top-0 left-0 right-0 bottom-0 flex justify-center text-xs font-bold'>
-                            {Math.round(
-                              (+answerData.yesCount /
-                                (+answerData.yesCount + +answerData.noCount)) *
-                                10000
-                            ) / 100}
+                            {Math.round((+answerData.yesCount / (+answerData.yesCount + +answerData.noCount)) * 10000) /
+                              100}
                             %
                           </div>
                         </div>
@@ -265,20 +253,13 @@ export default function Poll({
                         <div
                           className='bg-gradient-to-tr from-[#899ED4] to-[#A389D4] h-full rounded-full absolute top-0 left-0 z-0'
                           style={{
-                            width: `${
-                              (+answerData.noCount /
-                                (+answerData.yesCount + +answerData.noCount)) *
-                              100
-                            }%`,
+                            width: `${(+answerData.noCount / (+answerData.yesCount + +answerData.noCount)) * 100}%`,
                           }}
                         />
                         <div className='w-full h-full border rounded-full border-neutral-300 bg-transparent shadow-[inset_0_1px_1px_1px_rgba(0,_0,_0,_0.5)] absolute top-0 left-0 z-10'>
                           <div className='absolute top-0 left-0 right-0 bottom-0 flex justify-center text-xs font-bold'>
-                            {Math.round(
-                              (+answerData.noCount /
-                                (+answerData.yesCount + +answerData.noCount)) *
-                                10000
-                            ) / 100}
+                            {Math.round((+answerData.noCount / (+answerData.yesCount + +answerData.noCount)) * 10000) /
+                              100}
                             %
                           </div>
                         </div>
@@ -291,8 +272,7 @@ export default function Poll({
                 <div className='flex justify-center gap-4'>
                   <Button
                     className={classNames('rounded-full text-2xl h-16 w-16', {
-                      'outline outline-4 outline-offset-2 outline-[#6932D1]':
-                        agree === true,
+                      'outline outline-4 outline-offset-2 outline-[#6932D1]': agree === true,
                     })}
                     onClick={() => setAgree(true)}
                   >
@@ -300,8 +280,7 @@ export default function Poll({
                   </Button>
                   <Button
                     className={classNames('rounded-full text-2xl h-16 w-16', {
-                      'outline outline-4 outline-offset-2 outline-[#6932D1]':
-                        agree === false,
+                      'outline outline-4 outline-offset-2 outline-[#6932D1]': agree === false,
                     })}
                     onClick={() => setAgree(false)}
                   >
@@ -312,8 +291,7 @@ export default function Poll({
                   <div className='flex flex-col items-center gap-2'>
                     <Button
                       className={classNames('rounded-full text-2xl h-12 w-12', {
-                        'outline outline-4 outline-offset-2 outline-[#6932D1]':
-                          rating === 1,
+                        'outline outline-4 outline-offset-2 outline-[#6932D1]': rating === 1,
                       })}
                       onClick={() => setRating(1)}
                     >
@@ -324,8 +302,7 @@ export default function Poll({
                   <div>
                     <Button
                       className={classNames('rounded-full text-2xl h-12 w-12', {
-                        'outline outline-4 outline-offset-2 outline-[#6932D1]':
-                          rating === 2,
+                        'outline outline-4 outline-offset-2 outline-[#6932D1]': rating === 2,
                       })}
                       onClick={() => setRating(2)}
                     >
@@ -335,8 +312,7 @@ export default function Poll({
                   <div className='flex flex-col items-center gap-2'>
                     <Button
                       className={classNames('rounded-full text-2xl h-12 w-12', {
-                        'outline outline-4 outline-offset-2 outline-[#6932D1]':
-                          rating === 3,
+                        'outline outline-4 outline-offset-2 outline-[#6932D1]': rating === 3,
                       })}
                       onClick={() => setRating(3)}
                     >
@@ -347,8 +323,7 @@ export default function Poll({
                   <div>
                     <Button
                       className={classNames('rounded-full text-2xl h-12 w-12', {
-                        'outline outline-4 outline-offset-2 outline-[#6932D1]':
-                          rating === 4,
+                        'outline outline-4 outline-offset-2 outline-[#6932D1]': rating === 4,
                       })}
                       onClick={() => setRating(4)}
                     >
@@ -357,13 +332,9 @@ export default function Poll({
                   </div>
                   <div className='flex flex-col items-center gap-2'>
                     <Button
-                      className={classNames(
-                        'rounded-full text-2xl h-12 w-12 !p-0',
-                        {
-                          'outline outline-4 outline-offset-2 outline-[#6932D1]':
-                            rating === 5,
-                        }
-                      )}
+                      className={classNames('rounded-full text-2xl h-12 w-12 !p-0', {
+                        'outline outline-4 outline-offset-2 outline-[#6932D1]': rating === 5,
+                      })}
                       onClick={() => setRating(5)}
                     >
                       <BsStarFill />
@@ -374,12 +345,7 @@ export default function Poll({
                 <div className='grid grid-cols-1 gap-4'>
                   <Button
                     className='text-2xl'
-                    disabled={
-                      agree === undefined ||
-                      agree === null ||
-                      rating === undefined ||
-                      rating === null
-                    }
+                    disabled={agree === undefined || agree === null || rating === undefined || rating === null}
                     onClick={async () => {
                       const newAnswers = [...answers];
                       newAnswers[index].agree = agree;
@@ -395,13 +361,10 @@ export default function Poll({
                                 a.agree === null ||
                                 a.rating === undefined ||
                                 a.rating === null) &&
-                              !a.skipped
-                          )
+                              !a.skipped,
+                          ),
                       );
-                      if (
-                        nextIndex === -1 &&
-                        currentIndex < questions.length - 1
-                      ) {
+                      if (nextIndex === -1 && currentIndex < questions.length - 1) {
                         nextIndex = currentIndex + 1;
                       }
                       if (nextIndex >= 0 && nextIndex < questions.length) {
@@ -437,13 +400,10 @@ export default function Poll({
                                 a.agree === null ||
                                 a.rating === undefined ||
                                 a.rating === null) &&
-                              !a.skipped
-                          )
+                              !a.skipped,
+                          ),
                       );
-                      if (
-                        nextIndex === -1 &&
-                        currentIndex < questions.length - 1
-                      ) {
+                      if (nextIndex === -1 && currentIndex < questions.length - 1) {
                         nextIndex = currentIndex + 1;
                       }
                       if (nextIndex >= 0 && nextIndex < questions.length) {

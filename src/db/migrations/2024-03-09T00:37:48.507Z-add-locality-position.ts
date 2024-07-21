@@ -1,10 +1,7 @@
 import { Kysely, sql } from 'kysely';
 
 export async function up(db: Kysely<any>) {
-  await db.schema
-    .alterTable('Locality')
-    .addColumn('position', 'integer')
-    .execute();
+  await db.schema.alterTable('Locality').addColumn('position', 'integer').execute();
 
   await db
     .updateTable('Locality')
@@ -32,5 +29,10 @@ export async function up(db: Kysely<any>) {
 }
 
 export async function down(db: Kysely<any>) {
-  await db.updateTable('Locality').set({ position: null }).execute();
+  await db
+    .updateTable('Locality')
+    .set({
+      position: null,
+    })
+    .execute();
 }

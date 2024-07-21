@@ -40,9 +40,7 @@ export default function CandidateCard({
         </div>
         <div className='[line-height:12px] grid grid-cols-1 grid-rows-3 gap-2'>
           <div className='flex items-start'>{candidate.name}</div>
-          <div className='flex items-center'>
-            Four Score: {candidate.score}%
-          </div>
+          <div className='flex items-center'>Four Score: {candidate.score}%</div>
           <div className='flex items-end text-[#22C064]'>
             {Math.round((candidate.score / 100) * 5) > 0 &&
               Array(Math.round((candidate.score / 100) * 5))

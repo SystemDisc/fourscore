@@ -21,9 +21,7 @@ export default function Page() {
         {(status === 'loading' || loading) && <Loading />}
         {status !== 'loading' && !loading && (
           <>
-            {!session?.user && (
-              <Button onClick={() => signIn()}>Sign in</Button>
-            )}
+            {!session?.user && <Button onClick={() => signIn()}>Sign in</Button>}
             {session?.user && (
               <>
                 <Button
@@ -38,7 +36,10 @@ export default function Page() {
                 >
                   Delete account
                 </Button>
-                <Button isLink href='/dashboard'>
+                <Button
+                  isLink
+                  href='/dashboard'
+                >
                   Dashboard
                 </Button>
               </>

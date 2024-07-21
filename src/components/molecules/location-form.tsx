@@ -14,15 +14,12 @@ export default function LocationForm() {
 
   const router = useRouter();
 
-  const [autocomplete, setAutocomplete] =
-    useState<google.maps.places.Autocomplete>();
+  const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete>();
 
   const onPlaceChanged = useCallback(() => {
     const place = autocomplete!.getPlace();
     if (place) {
-      const streetNumber = place.address_components?.find((a) =>
-        a.types.find((t) => 'street_number'),
-      );
+      const streetNumber = place.address_components?.find((a) => a.types.find((t) => 'street_number'));
 
       localStorage.setItem('center', JSON.stringify(place.geometry?.location));
       localStorage.setItem('placeId', place.place_id || '');
@@ -74,9 +71,7 @@ export default function LocationForm() {
             placeholder='Voter Registration Address'
           />
         )}
-        <Button className='h-14 w-14 ml-1 text-4xl !px-0 !pt-0 pb-3 font-bold !tracking-normal'>
-          go
-        </Button>
+        <Button className='h-14 w-14 ml-1 text-4xl !px-0 !pt-0 pb-3 font-bold !tracking-normal'>go</Button>
       </form>
       <div className='md:w-full text-[#f99000] text-2xl'>
         <div className='max-w-xl w-full text-center text-stroke mb-4 font-bold'>

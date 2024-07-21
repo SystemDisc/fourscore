@@ -3,9 +3,7 @@ import { Kysely, sql } from 'kysely';
 export async function up(db: Kysely<any>) {
   await db.schema
     .createTable('Address')
-    .addColumn('id', 'uuid', (col) =>
-      col.primaryKey().defaultTo(sql`gen_random_uuid()`),
-    )
+    .addColumn('id', 'uuid', (col) => col.primaryKey().defaultTo(sql`gen_random_uuid()`))
     .addColumn('userId', 'uuid', (col) => col.notNull())
     .addColumn('streetNumber', 'varchar', (col) => col.notNull())
     .addColumn('route', 'varchar', (col) => col.notNull())

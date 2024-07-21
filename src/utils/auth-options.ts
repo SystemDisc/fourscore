@@ -36,9 +36,7 @@ const authOptions: AuthOptions = {
       const session_id = cookieStore.get('session-id')?.value || user.email;
       const gclid = cookieStore.get('gclid')?.value;
       if (isNewUser) {
-        const url = new URL(
-          'https://server-side-tagging-eta3rcf4fa-uc.a.run.app/mp/collect',
-        );
+        const url = new URL('https://server-side-tagging-eta3rcf4fa-uc.a.run.app/mp/collect');
         url.searchParams.set('measurement_id', 'G-WHQGZ00D5B');
         url.searchParams.set('api_secret', process.env.MP_API_SECRET || '');
         gclid && url.searchParams.set('gclid', gclid);

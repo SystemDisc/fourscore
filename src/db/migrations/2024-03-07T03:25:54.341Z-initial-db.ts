@@ -3,9 +3,7 @@ import { Kysely, sql } from 'kysely';
 export async function up(db: Kysely<any>) {
   await db.schema
     .createTable('User')
-    .addColumn('id', 'uuid', (col) =>
-      col.primaryKey().defaultTo(sql`gen_random_uuid()`),
-    )
+    .addColumn('id', 'uuid', (col) => col.primaryKey().defaultTo(sql`gen_random_uuid()`))
     .addColumn('name', 'varchar')
     .addColumn('email', 'varchar', (col) => col.notNull())
     .addColumn('emailVerified', 'timestamp')
@@ -14,9 +12,7 @@ export async function up(db: Kysely<any>) {
 
   await db.schema
     .createTable('Account')
-    .addColumn('id', 'uuid', (col) =>
-      col.primaryKey().defaultTo(sql`gen_random_uuid()`),
-    )
+    .addColumn('id', 'uuid', (col) => col.primaryKey().defaultTo(sql`gen_random_uuid()`))
     .addColumn('userId', 'uuid', (col) => col.notNull())
     .addColumn('type', 'varchar', (col) => col.notNull())
     .addColumn('provider', 'varchar', (col) => col.notNull())
@@ -32,9 +28,7 @@ export async function up(db: Kysely<any>) {
 
   await db.schema
     .createTable('Session')
-    .addColumn('id', 'uuid', (col) =>
-      col.primaryKey().defaultTo(sql`gen_random_uuid()`),
-    )
+    .addColumn('id', 'uuid', (col) => col.primaryKey().defaultTo(sql`gen_random_uuid()`))
     .addColumn('userId', 'uuid', (col) => col.notNull())
     .addColumn('sessionToken', 'varchar', (col) => col.notNull())
     .addColumn('expires', 'timestamp', (col) => col.notNull())

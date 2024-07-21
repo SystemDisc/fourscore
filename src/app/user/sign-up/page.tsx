@@ -20,7 +20,10 @@ export default function Page() {
           Please proceed to the poll to find your candidate matches.
         </div>
         <div className='text-center'>
-          <Button isLink href='/poll'>
+          <Button
+            isLink
+            href='/poll'
+          >
             Take the poll
           </Button>
         </div>

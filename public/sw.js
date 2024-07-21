@@ -41,12 +41,7 @@ const fetchFallback = async ({ request, fallbackUrl }) => {
   try {
     if (
       url.pathname === fallbackUrl &&
-      [
-        'localhost',
-        'localhost:3002',
-        'fourscore.app',
-        'www.fourscore.app',
-      ].includes(url.hostname)
+      ['localhost', 'localhost:3002', 'fourscore.app', 'www.fourscore.app'].includes(url.hostname)
     ) {
       // First try to get the resource from the cache
       const responseFromCache = await caches.match(request);
@@ -72,7 +67,9 @@ const fetchFallback = async ({ request, fallbackUrl }) => {
     // return a Response object
     return new Response('Network error happened', {
       status: 408,
-      headers: { 'Content-Type': 'text/plain' },
+      headers: {
+        'Content-Type': 'text/plain',
+      },
     });
   }
 };

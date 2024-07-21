@@ -37,14 +37,19 @@ export default forwardRef(function Accordion(
     onToggle?: (isOpen: boolean) => void;
     children?: ReactNode;
     iconRotation?: number;
-    icon?: ComponentType<{ className: string; style?: CSSProperties }>;
+    icon?: ComponentType<{
+      className: string;
+      style?: CSSProperties;
+    }>;
     isRounded?: boolean;
     tabHeadings?: string[];
     tabs?: ReactNode[];
     wrapperClassname?: string;
     headerClassname?: string;
   } & React.HTMLAttributes<HTMLDivElement>,
-  ref?: Ref<{ updateSize: () => void }>,
+  ref?: Ref<{
+    updateSize: () => void;
+  }>,
 ) {
   if (iconRotation === undefined) {
     iconRotation = 180;
@@ -52,19 +57,18 @@ export default forwardRef(function Accordion(
   const [open, setOpen] = useState(isOpen || false);
   const headerRef = useRef<HTMLElement>(null);
   const articleRef = useRef<HTMLElement>(null);
-  const Icon: ComponentType<{ className: string; style?: CSSProperties }> =
-    icon || BsChevronDown;
+  const Icon: ComponentType<{
+    className: string;
+    style?: CSSProperties;
+  }> = icon || BsChevronDown;
   const rounded = isRounded === undefined ? true : isRounded;
 
   useEffect(() => {
     const handler = () => {
       if (articleRef.current && open) {
-        const height = [...articleRef.current.children].reduce(
-          (height, elem) => {
-            return height + elem.clientHeight;
-          },
-          0,
-        );
+        const height = [...articleRef.current.children].reduce((height, elem) => {
+          return height + elem.clientHeight;
+        }, 0);
         articleRef.current.style.height = `${height}px`;
       }
     };
@@ -140,7 +144,10 @@ export default forwardRef(function Accordion(
   const [selectedTab, setSelectedTab] = useState(0);
 
   return (
-    <div className={wrapperClassname} {...props}>
+    <div
+      className={wrapperClassname}
+      {...props}
+    >
       <header
         ref={headerRef}
         className={classNames(
@@ -158,11 +165,7 @@ export default forwardRef(function Accordion(
           }
         }}
       >
-        {typeof header === 'string' ? (
-          <span className='flex-1'>{header}</span>
-        ) : (
-          header
-        )}
+        {typeof header === 'string' ? <span className='flex-1'>{header}</span> : header}
         <div className='flex items-center'>
           {tabHeadings &&
             tabHeadings.map((heading, index) => (
@@ -172,8 +175,7 @@ export default forwardRef(function Accordion(
                 className={classNames(
                   'tab-button inline-block border border-sermons-dark rounded font-bold px-2 py-1 mr-2',
                   {
-                    'bg-white !text-black active:brightness-125 hover:brightness-110':
-                      selectedTab !== index,
+                    'bg-white !text-black active:brightness-125 hover:brightness-110': selectedTab !== index,
                     'bg-gradient-to-b from-sermons-light to-sermons-dark !text-black active:from-sermons-dark active:to-sermons-dark hover:brightness-110':
                       selectedTab === index,
                   },
@@ -185,7 +187,9 @@ export default forwardRef(function Accordion(
             ))}
           <Icon
             className='inline-block text-3xl transition-transform text-sermons-dark'
-            style={{ transform: open ? `rotate(${iconRotation}deg)` : '' }}
+            style={{
+              transform: open ? `rotate(${iconRotation}deg)` : '',
+            }}
           />
         </div>
       </header>
@@ -195,12 +199,7 @@ export default forwardRef(function Accordion(
         })}
         ref={articleRef}
       >
-        <div
-          className={classNames(
-            'border border-t-0 border-white p-4',
-            className,
-          )}
-        >
+        <div className={classNames('border border-t-0 border-white p-4', className)}>
           {tabs &&
             tabs.map((tab, index) => (
               <article
