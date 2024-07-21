@@ -3,6 +3,7 @@
 import { User } from '@/db/database';
 import Cookies from 'js-cookie';
 import { Simplify } from 'kysely';
+import moment from 'moment';
 import { useEffect } from 'react';
 
 export default function GAConversion({ user }: { user: Simplify<User> }) {
@@ -17,6 +18,7 @@ export default function GAConversion({ user }: { user: Simplify<User> }) {
       user_email: user.email,
       campaign: gclid ? '(paid)' : '(organic)',
       gclid,
+      dateCreated: moment().toISOString(),
     } as GASignupEvent);
   }, []);
 
