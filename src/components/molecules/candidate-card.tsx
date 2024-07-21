@@ -16,11 +16,15 @@ export default function CandidateCard({
 }) {
   const router = useRouter();
   const goCandidateProfile = () => {
-    router.push(`profile/${candidate.id}`)
-  }
+    router.push(`profile/${candidate.id}`);
+  };
 
   return (
-    <div key={candidate.id} className='grid [grid-template-columns:3rem_1fr] gap-4 hover: cursor-pointer' onClick={goCandidateProfile}>
+    <div
+      key={candidate.id}
+      className='grid [grid-template-columns:3rem_1fr] gap-4 hover: cursor-pointer'
+      onClick={goCandidateProfile}
+    >
       <div>
         <PledgeToggle
           checked={selected}
