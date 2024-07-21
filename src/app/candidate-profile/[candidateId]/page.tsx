@@ -1,6 +1,3 @@
-import MainCard from '@/components/atoms/main-card';
-import MainNav from '@/components/molecules/main-nav';
-
 import ProfileAnswers from '@/components/molecules/profile/profile-answers';
 import ProfileBanner from '@/components/molecules/profile/profile-banner';
 import authOptions from '@/utils/auth-options';
@@ -23,8 +20,7 @@ export default async function Page({ params: { candidateId } }: { params: { cand
   const candidateQuestionsWithScore = await getCandidateAnswerScore(session.user, candidateId);
 
   return (
-    <MainCard>
-      <MainNav />
+    <>
       <ProfileBanner
         currentUser={currentUser}
         candidate={candidate}
@@ -33,6 +29,6 @@ export default async function Page({ params: { candidateId } }: { params: { cand
         candidate={candidate}
         candidateQuestionsWithScore={candidateQuestionsWithScore}
       />
-    </MainCard>
+    </>
   );
 }

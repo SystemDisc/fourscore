@@ -1,5 +1,3 @@
-import MainCard from '@/components/atoms/main-card';
-import MainNav from '@/components/molecules/main-nav';
 import ProfileBanner from '@/components/molecules/profile/profile-banner';
 import ProfileCategory from '@/components/molecules/profile/profile-category';
 import authOptions from '@/utils/auth-options';
@@ -31,8 +29,7 @@ export default async function Page({
   }
 
   return (
-    <MainCard>
-      <MainNav />
+    <>
       <ProfileBanner
         currentUser={currentUser}
         candidate={candidate}
@@ -41,6 +38,6 @@ export default async function Page({
         candidate={candidate}
         category={category}
       />
-    </MainCard>
+    </>
   );
 }
