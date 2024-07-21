@@ -80,6 +80,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
         <GoogleTagManager gtmId='GTM-TK3ZT6B3' />
         <Script
+          id='register-sw'
           dangerouslySetInnerHTML={{
             __html: `
             const registerServiceWorker = async () => {
