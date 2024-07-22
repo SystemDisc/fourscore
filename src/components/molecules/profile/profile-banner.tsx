@@ -31,7 +31,7 @@ export default async function ProfileBanner({
       <div className='grid grid-cols-2'>
         {candidate.image && (
           <Link
-            className='block w-full h-full border-4 border-neutral-300 shadow-lg shadow-black rounded-full overflow-hidden'
+            className='block w-full h-auto border-4 border-neutral-300 shadow-lg shadow-black rounded-full overflow-hidden'
             href={candidate.image}
             target='_blank'
             rel='noopener noreferrer'
