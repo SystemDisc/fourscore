@@ -37,7 +37,7 @@ export default async function ProfileBanner({
             rel='noopener noreferrer'
           >
             <Image
-              className='w-full h-full object-cover'
+              className='w-full h-auto object-cover'
               src={candidate.image}
               alt='Profile'
               width={1023}

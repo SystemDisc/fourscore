@@ -48,7 +48,7 @@ export default function CandidateCard({
           {candidate.image && (
             <Image
               src={candidate.image}
-              className='h-16 w-16 rounded-lg border-2 border-neutral-300 shadow-md shadow-neutral-500'
+              className='h-16 w-16 rounded-lg border-2 border-neutral-300 shadow-md shadow-neutral-500 object-cover'
               width={256}
               height={256}
               alt={candidate.name || 'Candidate'}
