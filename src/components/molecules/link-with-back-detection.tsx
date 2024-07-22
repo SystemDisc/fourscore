@@ -51,7 +51,7 @@ export default function LinkWithBackDetection(props: PropsWithChildren<Props>) {
       }
       return false;
     },
-    [previousPathname, previousSearchParams, router],
+    [previousPathname, previousSearchParams, nextPathname, nextSearchParams, router],
   );
 
   const clickHandler = useCallback(
