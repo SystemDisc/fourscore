@@ -41,8 +41,6 @@ export default async function Page() {
     Promise.resolve([] as CandidateResult[]),
   );
 
-  console.dir({ descriptions: candidates.map((c) => c.candidateData?.description) }, { depth: null });
-
   return (
     <MainCard>
       <section className='flex flex-col gap-4'>

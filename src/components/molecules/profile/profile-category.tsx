@@ -31,7 +31,10 @@ export default async function ProfileCategory({
         {category.similarityScore && (
           <div className='flex flex-row gap-2 items-center'>
             <div className='text-lg font-light flex items-center'>{category.similarityScore}% Similar</div>
-            <Star rate={category.similarityScore / 20} />
+            <Star
+              rate={category.similarityScore / 20}
+              displayEmptyStar
+            />
           </div>
         )}
       </div>
