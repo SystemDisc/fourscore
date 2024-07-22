@@ -30,19 +30,22 @@ export default async function Profile({
             {candidate.candidateData?.description ? 'Poll' : `${candidate.name}'s`} Answers
           </div>
           <hr className='border-black' />
-          {(
-            candidateQuestionsWithScore ||
-            candidate.categories?.map((c) => ({ ...c, similarityScore: undefined })) ||
-            []
-          ).map((category) => (
-            <AnswerItem
-              key={category.id}
-              title={category.name}
-              score={category.similarityScore}
-              candidateId={candidate.id}
-              categoryId={category.id}
-            />
-          ))}
+          <div className='grid grid-cols-1 sm:grid-cols-2 gap-2'>
+            {(
+              candidateQuestionsWithScore ||
+              candidate.categories?.map((c) => ({ ...c, similarityScore: undefined })) ||
+              []
+            ).map((category) => (
+              <AnswerItem
+                key={category.id}
+                title={category.name}
+                score={category.similarityScore}
+                candidateId={candidate.id}
+                categoryId={category.id}
+                questionCount={category.questions.length}
+              />
+            ))}
+          </div>
         </Card>
       )}
     </div>

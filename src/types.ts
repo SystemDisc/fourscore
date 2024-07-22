@@ -39,3 +39,8 @@ export type CategoryWithQuestions = Simplify<Category> & {
 export type CategoryWithQuestionsAndScore = CategoryWithQuestions & {
   similarityScore: number;
 };
+
+export interface ParsedUrl {
+  pathname: string;
+  searchParams: URLSearchParams;
+}

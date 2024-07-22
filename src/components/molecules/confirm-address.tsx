@@ -10,6 +10,7 @@ import Cookies from 'js-cookie';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useContext, useEffect, useState } from 'react';
+import LinkWithBackDetection from './link-with-back-detection';
 
 export default function ConfirmAddress() {
   const router = useRouter();
@@ -198,13 +199,13 @@ export default function ConfirmAddress() {
             >
               Yes
             </Button>
-            <Button
+            <LinkWithBackDetection
               buttonType='white'
-              isLink
+              isButton
               href='/'
             >
               Edit
-            </Button>
+            </LinkWithBackDetection>
           </div>
         </section>
       )}

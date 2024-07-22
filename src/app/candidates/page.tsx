@@ -1,8 +1,8 @@
-import Button from '@/components/atoms/button';
 import Disclaimer from '@/components/atoms/disclaimer';
 import MainCard from '@/components/atoms/main-card';
 import AuthButton from '@/components/molecules/auth-button';
 import CandidateList from '@/components/molecules/candidate-list';
+import LinkWithBackDetection from '@/components/molecules/link-with-back-detection';
 import { CandidateResult } from '@/types';
 import authOptions from '@/utils/auth-options';
 import { renderMarkdown } from '@/utils/markdown';
@@ -69,12 +69,12 @@ export default async function Page() {
       <section className='p-4 pt-0'>
         <div className='flex justify-center'>
           {session?.user ? (
-            <Button
-              isLink
+            <LinkWithBackDetection
+              isButton
               href='/dashboard'
             >
               Go to Dashboard
-            </Button>
+            </LinkWithBackDetection>
           ) : (
             <AuthButton isGreen />
           )}

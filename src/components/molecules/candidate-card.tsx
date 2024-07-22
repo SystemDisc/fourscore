@@ -4,8 +4,8 @@ import styles from '@/app/normalize.module.scss';
 import { CandidateResult } from '@/types';
 import classNames from 'classnames';
 import Image from 'next/image';
-import Link from 'next/link';
 import Star from '../atoms/star';
+import LinkWithBackDetection from './link-with-back-detection';
 import PledgeToggle from './pledge-toggle';
 
 export default function CandidateCard({
@@ -40,7 +40,7 @@ export default function CandidateCard({
           />
         </div>
       )}
-      <Link
+      <LinkWithBackDetection
         className='h-[calc(1rem_+_4rem_+_2px)] overflow-hidden border border-neutral-300 rounded-lg shadow-md shadow-neutral-500 grid [grid-template-columns:4rem_1fr] gap-2 p-2 hover:bg-neutral-100'
         href={`/candidate-profile/${candidate.id}`}
       >
@@ -75,7 +75,7 @@ export default function CandidateCard({
             )
           )}
         </div>
-      </Link>
+      </LinkWithBackDetection>
     </div>
   );
 }

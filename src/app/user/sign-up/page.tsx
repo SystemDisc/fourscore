@@ -1,6 +1,6 @@
-import Button from '@/components/atoms/button';
 import GAConversion from '@/components/atoms/ga-conversion';
 import MainCard from '@/components/atoms/main-card';
+import LinkWithBackDetection from '@/components/molecules/link-with-back-detection';
 import authOptions from '@/utils/auth-options';
 import { getUser } from '@/utils/server-actions';
 import { getServerSession } from 'next-auth';
@@ -24,12 +24,12 @@ export default async function Page() {
           Please proceed to the poll to find your candidate matches.
         </div>
         <div className='text-center'>
-          <Button
-            isLink
+          <LinkWithBackDetection
+            isButton
             href='/poll'
           >
             Take the poll
-          </Button>
+          </LinkWithBackDetection>
         </div>
       </div>
     </MainCard>

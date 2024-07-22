@@ -544,3 +544,8 @@ export const getCandidates = async () => {
     .execute();
   return candidates;
 };
+
+export const getLocalities = async () => {
+  const localities = await db.selectFrom('Locality').selectAll().execute();
+  return localities;
+};

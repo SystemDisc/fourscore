@@ -1,24 +1,28 @@
 import classNames from 'classnames';
-import Link from 'next/link';
-import { AnchorHTMLAttributes, ButtonHTMLAttributes, HTMLAttributes } from 'react';
+import Link, { LinkProps } from 'next/link';
+import { AnchorHTMLAttributes, ButtonHTMLAttributes } from 'react';
 
-export default function Button({
-  disabled,
-  buttonType = 'default',
-  children,
-  isLink = false,
-  className,
-  href,
-  ...props
-}: {
+export interface BaseButtonProps {
   buttonType?: 'red' | 'default' | 'flat' | 'white';
-  isLink?: boolean;
-} & ButtonHTMLAttributes<HTMLButtonElement> &
-  AnchorHTMLAttributes<HTMLAnchorElement>) {
+}
+
+export interface ButtonProps extends BaseButtonProps, ButtonHTMLAttributes<HTMLButtonElement> {
+  isLink?: false;
+}
+
+export interface LinkPropsExtended extends BaseButtonProps, AnchorHTMLAttributes<HTMLAnchorElement>, LinkProps {
+  isLink: true;
+  href: string;
+}
+
+type Props = ButtonProps | LinkPropsExtended;
+
+export default function Button(props: Props) {
+  const { buttonType = 'default', children, isLink, className, ...otherProps } = props;
+  const disabled = isLink ? undefined : props.disabled;
+  const href = isLink ? props.href : undefined;
+
   const ButtonClass = isLink ? Link : 'button';
-  const otherProps = isLink
-    ? (props as HTMLAttributes<HTMLAnchorElement>)
-    : (props as HTMLAttributes<HTMLButtonElement>);
   return (
     <>
       {buttonType === 'default' && (

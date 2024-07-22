@@ -1,29 +1,35 @@
 import Star from '@/components/atoms/star';
-import Link from 'next/link';
+import LinkWithBackDetection from '../molecules/link-with-back-detection';
 
 const AnswerItem = ({
   title,
   score,
   candidateId,
   categoryId,
+  questionCount,
 }: {
   title: string;
   score?: number;
   candidateId: string;
   categoryId: string;
+  questionCount: number;
 }) => {
   return (
-    <Link
-      className='block border border-neutral-300 rounded-md shadow'
+    <LinkWithBackDetection
+      className='border border-neutral-300 rounded-md shadow hover:brightness-75 focus:outline focus:outline-[#22C064] focus:outline-offset-4 flex items-center content-center'
       href={`${candidateId}/category/${categoryId}`}
     >
-      <div className='w-full text-left px-6 py-4 hover:bg-gray-200 focus:outline-none'>
-        <div className='flex flex-row justify-between items-center'>
-          <div>
-            <div className='text-2xl font-light'>{title}</div>
+      <div className='w-full text-left p-2'>
+        <div className='flex flex-row justify-between gap-2 items-center'>
+          <div className='grid grid-cols-1 grid-rows-1 gap-0.5'>
+            <div className='font-light leading-[1.125]'>{title}</div>
+            <div className='text-xs text-neutral-400 font-bold leading-none'>{questionCount} questions</div>
             {score !== undefined && (
-              <div className='flex flex-row gap-2 items-center'>
-                <div className='text-lg font-light'>{Math.round(score)}% Similar</div>
+              <div className='flex flex-col justify-center leading-none gap-0.5'>
+                <div className='font-light'>
+                  <span>Four Score: </span>
+                  <span>{Math.round(score)}%</span>
+                </div>
                 <Star
                   rate={Math.round(score / 20)}
                   displayEmptyStar
@@ -67,7 +73,7 @@ const AnswerItem = ({
           </div>
         </div>
       </div>
-    </Link>
+    </LinkWithBackDetection>
   );
 };
 

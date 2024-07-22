@@ -2,26 +2,27 @@
 
 import Button from '@/components/atoms/button';
 import { signIn, signOut } from 'next-auth/react';
+import LinkWithBackDetection from './link-with-back-detection';
 
 export default function MainNav({ loggedIn }: { loggedIn: boolean }) {
   return (
     <nav className='flex justify-between p-4'>
       {loggedIn ? (
         <>
-          <Button
-            isLink
+          <LinkWithBackDetection
+            isButton
             href='/poll'
             className='text-sm'
           >
             View Poll
-          </Button>
-          <Button
-            isLink
+          </LinkWithBackDetection>
+          <LinkWithBackDetection
+            isButton
             href='/candidate-matches'
             className='text-sm'
           >
             Candidates
-          </Button>
+          </LinkWithBackDetection>
           <Button
             onClick={() => signOut()}
             className='text-sm'
@@ -31,13 +32,13 @@ export default function MainNav({ loggedIn }: { loggedIn: boolean }) {
         </>
       ) : (
         <>
-          <Button
-            isLink
+          <LinkWithBackDetection
+            isButton
             href='/candidates'
             className='text-sm'
           >
             View Candidates
-          </Button>
+          </LinkWithBackDetection>
           <Button
             className='text-xs sm:text-base'
             buttonType='flat'

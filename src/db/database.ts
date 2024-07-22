@@ -1,4 +1,3 @@
-import { Nullable } from '@/types';
 import { Generated, Insertable, Kysely, PostgresDialect, Selectable, Updateable } from 'kysely';
 import { Pool } from 'pg';
 
@@ -25,6 +24,8 @@ export interface UserTable {
   emailVerified: Date | null;
   image: string | null;
   seenVotingTutorial: Generated<boolean>;
+  dateCreated: Generated<Date> | null;
+  dateUpdated: Date | null;
 }
 
 export type User = Selectable<UserTable>;
@@ -123,7 +124,9 @@ export interface AnswerTable {
   rating: number | null;
   skipped: boolean;
   notes: string | null;
-  dateUpdated: Date;
+  answeredByStaff: Generated<boolean>;
+  dateCreated: Generated<Date>;
+  dateUpdated: Date | null;
 }
 
 export type Answer = Selectable<AnswerTable>;
@@ -156,7 +159,7 @@ export interface CandidateUserScoreTable {
   userId: string;
   candidateId: string;
   score: number;
-  dateUpdated: Date;
+  dateUpdated: Date | null;
 }
 
 export type CandidateUserScore = Selectable<CandidateUserScoreTable>;
@@ -168,8 +171,8 @@ export interface CandidateDataTable {
   userId: string;
   description: string;
   dateCreated: Generated<Date>;
-  dateUpdated: Nullable<Date>;
-  dateDeleted: Nullable<Date>;
+  dateUpdated: Date | null;
+  dateDeleted: Date | null;
 }
 
 export type CandidateData = Selectable<CandidateDataTable>;

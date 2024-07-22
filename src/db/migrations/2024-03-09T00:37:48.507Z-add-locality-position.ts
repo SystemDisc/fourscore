@@ -6,7 +6,7 @@ export async function up(db: Kysely<Database>) {
 
   await db
     .updateTable('Locality')
-    .where('name', '=', 'Local')
+    .where('id', '=', 'fefab2ef-61cd-4ffa-b480-2439f34f7b7e')
     .set({
       position: 0,
     })
@@ -14,7 +14,7 @@ export async function up(db: Kysely<Database>) {
 
   await db
     .updateTable('Locality')
-    .where('name', '=', 'State')
+    .where('id', '=', '73c0ff5a-6826-42db-9dc3-a0b5bc62fbb2')
     .set({
       position: 1,
     })
@@ -22,7 +22,7 @@ export async function up(db: Kysely<Database>) {
 
   await db
     .updateTable('Locality')
-    .where('name', '=', 'Federal')
+    .where('id', '=', '2391e8f3-bff3-4ca2-ba62-b8912d8d8e94')
     .set({
       position: 2,
     })

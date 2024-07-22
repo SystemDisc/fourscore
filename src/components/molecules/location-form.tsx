@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import Button from '../atoms/button';
+import LinkWithBackDetection from './link-with-back-detection';
 
 export default function LocationForm() {
   const { isLoaded } = useJsApiLoader({
@@ -76,13 +77,13 @@ export default function LocationForm() {
           Find your perfect political candidate
         </div>
         <div className='max-w-xl w-full text-center'>
-          <Button
+          <LinkWithBackDetection
             className='mb-2'
-            isLink
+            isButton
             href='/candidates'
           >
             View Candidates
-          </Button>
+          </LinkWithBackDetection>
           <br />
           <div className='text-sm tracking-wider text-stroke'>
             <Link href='/candidate'>

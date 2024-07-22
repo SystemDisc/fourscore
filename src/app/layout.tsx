@@ -1,5 +1,6 @@
 import Pageview from '@/components/atoms/pageview';
 import NotificationProvider from '@/providers/notification-provider';
+import { RouteTrackerProvider } from '@/providers/route-tracking-provider';
 import NextAuthSessionProvider from '@/providers/session-provider';
 import authOptions from '@/utils/auth-options';
 import { GoogleTagManager } from '@next/third-parties/google';
@@ -160,7 +161,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className={classNames(lato.className, 'bg-[#ececec]')}>
         <Pageview />
         <NextAuthSessionProvider session={session!}>
-          <NotificationProvider>{children}</NotificationProvider>
+          <RouteTrackerProvider>
+            <NotificationProvider>{children}</NotificationProvider>
+          </RouteTrackerProvider>
         </NextAuthSessionProvider>
         <Analytics />
         <noscript>
