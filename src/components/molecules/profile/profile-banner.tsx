@@ -66,18 +66,20 @@ export default async function ProfileBanner({
             </div>
           </div>
           <hr className='border border-white w-full' />
-          {candidate.candidateUserScore?.score !== undefined && !isNaN(candidate.candidateUserScore.score) && (
-            <div className='flex flex-col'>
-              <div className='text-sm text-white uppercase'>Four Score</div>
-              <div className='flex flex-row items-center gap-2'>
-                <div className='text-lg text-white uppercase'>{candidate.candidateUserScore.score}%</div>
-                <Star
-                  rate={Math.round(candidate.candidateUserScore.score / 20)}
-                  displayEmptyStar
-                />
+          {candidate.answers.length > 0 &&
+            candidate.candidateUserScore?.score !== undefined &&
+            !isNaN(candidate.candidateUserScore.score) && (
+              <div className='flex flex-col'>
+                <div className='text-sm text-white uppercase'>Four Score</div>
+                <div className='flex flex-row items-center gap-2'>
+                  <div className='text-lg text-white uppercase'>{candidate.candidateUserScore.score}%</div>
+                  <Star
+                    rate={Math.round(candidate.candidateUserScore.score / 20)}
+                    displayEmptyStar
+                  />
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
       </div>
     </div>

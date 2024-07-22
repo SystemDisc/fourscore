@@ -58,11 +58,21 @@ export default function CandidateCard({
         <div className='[line-height:12px] flex flex-col items-start justify-start overflow-hidden'>
           <span className='flex items-start leading-none'>{candidate.name}</span>
           <hr className='border-b-[0.5px] border-black w-full' />
-          {candidate.score !== undefined && !isNaN(candidate.score) ? (
+          {candidate.score !== undefined && !isNaN(candidate.score) && candidate.score >= 0 ? (
             <>
               <span className='flex items-center mt-1.5 mb-1.5'>Four Score: {candidate.score}%</span>
               <Star
                 rate={Math.round(candidate.score / 20)}
+                displayEmptyStar
+              />
+            </>
+          ) : candidate.score === -1 ? (
+            <>
+              <span className='flex items-center mt-1.5 mb-1.5'>
+                FourScore does not have this candidate&apos;s poll answers
+              </span>
+              <Star
+                rate={0}
                 displayEmptyStar
               />
             </>

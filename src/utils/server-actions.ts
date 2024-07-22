@@ -185,7 +185,15 @@ export const calculateScore = async (userAnswers: Nullable<Answer>[], candidateA
   let sameScore = 0;
   let diffScore = 0;
 
+  if (userAnswers.length === 0) {
+    return NaN;
+  }
+
   if (candidateAnswers.length === 0) {
+    return -1;
+  }
+
+  if (userAnswers.length > 0 && candidateAnswers.length === 0) {
     return 0;
   }
 
@@ -212,7 +220,8 @@ export const calculateScore = async (userAnswers: Nullable<Answer>[], candidateA
     }
   }
 
-  return Math.round((sameScore / (sameScore + diffScore)) * 10000) / 100;
+  const total = sameScore + diffScore;
+  return total === 0 ? NaN : Math.round((sameScore / total) * 10000) / 100;
 };
 
 export const calculateMatches = async (user: DefaultSession['user']) => {
@@ -299,7 +308,7 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
           .where('CandidateUserScore.candidateId', '=', candidate.id)
           .returningAll()
           .executeTakeFirst();
-        candidateUserScore!.score = +candidateUserScore!.score;
+        candidateUserScore!.score = candidateUserScore!.score;
         candidate.candidateUserScore = candidateUserScore!;
       } else {
         const candidateUserScore = await db
@@ -312,11 +321,11 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
           })
           .returningAll()
           .executeTakeFirst();
-        candidateUserScore!.score = +candidateUserScore!.score;
+        candidateUserScore!.score = candidateUserScore!.score;
         candidate.candidateUserScore = candidateUserScore!;
       }
     } else {
-      candidate.score = isNaN(candidate.candidateUserScore.score || 0) ? 0 : candidate.candidateUserScore.score || 0;
+      candidate.score = candidate.candidateUserScore.score;
     }
   }
 

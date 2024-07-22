@@ -6,13 +6,13 @@ const AnswerItem = ({
   score,
   candidateId,
   categoryId,
-  questionCount,
+  answerCount,
 }: {
   title: string;
   score?: number;
   candidateId: string;
   categoryId: string;
-  questionCount: number;
+  answerCount: number;
 }) => {
   return (
     <LinkWithBackDetection
@@ -23,8 +23,8 @@ const AnswerItem = ({
         <div className='flex flex-row justify-between gap-2 items-center'>
           <div className='grid grid-cols-1 grid-rows-1 gap-0.5'>
             <div className='font-light leading-[1.125]'>{title}</div>
-            <div className='text-xs text-neutral-400 font-bold leading-none'>{questionCount} questions</div>
-            {score !== undefined && (
+            <div className='text-xs text-neutral-400 font-bold leading-none'>{answerCount} answers</div>
+            {score !== undefined && !isNaN(score) && (
               <div className='flex flex-col justify-center leading-none gap-0.5'>
                 <div className='font-light'>
                   <span>Four Score: </span>
