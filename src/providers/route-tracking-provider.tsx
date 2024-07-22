@@ -82,7 +82,7 @@ export const RouteTrackerProvider = ({ children }: { children: ReactNode }) => {
     }
 
     setHistoryLength(window.history.length);
-  }, [pathname, searchParams]);
+  }, [pathname, searchParams, currentIndex, currentPathname, currentSearchParams, historyLength, paths]);
 
   return (
     <RouteTrackerContext.Provider
