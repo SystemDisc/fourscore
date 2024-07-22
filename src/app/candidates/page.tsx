@@ -1,14 +1,47 @@
+import Button from '@/components/atoms/button';
 import Disclaimer from '@/components/atoms/disclaimer';
 import MainCard from '@/components/atoms/main-card';
 import AuthButton from '@/components/molecules/auth-button';
 import CandidateList from '@/components/molecules/candidate-list';
-import { getCandidates } from '@/utils/server-actions';
+import { CandidateResult } from '@/types';
+import authOptions from '@/utils/auth-options';
+import { renderMarkdown } from '@/utils/markdown';
+import { getCandidates, getPoll } from '@/utils/server-actions';
+import { getServerSession } from 'next-auth';
+import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function Page() {
-  const candidates = await getCandidates();
+  const session = await getServerSession(authOptions);
+
+  if (session?.user) {
+    const data = await getPoll(session?.user);
+    if (data.allAnswers.length > 0) {
+      redirect('/candidate-matches');
+    } else {
+      redirect('/poll');
+    }
+  }
+
+  const candidates = await (
+    await getCandidates()
+  ).reduce(
+    async (cList, c) => [
+      ...(await cList),
+      {
+        ...c,
+        candidateData: c.candidateData && {
+          ...c.candidateData,
+          description: c.candidateData?.description && (await renderMarkdown(c.candidateData.description)),
+        },
+      },
+    ],
+    Promise.resolve([] as CandidateResult[]),
+  );
+
+  console.dir({ descriptions: candidates.map((c) => c.candidateData?.description) }, { depth: null });
 
   return (
     <MainCard>
@@ -23,8 +56,10 @@ export default async function Page() {
         </header>
       </section>
       <section className='p-4'>
-        <div className='mb-2'>
-          <h2 className='text-2xl text-center mb-4'>President of The United States of America</h2>
+        <div className='mb-4 text-center'>
+          <h2 className='text-2xl text-center border-b border-black w-auto inline-block'>
+            President of The United States of America
+          </h2>
         </div>
         <div className='sm:max-w-md sm:mx-auto'>
           <CandidateList
@@ -35,7 +70,16 @@ export default async function Page() {
       </section>
       <section className='p-4 pt-0'>
         <div className='flex justify-center'>
-          <AuthButton isGreen />
+          {session?.user ? (
+            <Button
+              isLink
+              href='/dashboard'
+            >
+              Go to Dashboard
+            </Button>
+          ) : (
+            <AuthButton isGreen />
+          )}
         </div>
       </section>
       <Disclaimer className='text-justify text-sm p-4 bg-neutral-100 border-t border-neutral-300' />

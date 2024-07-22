@@ -68,7 +68,7 @@ export default async function ProfileBanner({
                 <div className='text-lg text-white uppercase'>{candidate.candidateUserScore.score}%</div>
                 <Star
                   rate={Math.round(candidate.candidateUserScore.score / 20)}
-                  displayEmptyStar={true}
+                  displayEmptyStar
                 />
               </div>
             </div>

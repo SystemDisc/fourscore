@@ -2,7 +2,6 @@ import styles from '@/app/normalize.module.scss';
 import Button from '@/components/atoms/button';
 import Star from '@/components/atoms/star';
 import { CandidateResult, CategoryWithQuestions, CategoryWithQuestionsAndScore, QuestionWithAnswer } from '@/types';
-import { calculateRateFromScore } from '@/utils/calc';
 import { renderMarkdown } from '@/utils/markdown';
 import classNames from 'classnames';
 import moment from 'moment';
@@ -32,7 +31,7 @@ export default async function ProfileCategory({
         {category.similarityScore && (
           <div className='flex flex-row gap-2 items-center'>
             <div className='text-lg font-light flex items-center'>{category.similarityScore}% Similar</div>
-            <Star rate={calculateRateFromScore(category.similarityScore)} />
+            <Star rate={category.similarityScore / 20} />
           </div>
         )}
       </div>

@@ -1,5 +1,4 @@
 import Star from '@/components/atoms/star';
-import { calculateRateFromScore } from '@/utils/calc';
 import Link from 'next/link';
 
 const AnswerItem = ({
@@ -24,8 +23,11 @@ const AnswerItem = ({
             <div className='text-2xl font-light'>{title}</div>
             {score !== undefined && (
               <div className='flex flex-row gap-2 items-center'>
-                <div className='text-lg font-light'>{Math.round(score || 0)}% Similar</div>
-                <Star rate={calculateRateFromScore(score)} />
+                <div className='text-lg font-light'>{Math.round(score)}% Similar</div>
+                <Star
+                  rate={Math.round(score / 20)}
+                  displayEmptyStar
+                />
               </div>
             )}
           </div>

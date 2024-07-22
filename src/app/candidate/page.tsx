@@ -24,14 +24,12 @@ export default function Home() {
             <AuthButton isCandidate />
           </nav>
           <div className='min-h-[calc(100dvh_-_2.75rem_-_2rem_-_3rem)] flex items-center md:justify-start content-center flex-wrap md:pl-20 p-0 justify-center text-white'>
-            <div className='md:w-full text-7xl font-black mb-4'>
-              <div className='max-w-xl w-full text-center text-stroke'>Connected</div>
-            </div>
-            <div className='md:w-full text-2xl'>
-              <div className='max-w-xl w-full text-center text-stroke mb-4 font-bold'>
+            <div className='max-w-2xl w-full text-center mb-4'>
+              <div className='text-stroke text-6xl font-black sm:text-7xl'>Connected</div>
+              <div className='text-stroke mb-4 font-bold text-2xl'>
                 Save money and start connecting with your voters today
               </div>
-              <div className='max-w-xl w-full text-center mb-4'>
+              <div className='mb-4'>
                 <Button
                   className='!tracking-wide rounded-tl-md rounded-br-md h-14 !px-8 [border-bottom-left-radius:1.75rem] [border-top-right-radius:1.75rem]'
                   isLink
@@ -40,14 +38,14 @@ export default function Home() {
                   Get Started
                 </Button>
               </div>
-              <div className='max-w-xl w-full text-center text-xl font-bold'>
-                <Button
-                  isLink
-                  buttonType='white'
-                  href='/'
-                >
-                  I&apos;m a voter
-                </Button>
+              <div className='text-sm tracking-wider text-stroke text-center'>
+                <Link href='/'>
+                  Are you a voter?
+                  <br />
+                  <span className='underline'>
+                    Find the candidates who align with your values and make an informed choice!
+                  </span>
+                </Link>
               </div>
             </div>
           </div>

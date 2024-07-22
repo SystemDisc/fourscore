@@ -33,14 +33,15 @@ export default function CandidateList({
   }, []);
 
   return (
-    <div className='grid grid-cols-1 gap-4'>
-      {candidates.map((candidate) => (
+    <div className='grid grid-cols-1 gap-2'>
+      {candidates.map((candidate, index) => (
         <CandidateCard
           key={candidate.id}
           candidate={candidate}
           selected={pledgedCandidate === candidate}
           onSelect={(selectedCandidate) => setPledgedCandidate(selectedCandidate)}
           hidePledge={withoutPledging}
+          descriptionHtml={candidate.candidateData?.description || ''}
         />
       ))}
     </div>

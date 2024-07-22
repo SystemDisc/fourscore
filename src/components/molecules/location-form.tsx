@@ -1,6 +1,7 @@
 'use client';
 
 import { Autocomplete, useJsApiLoader } from '@react-google-maps/api';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import Button from '../atoms/button';
@@ -79,13 +80,20 @@ export default function LocationForm() {
         </div>
         <div className='max-w-xl w-full text-center'>
           <Button
-            className='!tracking-wide'
-            buttonType='white'
+            className='mb-2'
             isLink
-            href='/candidate'
+            href='/candidates'
           >
-            I&apos;m a candidate
+            View Candidates
           </Button>
+          <br />
+          <div className='text-sm tracking-wider text-stroke'>
+            <Link href='/candidate'>
+              Are you a candidate?
+              <br />
+              <span className='underline'>Discover how FourScore can boost your campaign and sign up today!</span>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

@@ -2,7 +2,9 @@ import Button from '@/components/atoms/button';
 import Disclaimer from '@/components/atoms/disclaimer';
 import MainCard from '@/components/atoms/main-card';
 import CandidateList from '@/components/molecules/candidate-list';
+import { CandidateResult } from '@/types';
 import authOptions from '@/utils/auth-options';
+import { renderMarkdown } from '@/utils/markdown';
 import { calculateMatches } from '@/utils/server-actions';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
@@ -16,7 +18,22 @@ export default async function Page() {
     redirect('/');
   }
 
-  const { candidates, currentUser } = await calculateMatches(session.user);
+  const result = await calculateMatches(session.user);
+  const { currentUser } = result;
+
+  const candidates = await result.candidates.reduce(
+    async (cList, c) => [
+      ...(await cList),
+      {
+        ...c,
+        candidateData: c.candidateData && {
+          ...c.candidateData,
+          description: c.candidateData?.description && (await renderMarkdown(c.candidateData.description)),
+        },
+      },
+    ],
+    Promise.resolve([] as CandidateResult[]),
+  );
 
   const pollPercentage = Math.round((currentUser.questionsAnswered / currentUser.questionsTotal) * 100);
 
@@ -57,9 +74,13 @@ export default async function Page() {
         </header>
       </section>
       <section className='p-4'>
-        <div className='grid [grid-template-columns:3rem_1fr] mb-2'>
+        <div className='grid [grid-template-columns:3rem_1fr] mb-4'>
           <div className='flex justify-center items-end text-center'>Pledge Support</div>
-          <h2 className='text-2xl text-center mb-4'>President of The United States of America</h2>
+          <h2 className='text-2xl text-center'>
+            <div className='border-b border-black w-auto inline-block'>
+              <span className='font-bold'>Candidates</span> in The United States of America
+            </div>
+          </h2>
         </div>
         <CandidateList candidates={candidates} />
       </section>

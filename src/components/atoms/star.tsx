@@ -1,4 +1,4 @@
-import { HTMLAttributes } from 'react';
+import { BsStar, BsStarFill } from 'react-icons/bs';
 
 export default function Star({
   rate,
@@ -9,30 +9,17 @@ export default function Star({
   total?: number;
   displayEmptyStar?: boolean;
 }) {
-  // rating should be a number between 0 and 5
-  const renderStars = () => {
-    const stars = [];
-    for (let i = 0; i < total; i++) {
-      if (i < rate)
-        stars.push(
-          <span
-            className='text-xl text-[#69F7A5]'
-            key={i}
-          >
-            ★
-          </span>,
-        );
-      else if (displayEmptyStar)
-        stars.push(
-          <span
-            className='text-xl text-[#212224]'
-            key={i}
-          >
-            ★
-          </span>,
-        );
-    }
-    return stars;
-  };
-  return <div className='flex flex-row gap-1'>{renderStars()}</div>;
+  return (
+    <span className='flex items-end text-[#22C064]'>
+      {Math.round((rate / total) * total) > 0 &&
+        Array(Math.round((rate / total) * total))
+          .fill(null)
+          .map((_, index) => <BsStarFill key={index} />)}
+      {displayEmptyStar &&
+        total - Math.round((rate / total) * total) > 0 &&
+        Array(total - Math.round((rate / total) * total))
+          .fill(null)
+          .map((_, index) => <BsStar key={index} />)}
+    </span>
+  );
 }
