@@ -29,22 +29,24 @@ export default async function ProfileBanner({
       </div>
 
       <div className='grid grid-cols-2'>
-        {candidate.image && (
-          <Link
-            className='block w-full h-auto border-4 border-neutral-300 shadow-lg shadow-black rounded-full overflow-hidden'
-            href={candidate.image}
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <Image
-              className='w-full h-auto object-cover'
-              src={candidate.image}
-              alt='Profile'
-              width={1023}
-              height={1023}
-            />
-          </Link>
-        )}
+        <div className='w-full pt-[100%] relative'>
+          {candidate.image && (
+            <Link
+              className='absolute top-0 left-0 block w-full h-full border-4 border-neutral-300 shadow-lg shadow-black rounded-full overflow-hidden'
+              href={candidate.image}
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              <Image
+                className='w-full h-full object-cover'
+                src={candidate.image}
+                alt='Profile'
+                width={1023}
+                height={1023}
+              />
+            </Link>
+          )}
+        </div>
         {!candidate.image && (
           <div className='w-full h-full border-4 border-neutral-300 shadow-lg shadow-black rounded-full overflow-hidden'>
             <Image
