@@ -58,10 +58,13 @@ export default async function ProfileBanner({
         )}
         <div className='flex justify-end items-end content-end flex-col'>
           <div className='w-full text-right'>
-            <div className='text-lg text-white uppercase'>Poll Complete: {pollCompleteness()}%</div>
+            <div className='sm:text-lg text-white uppercase'>
+              Poll Complete:
+              <br className='sm:hidden' /> {pollCompleteness()}%
+            </div>
           </div>
           <hr className='border border-white w-full' />
-          {candidate.candidateUserScore?.score && (
+          {candidate.candidateUserScore?.score !== undefined && !isNaN(candidate.candidateUserScore.score) && (
             <div className='flex flex-col'>
               <div className='text-sm text-white uppercase'>Four Score</div>
               <div className='flex flex-row items-center gap-2'>

@@ -58,7 +58,7 @@ export default function CandidateCard({
         <div className='[line-height:12px] flex flex-col items-start justify-start overflow-hidden'>
           <span className='flex items-start leading-none'>{candidate.name}</span>
           <hr className='border-b-[0.5px] border-black w-full' />
-          {candidate.score ? (
+          {candidate.score !== undefined && !isNaN(candidate.score) ? (
             <>
               <span className='flex items-center mt-1.5 mb-1.5'>Four Score: {candidate.score}%</span>
               <Star

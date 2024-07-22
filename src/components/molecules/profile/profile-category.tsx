@@ -30,7 +30,7 @@ export default async function ProfileCategory({
       </div>
       <div className='p-4 border-y border-neutral-300 bg-neutral-100'>
         <div className='text-2xl font-light'>{category.name}</div>
-        {category.similarityScore && (
+        {category.similarityScore !== undefined && !isNaN(category.similarityScore) && (
           <div className='flex flex-row gap-2 items-center'>
             <div className='text-lg font-light flex items-center'>{category.similarityScore}% Similar</div>
             <Star
