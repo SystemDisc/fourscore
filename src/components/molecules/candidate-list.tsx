@@ -1,7 +1,6 @@
 'use client';
 
 import { CandidateResult } from '@/types';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import CandidateCard from './candidate-card';
 
@@ -12,8 +11,6 @@ export default function CandidateList({
   candidates: CandidateResult[];
   withoutPledging?: boolean;
 }) {
-  const router = useRouter();
-
   const [pledgedCandidate, setPledgedCandidate] = useState<CandidateResult>(candidates[0]);
 
   useEffect(() => {
@@ -22,15 +19,6 @@ export default function CandidateList({
       setPledgedCandidate(candidates[0]);
     }
   }, [candidates, pledgedCandidate]);
-
-  useEffect(() => {
-    if (!localStorage.getItem('refresh-candidates')) {
-      localStorage.setItem('refresh-candidates', 'true');
-      router.refresh();
-    } else {
-      localStorage.removeItem('refresh-candidates');
-    }
-  }, []);
 
   return (
     <div className='grid grid-cols-1 gap-2'>

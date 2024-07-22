@@ -31,14 +31,11 @@ export default function LocationForm() {
         router.push('/edit-address');
       }
     }
-  }, [autocomplete]);
+  }, [autocomplete, router]);
 
-  const onLoad = useCallback(
-    (newAutocomplete: google.maps.places.Autocomplete) => {
-      setAutocomplete(newAutocomplete);
-    },
-    [router],
-  );
+  const onLoad = useCallback((newAutocomplete: google.maps.places.Autocomplete) => {
+    setAutocomplete(newAutocomplete);
+  }, []);
 
   return (
     <div className='min-h-[calc(100dvh_-_2.75rem_-_2rem_-_3rem)] flex items-center md:justify-start content-center flex-wrap md:pl-20 p-0 justify-center'>

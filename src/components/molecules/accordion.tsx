@@ -7,7 +7,6 @@ import {
   ReactNode,
   Ref,
   forwardRef,
-  useCallback,
   useEffect,
   useImperativeHandle,
   useRef,
@@ -127,7 +126,7 @@ export default forwardRef(function Accordion(
     if ((isOpen === true || isOpen === false) && isOpen != open) {
       toggle();
     }
-  }, [isOpen]);
+  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useImperativeHandle(ref, () => ({
     updateSize: () => {

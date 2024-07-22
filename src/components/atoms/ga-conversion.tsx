@@ -20,7 +20,7 @@ export default function GAConversion({ user }: { user: Simplify<User> }) {
       gclid,
       dateCreated: moment().toISOString(),
     } as GASignupEvent);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return null;
 }

@@ -2,15 +2,14 @@
 
 import Button from '@/components/atoms/button';
 import Loading from '@/components/atoms/loading';
-import MainCard from '@/components/atoms/main-card';
 import { NewAddress } from '@/db/database';
 import { notificationContext } from '@/providers/notification-provider';
 import { saveAddress } from '@/utils/server-actions';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+import Cookies from 'js-cookie';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useContext, useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
 
 export default function ConfirmAddress() {
   const router = useRouter();
@@ -31,41 +30,44 @@ export default function ConfirmAddress() {
   const [place, setPlace] = useState<google.maps.places.PlaceResult | null>(null);
   const [isNotExact, setIsNotExact] = useState(false);
 
-  const onLoad = useCallback((map: google.maps.Map) => {
-    const centerString = localStorage.getItem('center');
-    const placeId = localStorage.getItem('placeId');
-    if (centerString && placeId) {
-      try {
-        const center = JSON.parse(centerString);
-        setCenter(center);
+  const onLoad = useCallback(
+    (map: google.maps.Map) => {
+      const centerString = localStorage.getItem('center');
+      const placeId = localStorage.getItem('placeId');
+      if (centerString && placeId) {
+        try {
+          const center = JSON.parse(centerString);
+          setCenter(center);
 
-        const service = new google.maps.places.PlacesService(map);
-        service.getDetails(
-          {
-            placeId: placeId,
-          },
-          (place, status) => {
-            setPlace(place);
-            if (place && place.address_components) {
-              setMap(map);
-              setTimeout(() => setIsLoading(false));
-            } else {
-              router.replace('/');
-            }
-          },
-        );
+          const service = new google.maps.places.PlacesService(map);
+          service.getDetails(
+            {
+              placeId: placeId,
+            },
+            (place, status) => {
+              setPlace(place);
+              if (place && place.address_components) {
+                setMap(map);
+                setTimeout(() => setIsLoading(false));
+              } else {
+                router.replace('/');
+              }
+            },
+          );
 
-        new google.maps.Marker({
-          map,
-          position: center,
-        });
-      } catch (e) {
+          new google.maps.Marker({
+            map,
+            position: center,
+          });
+        } catch (e) {
+          router.replace('/');
+        }
+      } else {
         router.replace('/');
       }
-    } else {
-      router.replace('/');
-    }
-  }, []);
+    },
+    [router],
+  );
 
   const onUnmount = useCallback((map: google.maps.Map) => {
     setMap(undefined);
@@ -109,7 +111,7 @@ export default function ConfirmAddress() {
         router.replace('/');
       }
     }
-  }, [isLoading, place]);
+  }, [isLoading, place, router]);
 
   const [streetNumber, setStreetNumber] = useState<string>();
   const [route, setRoute] = useState<string>();

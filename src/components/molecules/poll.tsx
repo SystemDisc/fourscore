@@ -5,6 +5,7 @@ import { markTutorialShown, savePoll } from '@/utils/server-actions';
 import classNames from 'classnames';
 import { Simplify } from 'kysely';
 import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { BsStarFill } from 'react-icons/bs';
@@ -39,15 +40,15 @@ export default function Poll({
     foundIndex >= 0
       ? questions[foundIndex]?.answer?.agree
       : questions.length > 0
-        ? questions[questions.length - 1]?.answer?.agree
-        : undefined,
+      ? questions[questions.length - 1]?.answer?.agree
+      : undefined,
   );
   const [rating, setRating] = useState<number | null | undefined>(
     foundIndex >= 0
       ? questions[foundIndex]?.answer?.rating
       : questions.length > 0
-        ? questions[questions.length - 1]?.answer?.rating
-        : undefined,
+      ? questions[questions.length - 1]?.answer?.rating
+      : undefined,
   );
   const [answers, setAnswers] = useState<Simplify<AnswerUpdate>[]>(
     questions.map(
@@ -74,7 +75,7 @@ export default function Poll({
         await markTutorialShown(session?.user);
       })().catch(console.error);
     }
-  }, [showTutorial, rating]);
+  }, [showTutorial, rating, session?.user]);
 
   if (!session || !session.user) {
     if (status !== 'loading') {
@@ -192,17 +193,20 @@ export default function Poll({
               <div className='flex items-end justify-between p-4'>
                 <div className='text-4xl text-white'>{question.locality?.name}</div>
                 <div className='grid grid-cols-3 gap-4 pb-1'>
-                  <img
+                  <Image
+                    alt='Icon of a house'
                     src='/images/house.svg'
                     width={44}
                     height={39}
                   />
-                  <img
+                  <Image
+                    alt='Icon of a house'
                     src='/images/house.svg'
                     width={44}
                     height={39}
                   />
-                  <img
+                  <Image
+                    alt='Icon of a house'
                     src='/images/house.svg'
                     width={44}
                     height={39}

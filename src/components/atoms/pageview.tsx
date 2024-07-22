@@ -16,7 +16,7 @@ export default function Pageview() {
       pagePath: fullPath,
       pageTitle: pageTitle,
     } as GAPageviewEvent);
-  }, [pathname, searchParams]);
+  }, [pathname, searchParams, pageTitle]);
 
   return null;
 }

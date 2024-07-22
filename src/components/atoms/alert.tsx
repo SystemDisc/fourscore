@@ -23,7 +23,7 @@ export default function Alert({
     return () => {
       clearTimeout(timeoutRef);
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div

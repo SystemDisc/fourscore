@@ -10,5 +10,5 @@ export function useCaptureGclid() {
     if (gclid) {
       Cookies.set('gclid', gclid, { expires: 90 });
     }
-  }, []);
+  }, [searchParams]);
 }
