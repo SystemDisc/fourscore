@@ -3,7 +3,6 @@ import AnswerItem from '@/components/atoms/answer-item';
 import Card from '@/components/atoms/card';
 import { CandidateResult, CategoryWithQuestionsAndScore } from '@/types';
 import { renderMarkdown } from '@/utils/markdown';
-import classNames from 'classnames';
 
 export default async function Profile({
   candidate,
@@ -19,7 +18,7 @@ export default async function Profile({
           <div className='text-4xl'>{candidate.name}</div>
           <hr className='border-black' />
           <div
-            className={classNames('text-lg', styles.normalize)}
+            className={styles.normalize}
             dangerouslySetInnerHTML={{ __html: await renderMarkdown(candidate.candidateData?.description) }}
           />
         </Card>

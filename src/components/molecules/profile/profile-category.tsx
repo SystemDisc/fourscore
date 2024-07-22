@@ -3,7 +3,6 @@ import Star from '@/components/atoms/star';
 import { CandidateResult, CategoryWithQuestions, CategoryWithQuestionsAndScore, QuestionWithAnswer } from '@/types';
 import { renderMarkdown } from '@/utils/markdown';
 import { getLocalities } from '@/utils/server-actions';
-import classNames from 'classnames';
 import moment from 'moment';
 import { ReactNode } from 'react';
 import LinkWithBackDetection from '../link-with-back-detection';
@@ -77,7 +76,7 @@ export default async function ProfileCategory({
                     />
                     {question.answer.notes && (
                       <div
-                        className={classNames('text-lg font-light', styles.normalize)}
+                        className={styles.normalize}
                         dangerouslySetInnerHTML={{
                           __html: await renderMarkdown(question.answer.notes),
                         }}
