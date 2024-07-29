@@ -80,7 +80,7 @@ export default async function Home() {
           content='https://fourscore.app/images/website-preview.png'
         />
       </Head>
-      <div>
+      <main>
         <header className='p-4 min-h-[100dvh] bg-[url("/images/home/bg.png")] bg-cover bg-right-bottom'>
           <nav className='h-11 flex justify-between items-center gap-4'>
             <Link href='/'>
@@ -365,7 +365,7 @@ export default async function Home() {
             </small>
           </div>
         </footer>
-      </div>
+      </main>
     </>
   );
 }
