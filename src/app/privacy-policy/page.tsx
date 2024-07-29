@@ -7,6 +7,7 @@ export default async function Page() {
     ul: 'mb-4 list-disc list-inside ml-8',
     a: 'text-blue-700 underline cursor-pointer',
   };
+
   return (
     <main>
       <section className='p-4 bg-white'>
@@ -32,7 +33,7 @@ export default async function Page() {
           ) (the "Service").
         </p>
         <p className={className.p}>
-          This page informs you of our policies regarding the collection, use and disclosure of Personal Information
+          This page informs you of our policies regarding the collection, use, and disclosure of Personal Information
           when you use our Service.
         </p>
         <p className={className.p}>
@@ -49,7 +50,7 @@ export default async function Page() {
           >
             https://FourScore.app
           </Link>
-          )
+          ).
         </p>
         <h2 className='text-bold text-2xl my-2'>Information Collection And Use</h2>
         <p className={className.p}>
@@ -86,9 +87,10 @@ export default async function Page() {
           when a cookie is being sent. However, if you do not accept cookies, you may not be able to use some portions
           of our Service.
         </p>
+        <h2 className='text-bold text-2xl my-2'>Do Not Track Disclosure</h2>
         <p className={className.p}>
-          Do Not Track Disclosure We support Do Not Track ("DNT"). Do Not Track is a preference you can set in your web
-          browser to inform websites that you do not want to be tracked.
+          We support Do Not Track ("DNT"). Do Not Track is a preference you can set in your web browser to inform
+          websites that you do not want to be tracked.
         </p>
         <p className={className.p}>
           You can enable or disable Do Not Track by visiting the Preferences or Settings page of your web browser.
@@ -148,9 +150,47 @@ export default async function Page() {
           You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are
           effective when they are posted on this page.
         </p>
-        <h2 className='text-bold text-2xl my-2'>Contact Us</h2>
+        <h2 className='text-bold text-2xl my-2'>Google User Data</h2>
         <p className={className.p}>
-          If you have any questions about this Privacy Policy, please contact us at{' '}
+          Our Service uses Google API Services to access certain user data. Specifically, we use the data to enhance
+          your experience with personalized content and to improve our Service functionality. The way we access, use,
+          store, and share Google user data is limited to what is described in this Privacy Policy.
+        </p>
+        <p className={className.p}>We collect Google user data through the following methods:</p>
+        <ul className={className.ul}>
+          <li>
+            Google OAuth: We use Google OAuth to authenticate users and access basic profile information such as your
+            email address and name. This data is used to streamline the login process and provide a personalized
+            experience.
+          </li>
+          <li>
+            Google Analytics: We use Google Analytics to collect data about how users interact with our Service. This
+            helps us understand user behavior and improve our Service. The data collected includes, but is not limited
+            to, page views, session duration, and other usage statistics.
+          </li>
+        </ul>
+        <p className={className.p}>
+          The data collected from Google API Services is stored securely and is not shared with third parties except as
+          required to provide and improve our Service. We do not sell Google user data to any third parties.
+        </p>
+        <p className={className.p}>
+          Users can revoke access to their Google data at any time by adjusting their Google account settings. If you
+          revoke access, you may not be able to use certain features of our Service that rely on Google data.
+        </p>
+        <p className={className.p}>
+          If you have any questions about how we handle Google user data, please contact us at{' '}
+          <a
+            className={className.a}
+            href={`mailto:${encodeURI('"FourScore Support" <support@FourScore.app>')}`}
+            target='_blank'
+          >
+            support@fourscore.app
+          </a>
+          .
+        </p>
+        <h2 className='text-bold text-2xl my-2'>Contact Us</h2>
+        <p className={className.p}>If you have any questions about this Privacy Policy, please contact us at:</p>
+        <p className={className.p}>
           <a
             className={className.a}
             href={`mailto:${encodeURI('"FourScore Support" <support@FourScore.app>')}`}
