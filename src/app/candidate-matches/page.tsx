@@ -44,7 +44,7 @@ export default async function Page() {
           <h1 className='text-4xl'>My Ballot</h1>
           <h2>United States of America Presidential Election</h2>
           <h3>Election Day - Tuesday, November 5, 2024</h3>
-          <div className='grid grid-cols-2 gasp-4 mt-4'>
+          <div className='grid grid-cols-[1fr_max-content] gasp-4 mt-4'>
             <div>
               <div className='inline-flex flex-col items-center'>
                 <h4>Poll Complete</h4>
@@ -75,10 +75,11 @@ export default async function Page() {
       </section>
       <section className='p-4'>
         <div className='grid [grid-template-columns:3rem_1fr] mb-4'>
-          <div className='flex justify-center items-end text-center'>Pledge Support</div>
-          <h2 className='text-2xl text-center'>
+          <div className='flex justify-center items-end text-center text-sm sm:text-base'>Pledge Support</div>
+          <h2 className='flex justify-center items-end text-lg sm:text-xl text-center'>
             <div className='border-b border-black w-auto inline-block'>
-              <span className='font-bold'>Candidates</span> in The United States of America
+              <span className='font-bold'>Candidates</span> in
+              <br className='sm:hidden' /> The United States of America
             </div>
           </h2>
         </div>

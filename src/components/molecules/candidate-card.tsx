@@ -68,12 +68,14 @@ export default function CandidateCard({
             </>
           ) : candidate.score === -1 ? (
             <>
-              <span className='flex items-center mt-1.5 mb-1.5'>
+              <span className='items-center mt-1.5 mb-1.5 flex sm:hidden'>Missing poll answers</span>
+              <span className='items-center mt-1.5 mb-1.5 hidden sm:flex'>
                 FourScore does not have this candidate&apos;s poll answers
               </span>
               <Star
                 rate={0}
                 displayEmptyStar
+                unknown
               />
             </>
           ) : (
