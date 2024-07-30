@@ -62,8 +62,8 @@ export default async function ProfileCategory({
                     {question.answer.answeredByStaff && (
                       <span className='text-sm text-neutral-400 tracking-wide font-bold'>
                         {' '}
-                        <span className='inline-flex gap-1'>
-                          <span>(</span>answered by FourScore staff<span>)</span>
+                        <span className='inline-flex gap-1 items-center justify-center text-center'>
+                          <span>(</span>answer researched by FourScore<span>)</span>
                         </span>
                       </span>
                     )}

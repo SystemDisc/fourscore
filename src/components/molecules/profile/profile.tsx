@@ -18,16 +18,6 @@ export default async function Profile({
   ).filter((c) => c.questions.every((q) => !!q.answer));
   return (
     <div className='grid grid-cols-1 gap-2 p-2'>
-      {candidate.candidateData?.description && (
-        <Card className='p-4'>
-          <div className='text-4xl'>{candidate.name}</div>
-          <hr className='border-black' />
-          <div
-            className={styles.normalize}
-            dangerouslySetInnerHTML={{ __html: await renderMarkdown(candidate.candidateData?.description) }}
-          />
-        </Card>
-      )}
       {(candidateQuestionsWithScore || candidate.categories) && categoriesWithAnswers.length > 0 && (
         <Card className='grid grid-cols-1 gap-2 p-2'>
           <div className='text-4xl'>
@@ -46,6 +36,16 @@ export default async function Profile({
               />
             ))}
           </div>
+        </Card>
+      )}
+      {candidate.candidateData?.description && (
+        <Card className='p-4'>
+          <div className='text-4xl'>{candidate.name}</div>
+          <hr className='border-black' />
+          <div
+            className={styles.normalize}
+            dangerouslySetInnerHTML={{ __html: await renderMarkdown(candidate.candidateData?.description) }}
+          />
         </Card>
       )}
     </div>

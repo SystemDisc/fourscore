@@ -13,7 +13,7 @@ export async function up(db: Kysely<Database>) {
 
   await db.schema
     .alterTable('Answer')
-    .addColumn('dateUpdated', 'timestamp', (col) => col.notNull().defaultTo(new Date()))
+    .addColumn('dateUpdated', 'timestamp', (col) => col.notNull().defaultTo(sql`clock_timestamp()`))
     .execute();
 }
 
