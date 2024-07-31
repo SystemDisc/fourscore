@@ -73,28 +73,30 @@ export default async function Page() {
           </div>
         </header>
       </section>
-      <section className='p-4'>
-        <div className='grid [grid-template-columns:3rem_1fr] mb-4'>
-          <div className='flex justify-center items-end text-center text-sm sm:text-base'>Pledge Support</div>
-          <h2 className='flex justify-center items-end text-lg sm:text-xl text-center'>
-            <div className='border-b border-black w-auto inline-block'>
-              <span className='font-bold'>Candidates</span> in
-              <br className='sm:hidden' /> The United States of America
-            </div>
-          </h2>
-        </div>
-        <CandidateList candidates={candidates} />
-      </section>
-      <section className='p-4 pt-0'>
-        <div className='flex justify-center'>
-          <LinkWithBackDetection
-            isButton
-            href='/dashboard'
-          >
-            Go to Dashboard
-          </LinkWithBackDetection>
-        </div>
-      </section>
+      <div className='max-w-lg mx-auto w-full'>
+        <section className='p-4'>
+          <div className='grid [grid-template-columns:3rem_1fr] mb-4'>
+            <div className='flex justify-center items-end text-center text-sm sm:text-base'>Pledge Support</div>
+            <h2 className='flex justify-center items-end text-lg sm:text-xl text-center'>
+              <div className='border-b border-black w-auto inline-block'>
+                <span className='font-bold'>Candidates</span> in
+                <br className='sm:hidden' /> The United States of America
+              </div>
+            </h2>
+          </div>
+          <CandidateList candidates={candidates} />
+        </section>
+        <section className='p-4 pt-0'>
+          <div className='flex justify-center'>
+            <LinkWithBackDetection
+              isButton
+              href='/dashboard'
+            >
+              Go to Dashboard
+            </LinkWithBackDetection>
+          </div>
+        </section>
+      </div>
       <Disclaimer className='text-justify text-sm p-4 bg-neutral-100 border-t border-neutral-300' />
     </MainCard>
   );

@@ -14,12 +14,17 @@ export async function up(db: Kysely<Database>) {
     for (const question of locality.questions) {
       for (const candidate of question.candidates.filter((c) => c.answer.rating !== null)) {
         await db
-          .updateTable('Answer')
-          .set({
+          .insertInto('Answer')
+          .values({
             ...candidate.answer,
             answeredByStaff: true,
           })
-          .where('id', '=', candidate.answer.id)
+          .onConflict((oc) =>
+            oc.column('id').doUpdateSet({
+              ...candidate.answer,
+              answeredByStaff: true,
+            }),
+          )
           .execute();
       }
     }
@@ -36,7 +41,7 @@ export async function down(db: Kysely<Database>) {
       answersMap.flatMap((c) => c.questions.flatMap((q) => q.candidates.map((c) => c.answer.id))),
     )
     .execute();
-  await db.schema.alterTable('Answer').dropColumn('answeredByStaff').execute();
+  await db.schema.alterTable('Answer').dropColumn('answeredByStaff').dropColumn('dateCreated').execute();
 }
 
 const calcRating = (percent?: number) => (percent ? Math.round((percent / 100) * 5) : null);
@@ -48,10 +53,10 @@ export const answersMap = [
     position: 0,
     questions: [
       {
-        id: 'f15804f2-738c-4b9f-8bb7-e6064fb73e17',
+        id: 'cc74aca8-bece-46b7-bab6-7a4476f19684',
         localityId: 'fefab2ef-61cd-4ffa-b480-2439f34f7b7e',
-        categoryId: 'ab47e6b6-985e-4a9f-b025-1e26ae06ac5f',
-        question: 'Should the city invest in infrastructure improvements in underserved neighborhoods?',
+        categoryId: '9c80af67-183f-4abe-90a1-dd9130d434af',
+        question: 'Do you believe in increasing funding for local arts and cultural programs?',
         candidates: [
           {
             id: 'b047056f-6d63-4afc-8870-e616abaf7505',
@@ -62,15 +67,13 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: '0a2341bb-fc8d-4bf7-bab1-2f2663f6a3ed',
+              id: '59012c32-5d41-4147-98dc-065771f1e9f1',
               userId: 'b047056f-6d63-4afc-8870-e616abaf7505',
-              questionId: 'f15804f2-738c-4b9f-8bb7-e6064fb73e17',
-              agree: false,
-              rating: calcRating(55),
+              questionId: 'cc74aca8-bece-46b7-bab6-7a4476f19684',
+              agree: true,
+              rating: calcRating(),
               dateUpdated: now,
-              notes: String.raw`**Answer:** Chase Oliver might argue that while infrastructure improvements in underserved neighborhoods are important, the best approach is to encourage private investment and community-led initiatives rather than relying on government funding. He might suggest that reducing regulatory barriers and offering incentives for private companies to invest in these areas could lead to more sustainable and efficient outcomes. Oliver could emphasize the importance of local control and decision-making, ensuring that any infrastructure projects are driven by the needs and priorities of the community members themselves. He might also highlight the role of public-private partnerships in addressing infrastructure needs without overburdening taxpayers.
-
-**Percentage of Importance:** Given his Libertarian principles, Oliver might assign a moderate importance to this issue, possibly in the range of 50-60%. This reflects a recognition of the importance of infrastructure improvements for community development, balanced with a strong emphasis on reducing government intervention and fostering private sector solutions.`,
+              notes: String.raw``,
               skipped: false,
             },
           },
@@ -83,15 +86,13 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: true,
             answer: {
-              id: 'b2ba3002-0328-48f8-8815-8175711672de',
+              id: '0c2c27a7-a447-4ead-a6d1-82d349a5f79b',
               userId: '267a857e-d76f-4223-884f-076c0c66e85e',
-              questionId: 'f15804f2-738c-4b9f-8bb7-e6064fb73e17',
+              questionId: 'cc74aca8-bece-46b7-bab6-7a4476f19684',
               agree: true,
-              rating: calcRating(95),
+              rating: calcRating(),
               dateUpdated: now,
-              notes: String.raw`**Answer:** Cornel West would likely argue that investing in infrastructure improvements in underserved neighborhoods is crucial for addressing long-standing disparities and promoting social and economic justice. He might emphasize that such investments are necessary to provide all residents with access to essential services, safe and healthy living conditions, and economic opportunities. West could highlight the importance of modernizing infrastructure such as roads, public transportation, schools, healthcare facilities, and green spaces to ensure that underserved communities are not left behind. He would likely advocate for comprehensive and inclusive planning processes that involve community members in decision-making to ensure that the investments meet the actual needs and priorities of the residents.
-
-**Percentage of Importance:** Given his focus on social justice and equity, West would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects his belief that investing in underserved neighborhoods is a fundamental step toward creating a more just and equitable society, addressing systemic inequities, and empowering communities.`,
+              notes: String.raw``,
               skipped: false,
             },
           },
@@ -104,15 +105,13 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: '3e7d989b-a6ba-4292-b888-97f90b10e636',
+              id: 'b2befae6-c433-4729-bc9b-7027b6e1b747',
               userId: '04a990af-a61e-41f2-beb0-d4098b533de5',
-              questionId: 'f15804f2-738c-4b9f-8bb7-e6064fb73e17',
-              agree: true,
-              rating: calcRating(75),
+              questionId: 'cc74aca8-bece-46b7-bab6-7a4476f19684',
+              agree: false,
+              rating: calcRating(),
               dateUpdated: now,
-              notes: String.raw`A**Answer:** Donald Trump would likely argue that investing in infrastructure improvements in underserved neighborhoods is essential for stimulating economic growth, creating jobs, and improving the quality of life for residents. He might emphasize the importance of modernizing infrastructure such as roads, bridges, and public facilities to attract businesses and investment to these areas. Trump could highlight the potential for public-private partnerships to leverage private sector resources and expertise in these projects, reducing the burden on taxpayers while ensuring high-quality outcomes. He would likely advocate for targeted investments that have clear economic benefits and contribute to the broader goal of revitalizing underserved communities.
-
-**Percentage of Importance:** Given his focus on economic development and infrastructure during his previous presidency, Trump would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects his belief that infrastructure investments are crucial for economic revitalization and community improvement, aligning with his broader goals of promoting economic growth and job creation.`,
+              notes: String.raw``,
               skipped: false,
             },
           },
@@ -125,15 +124,13 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: '44b44aa0-aed2-42fb-a0d9-1e98f3bb092f',
+              id: '2990f442-6f82-4fab-8447-d4c4646338a4',
               userId: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
-              questionId: 'f15804f2-738c-4b9f-8bb7-e6064fb73e17',
+              questionId: 'cc74aca8-bece-46b7-bab6-7a4476f19684',
               agree: true,
-              rating: calcRating(95),
+              rating: calcRating(),
               dateUpdated: now,
-              notes: String.raw`**Answer:** Jill Stein would likely argue that investing in infrastructure improvements in underserved neighborhoods is crucial for addressing social and economic disparities and promoting environmental sustainability. She might emphasize that such investments are necessary to provide all residents with access to essential services, safe and healthy living conditions, and economic opportunities. Stein could highlight the importance of modernizing infrastructure, such as public transportation, clean energy, water and sanitation systems, schools, healthcare facilities, and green spaces, to ensure that underserved communities are not left behind. She would likely advocate for a holistic approach that includes community involvement in planning and decision-making processes, ensuring that investments meet the actual needs and priorities of the residents. Stein might also stress the importance of using sustainable and green technologies in these infrastructure projects to promote long-term environmental benefits.
-
-**Percentage of Importance:** Given her focus on social justice, equity, and sustainability, Stein would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects her belief that investing in underserved neighborhoods is a fundamental step toward creating a more just and equitable society, addressing systemic inequities, and promoting sustainable development.`,
+              notes: String.raw``,
               skipped: false,
             },
           },
@@ -146,15 +143,34 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: 'd912260d-2cf4-4ddd-a95e-e7ab50097e39',
+              id: '22fa49cf-c01c-47d3-9006-2e43f1ad5bdc',
               userId: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
-              questionId: 'f15804f2-738c-4b9f-8bb7-e6064fb73e17',
+              questionId: 'cc74aca8-bece-46b7-bab6-7a4476f19684',
               agree: true,
-              rating: calcRating(85),
+              rating: calcRating(),
               dateUpdated: now,
-              notes: String.raw`**Answer:** Joe Biden would likely argue that investing in infrastructure improvements in underserved neighborhoods is essential for promoting economic equity, enhancing public health, and ensuring that all communities have access to quality infrastructure. He might emphasize the importance of addressing historical neglect and systemic disparities that have left many neighborhoods without adequate infrastructure. Biden could highlight his administration's commitment to rebuilding and modernizing America's infrastructure, including roads, bridges, public transportation, water systems, broadband access, and public facilities, in a way that prioritizes underserved communities. He would likely advocate for a comprehensive approach that involves local communities in the planning process to ensure that investments meet their specific needs and priorities.
+              notes: String.raw``,
+              skipped: false,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '3132dbac-44f5-4f43-bccd-228f5d09ac43',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'cc74aca8-bece-46b7-bab6-7a4476f19684',
+              agree: true,
+              rating: calcRating(75),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that increasing funding for local arts and cultural programs is essential for fostering community engagement, promoting cultural diversity, and enhancing the quality of life in cities. She might emphasize that arts and cultural programs play a vital role in education, mental health, and economic development. Harris could highlight the benefits of arts and cultural initiatives in bringing communities together, providing educational opportunities for young people, and stimulating local economies through tourism and creative industries. She would likely advocate for policies that ensure equitable access to arts and cultural programs, particularly in underserved communities, to promote inclusivity and diversity.
 
-**Percentage of Importance:** Given his administration's focus on infrastructure and equity, Biden would likely assign a high importance to this issue, possibly in the range of 80-90%. This reflects his belief that infrastructure investments are crucial for fostering inclusive economic growth, improving quality of life, and addressing long-standing disparities in underserved neighborhoods.`,
+**Percentage of Importance:** Given her focus on community development and cultural enrichment, Harris would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects her belief that arts and cultural programs are crucial for creating vibrant, inclusive communities and for fostering the social and economic well-being of residents.`,
               skipped: false,
             },
           },
@@ -167,15 +183,13 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: '56f9f608-cad6-4962-88a8-0d1281928531',
+              id: '66141b77-e29a-467c-b503-e7ab245e14cf',
               userId: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
-              questionId: 'f15804f2-738c-4b9f-8bb7-e6064fb73e17',
+              questionId: 'cc74aca8-bece-46b7-bab6-7a4476f19684',
               agree: true,
-              rating: calcRating(85),
+              rating: calcRating(),
               dateUpdated: now,
-              notes: String.raw`**Answer:** Robert F. Kennedy Jr. would likely argue that investing in infrastructure improvements in underserved neighborhoods is essential for addressing systemic inequities, promoting social justice, and fostering sustainable development. He might emphasize that such investments are crucial for ensuring that all residents have access to basic services, safe living conditions, and economic opportunities. Kennedy Jr. could highlight the need for modernizing infrastructure in a way that prioritizes clean energy, environmental sustainability, and resilience to climate change. He would likely advocate for community involvement in planning and decision-making processes to ensure that the infrastructure projects meet the specific needs and priorities of the residents. Kennedy Jr. might also stress the importance of integrating green technologies and sustainable practices into these projects to promote long-term environmental and public health benefits.
-
-**Percentage of Importance:** Given his focus on environmental sustainability and social justice, Kennedy Jr. would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects his belief that infrastructure investments in underserved neighborhoods are a critical component of creating equitable, sustainable, and resilient communities.`,
+              notes: String.raw``,
               skipped: false,
             },
           },
@@ -294,6 +308,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'b33a1356-de30-4882-b889-02ef733f151d',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'f0d91e14-c6d1-4873-8f84-2add4ac1f5ae',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that increasing funding for public transportation is essential for improving accessibility, reducing traffic congestion, and addressing environmental concerns. She might emphasize that a robust public transportation system can enhance mobility for all residents, particularly those in underserved communities, by providing affordable and reliable transit options. Harris could highlight the environmental benefits of reducing car dependency, such as lowering greenhouse gas emissions and improving air quality. She would likely advocate for policies that invest in modernizing and expanding public transit infrastructure, ensuring that it is safe, efficient, and accessible to all.
+
+**Percentage of Importance:** Given her focus on sustainability and equity, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that investing in public transportation is crucial for creating more equitable, sustainable, and livable cities, as well as for supporting economic growth and improving the quality of life for all residents.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -311,530 +346,6 @@ export const answersMap = [
               notes: String.raw`**Answer:** Robert F. Kennedy Jr. would likely argue that increasing funding for public transportation is essential for promoting environmental sustainability, improving public health, and ensuring equitable access to transportation. He might emphasize the role of public transportation in reducing greenhouse gas emissions, lowering pollution levels, and decreasing traffic congestion, which are all critical for combating climate change. Kennedy Jr. could also highlight the importance of providing affordable and reliable transportation options for all citizens, particularly those in low-income and underserved communities. He would advocate for comprehensive public transportation policies that support green technologies and infrastructure improvements, making cities more livable and environmentally friendly.
 
 **Percentage of Importance:** Given his strong focus on environmental and social issues, Kennedy Jr. would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects his belief that investing in public transportation is a crucial component of a sustainable and equitable urban policy framework.`,
-              skipped: false,
-            },
-          },
-        ],
-      },
-      {
-        id: 'eba2966b-aa5f-4d3e-9e38-1dda14cb3eb4',
-        localityId: 'fefab2ef-61cd-4ffa-b480-2439f34f7b7e',
-        categoryId: 'ad14126f-93a8-49d8-8d7f-16c9d0f4110c',
-        question: 'Do you support the increase of local funding for public schools?',
-        candidates: [
-          {
-            id: 'b047056f-6d63-4afc-8870-e616abaf7505',
-            name: 'Chase Oliver',
-            email: 'chaseoliver@fourscore.app',
-            emailVerified: null,
-            image: '/images/chase-oliver.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: 'b98097d3-11e0-48ba-95c4-25cb1469bd76',
-              userId: 'b047056f-6d63-4afc-8870-e616abaf7505',
-              questionId: 'eba2966b-aa5f-4d3e-9e38-1dda14cb3eb4',
-              agree: false,
-              rating: calcRating(55),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Chase Oliver might argue that while the quality of education is crucial, simply increasing local funding for public schools is not the most effective solution. He could suggest that the current education system suffers from inefficiencies and a lack of competition. Oliver might advocate for school choice policies, such as vouchers or education savings accounts, to allow parents to choose the best educational setting for their children, whether it be public, private, charter, or homeschooling. He could also emphasize the importance of local control over education, suggesting that decisions about funding and resource allocation should be made by communities and parents rather than centralized authorities.
-
-**Percentage of Importance:** Given his Libertarian principles, Oliver might assign a moderate importance to this issue, possibly in the range of 50-60%. This reflects a recognition of the importance of education, balanced with a strong emphasis on promoting competition, efficiency, and individual choice in the education system.`,
-              skipped: false,
-            },
-          },
-          {
-            id: '267a857e-d76f-4223-884f-076c0c66e85e',
-            name: 'Cornel West',
-            email: 'cornelwest@fourscore.app',
-            emailVerified: null,
-            image: '/images/cornel-west.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: true,
-            answer: {
-              id: '0dc0f15f-6ab0-41bc-9fe3-f8c1cfa519ef',
-              userId: '267a857e-d76f-4223-884f-076c0c66e85e',
-              questionId: 'eba2966b-aa5f-4d3e-9e38-1dda14cb3eb4',
-              agree: true,
-              rating: calcRating(95),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Cornel West would likely argue that increasing local funding for public schools is essential for providing every child with a high-quality education, regardless of their socioeconomic background. He might emphasize the importance of investing in public education as a means of promoting social and economic equity, reducing disparities, and empowering communities. West could highlight the need for adequate funding to ensure smaller class sizes, better teacher salaries, updated facilities, and access to comprehensive educational resources and support services. He would likely advocate for a more equitable distribution of resources to ensure that underserved and marginalized communities receive the support they need to provide a robust educational experience for their students.
-
-**Percentage of Importance:** Given his focus on social justice and education, West would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects his belief that increasing local funding for public schools is critical for achieving educational equity and fostering a more just and inclusive society.`,
-              skipped: false,
-            },
-          },
-          {
-            id: '04a990af-a61e-41f2-beb0-d4098b533de5',
-            name: 'Donald J. Trump',
-            email: 'donaldjtrump@fourscore.app',
-            emailVerified: null,
-            image: '/images/donald-trump.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: 'af63a5e2-2521-4a6e-a05e-067af5fd6f81',
-              userId: '04a990af-a61e-41f2-beb0-d4098b533de5',
-              questionId: 'eba2966b-aa5f-4d3e-9e38-1dda14cb3eb4',
-              agree: false,
-              rating: calcRating(65),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Donald Trump would likely argue that while improving education is important, simply increasing local funding for public schools is not the best solution. He might emphasize the need for school choice, allowing parents to choose the best educational environment for their children, whether it be public, private, charter, or homeschooling. Trump could advocate for policies that promote competition among schools to drive improvements in quality and efficiency. He might also stress the importance of ensuring that any funding increases are used effectively and efficiently, with a focus on improving educational outcomes rather than just increasing spending. Trump could highlight the success of charter schools and other alternatives as models for improving education through innovation and accountability.
-
-**Percentage of Importance:** Given his focus on school choice and fiscal responsibility, Trump would likely assign a moderate importance to this issue, possibly in the range of 60-70%. This reflects his belief that improving education requires more than just increased funding and that empowering parents and promoting competition among schools are key to achieving better educational outcomes.`,
-              skipped: false,
-            },
-          },
-          {
-            id: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
-            name: 'Jill Stein',
-            email: 'jillstein@fourscore.app',
-            emailVerified: null,
-            image: '/images/jill-stein.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: '3128970f-6418-4056-ab92-baff4c9d5f09',
-              userId: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
-              questionId: 'eba2966b-aa5f-4d3e-9e38-1dda14cb3eb4',
-              agree: true,
-              rating: calcRating(95),
-              dateUpdated: now,
-              notes: String.raw`=**Answer:** Jill Stein would likely argue that increasing local funding for public schools is essential for providing every child with a high-quality education, regardless of their socioeconomic background. She might emphasize the importance of investing in public education to reduce disparities, promote social and economic equity, and empower communities. Stein could highlight the need for adequate funding to ensure smaller class sizes, better teacher salaries, updated facilities, and access to comprehensive educational resources and support services. She would likely advocate for policies that ensure equitable distribution of resources so that underserved and marginalized communities receive the support they need to provide a robust educational experience for their students.
-
-**Percentage of Importance:** Given her focus on social justice and education, Stein would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects her belief that increasing local funding for public schools is critical for achieving educational equity and fostering a more just and inclusive society.`,
-              skipped: false,
-            },
-          },
-          {
-            id: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
-            name: 'Joe Biden',
-            email: 'joebiden@fourscore.app',
-            emailVerified: null,
-            image: '/images/joe-biden.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: '503b3377-cfb9-4c24-ac16-6ff9345852d3',
-              userId: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
-              questionId: 'eba2966b-aa5f-4d3e-9e38-1dda14cb3eb4',
-              agree: true,
-              rating: calcRating(85),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Joe Biden would likely argue that increasing local funding for public schools is essential for ensuring that all children have access to a high-quality education, regardless of their background or socioeconomic status. He might emphasize the importance of providing adequate resources to schools to address disparities, improve educational outcomes, and prepare students for future success. Biden could highlight his administration's efforts to support public education, such as increasing federal funding for schools, expanding access to early childhood education, and promoting teacher training and professional development. He would likely advocate for local governments to prioritize education funding to ensure that schools have the resources they need to provide a comprehensive and equitable education for all students.
-
-**Percentage of Importance:** Given his administration's focus on education and equity, Biden would likely assign a high importance to this issue, possibly in the range of 80-90%. This reflects his belief that investing in public education is crucial for promoting social and economic mobility, closing achievement gaps, and fostering a strong, inclusive society.`,
-              skipped: false,
-            },
-          },
-          {
-            id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
-            name: 'Robert F. Kennedy Jr.',
-            email: 'robertfkennedyjr@fourscore.app',
-            emailVerified: null,
-            image: '/images/robert-f-kennedy-jr.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: 'cf669368-7f43-4eeb-93fe-1f4561b26c6c',
-              userId: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
-              questionId: 'eba2966b-aa5f-4d3e-9e38-1dda14cb3eb4',
-              agree: true,
-              rating: calcRating(85),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Robert F. Kennedy Jr. would likely argue that increasing local funding for public schools is essential for addressing educational disparities and ensuring that all children have access to quality education. He might emphasize that adequate funding is crucial for providing necessary resources, improving school infrastructure, reducing class sizes, and attracting and retaining qualified teachers. Kennedy Jr. could highlight the importance of public education in promoting social equity, economic mobility, and community empowerment. He would likely advocate for policies that ensure equitable distribution of resources to underserved and marginalized communities, ensuring that every child has the opportunity to succeed.
-
-**Percentage of Importance:** Given his commitment to social justice and equity, Kennedy Jr. would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects his belief that increasing local funding for public schools is a critical step towards creating a more just and equitable society, where every child has access to the education they deserve.`,
-              skipped: false,
-            },
-          },
-        ],
-      },
-      {
-        id: 'e4adcd2f-a41a-4815-90b0-e9a4d178052f',
-        localityId: 'fefab2ef-61cd-4ffa-b480-2439f34f7b7e',
-        categoryId: 'ab47e6b6-985e-4a9f-b025-1e26ae06ac5f',
-        question: 'Do you favor zoning changes to allow more affordable housing developments?',
-        candidates: [
-          {
-            id: 'b047056f-6d63-4afc-8870-e616abaf7505',
-            name: 'Chase Oliver',
-            email: 'chaseoliver@fourscore.app',
-            emailVerified: null,
-            image: '/images/chase-oliver.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: '46d0cb15-d181-4cf4-bcee-0466687f1706',
-              userId: 'b047056f-6d63-4afc-8870-e616abaf7505',
-              questionId: 'e4adcd2f-a41a-4815-90b0-e9a4d178052f',
-              agree: true,
-              rating: calcRating(65),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Chase Oliver would likely argue that zoning changes to allow more affordable housing developments can be beneficial if they reduce unnecessary government restrictions and bureaucratic hurdles that inhibit housing supply. He might emphasize that deregulating zoning laws can encourage private developers to build more housing, which can naturally lead to more affordable options through increased supply and competition. Oliver could also stress the importance of property rights, ensuring that any zoning changes respect the rights of property owners and do not impose undue burdens on them. He might advocate for streamlined approval processes and less restrictive land-use regulations as ways to foster a more dynamic and responsive housing market.
-
-**Percentage of Importance:** Given his Libertarian principles, Oliver would likely assign a moderate to high importance to this issue, possibly in the range of 60-70%. This reflects his belief that reducing government intervention in the housing market can lead to more affordable housing options and that zoning changes should aim to enhance market efficiency and respect property rights.`,
-              skipped: false,
-            },
-          },
-          {
-            id: '267a857e-d76f-4223-884f-076c0c66e85e',
-            name: 'Cornel West',
-            email: 'cornelwest@fourscore.app',
-            emailVerified: null,
-            image: '/images/cornel-west.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: true,
-            answer: {
-              id: '344a9489-22b6-49db-8b66-ffdb5c320363',
-              userId: '267a857e-d76f-4223-884f-076c0c66e85e',
-              questionId: 'e4adcd2f-a41a-4815-90b0-e9a4d178052f',
-              agree: true,
-              rating: calcRating(85),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Cornel West would likely argue that zoning changes to allow more affordable housing developments are essential for addressing the housing crisis and ensuring that all people have access to safe, decent, and affordable housing. He might emphasize that affordable housing is a fundamental human right and that local governments have a responsibility to ensure that housing policies do not perpetuate economic and racial segregation. West could advocate for inclusive zoning policies that promote the development of mixed-income communities and prevent displacement of low-income residents. He would likely support measures that prioritize affordable housing near public transportation, schools, and other essential services to create vibrant and equitable communities.
-
-**Percentage of Importance:** Given his focus on social justice and economic equality, West would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects his belief that affordable housing is crucial for fostering inclusive and equitable communities and that zoning changes are a necessary tool for achieving these goals.`,
-              skipped: false,
-            },
-          },
-          {
-            id: '04a990af-a61e-41f2-beb0-d4098b533de5',
-            name: 'Donald J. Trump',
-            email: 'donaldjtrump@fourscore.app',
-            emailVerified: null,
-            image: '/images/donald-trump.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: 'f1d1a972-f545-42b6-8e40-8c056f15719a',
-              userId: '04a990af-a61e-41f2-beb0-d4098b533de5',
-              questionId: 'e4adcd2f-a41a-4815-90b0-e9a4d178052f',
-              agree: false,
-              rating: calcRating(55),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Donald Trump would likely argue that while affordable housing is important, zoning changes should be implemented in a way that promotes economic growth and respects property rights. He might emphasize the need for reducing bureaucratic red tape and regulatory barriers that can hinder housing development. Trump could advocate for policies that encourage private sector investment in affordable housing through incentives and public-private partnerships, rather than relying solely on government mandates. He might highlight the importance of local control, suggesting that communities should have the flexibility to determine the best approaches to zoning changes based on their unique needs and circumstances.
-
-**Percentage of Importance:** Given his focus on economic development and reducing government intervention, Trump would likely assign a moderate importance to this issue, possibly in the range of 50-60%. This reflects his belief in the importance of affordable housing, balanced with the need to ensure that zoning changes do not stifle economic growth or infringe on property rights.`,
-              skipped: false,
-            },
-          },
-          {
-            id: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
-            name: 'Jill Stein',
-            email: 'jillstein@fourscore.app',
-            emailVerified: null,
-            image: '/images/jill-stein.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: '366ecd02-b179-49bf-9f33-2ac82c796aec',
-              userId: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
-              questionId: 'e4adcd2f-a41a-4815-90b0-e9a4d178052f',
-              agree: true,
-              rating: calcRating(85),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Jill Stein would likely argue that zoning changes to allow more affordable housing developments are essential for addressing the housing crisis, reducing homelessness, and promoting social and economic equity. She might emphasize that access to affordable housing is a fundamental human right and a key component of a just society. Stein could advocate for policies that ensure affordable housing is available to low-income families, minorities, and other marginalized groups who are disproportionately affected by housing shortages and high costs. She would likely highlight the environmental benefits of well-planned affordable housing developments, such as reducing urban sprawl and promoting sustainable communities. Stein might also stress the importance of community involvement in planning and implementing these zoning changes to ensure they meet the needs of local residents.
-
-**Percentage of Importance:** Given her focus on social justice and sustainability, Stein would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that affordable housing is crucial for creating equitable and sustainable communities and that zoning changes are necessary to make housing more accessible and just for all residents.`,
-              skipped: false,
-            },
-          },
-          {
-            id: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
-            name: 'Joe Biden',
-            email: 'joebiden@fourscore.app',
-            emailVerified: null,
-            image: '/images/joe-biden.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: '13ac1f6d-856b-4411-83ea-69c6e345e40a',
-              userId: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
-              questionId: 'e4adcd2f-a41a-4815-90b0-e9a4d178052f',
-              agree: true,
-              rating: calcRating(75),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Joe Biden would likely argue that zoning changes to allow more affordable housing developments are crucial for tackling the housing crisis, reducing homelessness, and promoting inclusive economic growth. He might emphasize that access to affordable housing is essential for creating strong, resilient communities and ensuring that all Americans have a stable place to live. Biden could highlight his administration's efforts to increase federal support for affordable housing, including funding for housing construction, rental assistance, and initiatives aimed at eliminating discriminatory practices in housing. He would likely advocate for local governments to adopt zoning reforms that facilitate the development of affordable housing while ensuring that these changes are implemented in a way that benefits all community members and protects environmental standards.
-
-**Percentage of Importance:** Given his administration's focus on housing affordability and community development, Biden would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects his belief that zoning changes are an essential tool for increasing the supply of affordable housing and addressing broader social and economic challenges.`,
-              skipped: false,
-            },
-          },
-          {
-            id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
-            name: 'Robert F. Kennedy Jr.',
-            email: 'robertfkennedyjr@fourscore.app',
-            emailVerified: null,
-            image: '/images/robert-f-kennedy-jr.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: '1b1cc33e-e700-42da-a858-53fe324f4a2e',
-              userId: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
-              questionId: 'e4adcd2f-a41a-4815-90b0-e9a4d178052f',
-              agree: true,
-              rating: calcRating(75),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Robert F. Kennedy Jr. would likely argue that zoning changes to allow more affordable housing developments are essential for addressing the housing crisis, promoting social equity, and fostering sustainable urban growth. He might emphasize the importance of ensuring that affordable housing is accessible to low-income families and marginalized communities who are disproportionately affected by housing shortages and high costs. Kennedy Jr. could highlight the need for these developments to be environmentally sustainable, incorporating green building practices and ensuring that new housing projects do not contribute to urban sprawl or environmental degradation. He would likely advocate for community involvement in the planning process to ensure that the needs and voices of local residents are heard and addressed.
-
-**Percentage of Importance:** Given his focus on environmental sustainability and social justice, Kennedy Jr. would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects his belief that affordable housing is a critical component of a just and sustainable society, and that zoning changes are necessary to facilitate the development of such housing.`,
-              skipped: false,
-            },
-          },
-        ],
-      },
-      {
-        id: 'cdb4d376-d205-44ea-a7bf-47f21522ee50',
-        localityId: 'fefab2ef-61cd-4ffa-b480-2439f34f7b7e',
-        categoryId: 'ad14126f-93a8-49d8-8d7f-16c9d0f4110c',
-        question: 'Should the city offer free community college tuition to residents?',
-        candidates: [
-          {
-            id: 'b047056f-6d63-4afc-8870-e616abaf7505',
-            name: 'Chase Oliver',
-            email: 'chaseoliver@fourscore.app',
-            emailVerified: null,
-            image: '/images/chase-oliver.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: 'd1c2aed0-41c5-4701-8422-4b31c384c579',
-              userId: 'b047056f-6d63-4afc-8870-e616abaf7505',
-              questionId: 'cdb4d376-d205-44ea-a7bf-47f21522ee50',
-              agree: false,
-              rating: calcRating(45),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Chase Oliver might argue that while education is important, the city offering free community college tuition is not the most effective or sustainable solution. He could suggest that government-funded programs often come with high costs and inefficiencies. Instead, Oliver might advocate for policies that encourage private sector involvement, such as scholarships, grants, and partnerships with businesses that can provide funding for education. He could emphasize the importance of promoting competition and innovation in the education sector to drive down costs and improve quality. Oliver might also stress the need for individuals to take personal responsibility for their education and seek out opportunities through private means rather than relying on government programs.
-
-**Percentage of Importance:** Given his Libertarian principles, Oliver might assign a moderate importance to this issue, possibly in the range of 40-50%. This reflects his recognition of the importance of education while maintaining a strong emphasis on reducing government intervention and promoting private sector solutions.`,
-              skipped: false,
-            },
-          },
-          {
-            id: '267a857e-d76f-4223-884f-076c0c66e85e',
-            name: 'Cornel West',
-            email: 'cornelwest@fourscore.app',
-            emailVerified: null,
-            image: '/images/cornel-west.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: true,
-            answer: {
-              id: 'ee3b5ba6-e583-4b42-9498-7615d65a22b7',
-              userId: '267a857e-d76f-4223-884f-076c0c66e85e',
-              questionId: 'cdb4d376-d205-44ea-a7bf-47f21522ee50',
-              agree: true,
-              rating: calcRating(95),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Cornel West would likely argue that offering free community college tuition to residents is essential for promoting social and economic equity, providing greater opportunities for all, and addressing the educational disparities that disproportionately affect low-income and marginalized communities. He might emphasize that access to higher education is a fundamental right and a critical component of a just and equitable society. West could highlight the potential long-term benefits of such a policy, including a more educated workforce, reduced economic inequality, and greater social mobility. He would likely advocate for comprehensive policies that not only provide free tuition but also support students with additional resources such as tutoring, mentorship, and career counseling to ensure their success.
-
-**Percentage of Importance:** Given his focus on social justice and education, West would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects his belief that free community college tuition is a crucial step toward creating a more equitable and inclusive society, ensuring that all individuals have the opportunity to pursue higher education and improve their socio-economic status.`,
-              skipped: false,
-            },
-          },
-          {
-            id: '04a990af-a61e-41f2-beb0-d4098b533de5',
-            name: 'Donald J. Trump',
-            email: 'donaldjtrump@fourscore.app',
-            emailVerified: null,
-            image: '/images/donald-trump.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: '55624549-df18-42a4-9a30-92ae359db4d6',
-              userId: '04a990af-a61e-41f2-beb0-d4098b533de5',
-              questionId: 'cdb4d376-d205-44ea-a7bf-47f21522ee50',
-              agree: false,
-              rating: calcRating(55),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Donald Trump would likely argue that while education is important, offering free community college tuition to residents may not be the most effective use of government resources. He might emphasize that such policies could lead to increased government spending and higher taxes. Instead, Trump could advocate for initiatives that encourage job training, vocational education, and apprenticeships that align more directly with the needs of the job market. He might also highlight the importance of partnerships between businesses and educational institutions to provide targeted training programs that prepare students for high-demand careers. Trump could suggest that scholarships and grants funded by the private sector or through public-private partnerships might be a better approach than universally free tuition.
-
-**Percentage of Importance:** Given his focus on economic growth and fiscal conservatism, Trump might assign a moderate importance to this issue, possibly in the range of 50-60%. This reflects his belief in the value of education and workforce development while maintaining a strong emphasis on controlling government spending and encouraging private sector involvement.`,
-              skipped: false,
-            },
-          },
-          {
-            id: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
-            name: 'Jill Stein',
-            email: 'jillstein@fourscore.app',
-            emailVerified: null,
-            image: '/images/jill-stein.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: 'b237dab3-87d1-4e6f-bfdf-07afbaff03fa',
-              userId: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
-              questionId: 'cdb4d376-d205-44ea-a7bf-47f21522ee50',
-              agree: true,
-              rating: calcRating(95),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Jill Stein would likely argue that offering free community college tuition to residents is essential for promoting social and economic equity, providing greater opportunities for all, and addressing the educational disparities that disproportionately affect low-income and marginalized communities. She might emphasize that access to higher education is a fundamental right and a critical component of a just and equitable society. Stein could highlight the potential long-term benefits of such a policy, including a more educated workforce, reduced economic inequality, and greater social mobility. She would likely advocate for comprehensive policies that not only provide free tuition but also support students with additional resources such as tutoring, mentorship, and career counseling to ensure their success.
-
-**Percentage of Importance:** Given her focus on social justice and education, Stein would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects her belief that free community college tuition is a crucial step toward creating a more equitable and inclusive society, ensuring that all individuals have the opportunity to pursue higher education and improve their socio-economic status.`,
-              skipped: false,
-            },
-          },
-          {
-            id: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
-            name: 'Joe Biden',
-            email: 'joebiden@fourscore.app',
-            emailVerified: null,
-            image: '/images/joe-biden.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: '6ff66a11-c7b6-4e5d-8461-5fc3349a35cb',
-              userId: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
-              questionId: 'cdb4d376-d205-44ea-a7bf-47f21522ee50',
-              agree: true,
-              rating: calcRating(85),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Joe Biden would likely argue that offering free community college tuition to residents is essential for ensuring that all individuals have the opportunity to pursue higher education, regardless of their financial situation. He might emphasize the importance of education in creating pathways to good-paying jobs, reducing economic inequality, and strengthening the middle class. Biden could highlight his administration's efforts to make higher education more accessible and affordable, such as his support for the America’s College Promise proposal, which aims to make two years of community college free. He would likely advocate for policies that not only provide free tuition but also support wraparound services such as academic advising, tutoring, and career counseling to ensure student success.
-
-**Percentage of Importance:** Given his administration's focus on education and economic equity, Biden would likely assign a high importance to this issue, possibly in the range of 80-90%. This reflects his belief that expanding access to education through initiatives like free community college tuition is crucial for promoting economic mobility, reducing inequality, and ensuring a competitive workforce.`,
-              skipped: false,
-            },
-          },
-          {
-            id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
-            name: 'Robert F. Kennedy Jr.',
-            email: 'robertfkennedyjr@fourscore.app',
-            emailVerified: null,
-            image: '/images/robert-f-kennedy-jr.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: 'e80417f3-4789-4eda-9376-13dbe16ca0e5',
-              userId: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
-              questionId: 'cdb4d376-d205-44ea-a7bf-47f21522ee50',
-              agree: true,
-              rating: calcRating(85),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Robert F. Kennedy Jr. would likely argue that offering free community college tuition to residents is essential for creating a more equitable society and providing opportunities for all individuals, regardless of their financial background. He might emphasize that access to education is a fundamental right and critical for personal and professional development. Kennedy Jr. could highlight the potential benefits of such a policy, including reducing student debt, increasing the skilled workforce, and fostering economic growth. He would likely advocate for a comprehensive approach that includes free tuition along with support services such as tutoring, mentorship, and career counseling to ensure students can succeed and fully benefit from their education.
-
-**Percentage of Importance:** Given his focus on social justice and equity, Kennedy Jr. would likely assign a high importance to this issue, possibly in the range of 80-90%. This reflects his belief that free community college tuition is a crucial step toward addressing educational disparities, promoting social mobility, and ensuring that all residents have the opportunity to pursue higher education and improve their socio-economic status.`,
-              skipped: false,
-            },
-          },
-        ],
-      },
-      {
-        id: 'cc74aca8-bece-46b7-bab6-7a4476f19684',
-        localityId: 'fefab2ef-61cd-4ffa-b480-2439f34f7b7e',
-        categoryId: '9c80af67-183f-4abe-90a1-dd9130d434af',
-        question: 'Do you believe in increasing funding for local arts and cultural programs?',
-        candidates: [
-          {
-            id: 'b047056f-6d63-4afc-8870-e616abaf7505',
-            name: 'Chase Oliver',
-            email: 'chaseoliver@fourscore.app',
-            emailVerified: null,
-            image: '/images/chase-oliver.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: '59012c32-5d41-4147-98dc-065771f1e9f1',
-              userId: 'b047056f-6d63-4afc-8870-e616abaf7505',
-              questionId: 'cc74aca8-bece-46b7-bab6-7a4476f19684',
-              agree: true,
-              rating: calcRating(),
-              dateUpdated: now,
-              notes: '',
-              skipped: false,
-            },
-          },
-          {
-            id: '267a857e-d76f-4223-884f-076c0c66e85e',
-            name: 'Cornel West',
-            email: 'cornelwest@fourscore.app',
-            emailVerified: null,
-            image: '/images/cornel-west.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: true,
-            answer: {
-              id: '0c2c27a7-a447-4ead-a6d1-82d349a5f79b',
-              userId: '267a857e-d76f-4223-884f-076c0c66e85e',
-              questionId: 'cc74aca8-bece-46b7-bab6-7a4476f19684',
-              agree: true,
-              rating: calcRating(),
-              dateUpdated: now,
-              notes: '',
-              skipped: false,
-            },
-          },
-          {
-            id: '04a990af-a61e-41f2-beb0-d4098b533de5',
-            name: 'Donald J. Trump',
-            email: 'donaldjtrump@fourscore.app',
-            emailVerified: null,
-            image: '/images/donald-trump.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: 'b2befae6-c433-4729-bc9b-7027b6e1b747',
-              userId: '04a990af-a61e-41f2-beb0-d4098b533de5',
-              questionId: 'cc74aca8-bece-46b7-bab6-7a4476f19684',
-              agree: false,
-              rating: calcRating(),
-              dateUpdated: now,
-              notes: '',
-              skipped: false,
-            },
-          },
-          {
-            id: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
-            name: 'Jill Stein',
-            email: 'jillstein@fourscore.app',
-            emailVerified: null,
-            image: '/images/jill-stein.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: '2990f442-6f82-4fab-8447-d4c4646338a4',
-              userId: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
-              questionId: 'cc74aca8-bece-46b7-bab6-7a4476f19684',
-              agree: true,
-              rating: calcRating(),
-              dateUpdated: now,
-              notes: '',
-              skipped: false,
-            },
-          },
-          {
-            id: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
-            name: 'Joe Biden',
-            email: 'joebiden@fourscore.app',
-            emailVerified: null,
-            image: '/images/joe-biden.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: '22fa49cf-c01c-47d3-9006-2e43f1ad5bdc',
-              userId: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
-              questionId: 'cc74aca8-bece-46b7-bab6-7a4476f19684',
-              agree: true,
-              rating: calcRating(),
-              dateUpdated: now,
-              notes: '',
-              skipped: false,
-            },
-          },
-          {
-            id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
-            name: 'Robert F. Kennedy Jr.',
-            email: 'robertfkennedyjr@fourscore.app',
-            emailVerified: null,
-            image: '/images/robert-f-kennedy-jr.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: '66141b77-e29a-467c-b503-e7ab245e14cf',
-              userId: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
-              questionId: 'cc74aca8-bece-46b7-bab6-7a4476f19684',
-              agree: true,
-              rating: calcRating(),
-              dateUpdated: now,
-              notes: '',
               skipped: false,
             },
           },
@@ -952,6 +463,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '0fe3c56b-13ba-4415-b0e1-b8ecb9febd42',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'c0300c9d-a752-47db-bfe1-5a2af6cfc254',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that expanding mental health services is essential for addressing public health needs, reducing stigma, and providing crucial support to individuals and families. She might emphasize that mental health is as important as physical health and that access to mental health services should be available to everyone, regardless of their socioeconomic status. Harris could highlight the benefits of expanding mental health services, such as reducing homelessness, improving community safety, and enhancing overall quality of life. She would likely advocate for increased funding for mental health programs, training for mental health professionals, and the integration of mental health services into primary care and community health settings to ensure comprehensive care.
+
+**Percentage of Importance:** Given her focus on public health and social equity, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that expanding mental health services is crucial for creating healthier, more resilient communities and for addressing the mental health crisis affecting many individuals and families.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -960,7 +492,7 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: '8220c062-9636-4093-b722-9bcee22391dd',
+              id: '4b29d766-b02e-4ef3-b2d5-af531a1b1933',
               userId: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
               questionId: 'c0300c9d-a752-47db-bfe1-5a2af6cfc254',
               agree: true,
@@ -975,10 +507,10 @@ export const answersMap = [
         ],
       },
       {
-        id: 'a0eecdee-4dc3-4703-99db-d87168e64425',
+        id: 'e4adcd2f-a41a-4815-90b0-e9a4d178052f',
         localityId: 'fefab2ef-61cd-4ffa-b480-2439f34f7b7e',
-        categoryId: '9c80af67-183f-4abe-90a1-dd9130d434af',
-        question: 'Should the city sponsor annual community events to promote local businesses and tourism?',
+        categoryId: 'ab47e6b6-985e-4a9f-b025-1e26ae06ac5f',
+        question: 'Do you favor zoning changes to allow more affordable housing developments?',
         candidates: [
           {
             id: 'b047056f-6d63-4afc-8870-e616abaf7505',
@@ -989,13 +521,15 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: '37675604-9ac5-49cd-b9ce-2b46a42028ca',
+              id: '46d0cb15-d181-4cf4-bcee-0466687f1706',
               userId: 'b047056f-6d63-4afc-8870-e616abaf7505',
-              questionId: 'a0eecdee-4dc3-4703-99db-d87168e64425',
+              questionId: 'e4adcd2f-a41a-4815-90b0-e9a4d178052f',
               agree: true,
-              rating: calcRating(),
+              rating: calcRating(65),
               dateUpdated: now,
-              notes: '',
+              notes: String.raw`**Answer:** Chase Oliver would likely argue that zoning changes to allow more affordable housing developments can be beneficial if they reduce unnecessary government restrictions and bureaucratic hurdles that inhibit housing supply. He might emphasize that deregulating zoning laws can encourage private developers to build more housing, which can naturally lead to more affordable options through increased supply and competition. Oliver could also stress the importance of property rights, ensuring that any zoning changes respect the rights of property owners and do not impose undue burdens on them. He might advocate for streamlined approval processes and less restrictive land-use regulations as ways to foster a more dynamic and responsive housing market.
+
+**Percentage of Importance:** Given his Libertarian principles, Oliver would likely assign a moderate to high importance to this issue, possibly in the range of 60-70%. This reflects his belief that reducing government intervention in the housing market can lead to more affordable housing options and that zoning changes should aim to enhance market efficiency and respect property rights.`,
               skipped: false,
             },
           },
@@ -1008,13 +542,15 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: true,
             answer: {
-              id: '2b01b350-3183-4c1c-94de-62ac29a35ee4',
+              id: '344a9489-22b6-49db-8b66-ffdb5c320363',
               userId: '267a857e-d76f-4223-884f-076c0c66e85e',
-              questionId: 'a0eecdee-4dc3-4703-99db-d87168e64425',
+              questionId: 'e4adcd2f-a41a-4815-90b0-e9a4d178052f',
               agree: true,
-              rating: calcRating(),
+              rating: calcRating(85),
               dateUpdated: now,
-              notes: '',
+              notes: String.raw`**Answer:** Cornel West would likely argue that zoning changes to allow more affordable housing developments are essential for addressing the housing crisis and ensuring that all people have access to safe, decent, and affordable housing. He might emphasize that affordable housing is a fundamental human right and that local governments have a responsibility to ensure that housing policies do not perpetuate economic and racial segregation. West could advocate for inclusive zoning policies that promote the development of mixed-income communities and prevent displacement of low-income residents. He would likely support measures that prioritize affordable housing near public transportation, schools, and other essential services to create vibrant and equitable communities.
+
+**Percentage of Importance:** Given his focus on social justice and economic equality, West would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects his belief that affordable housing is crucial for fostering inclusive and equitable communities and that zoning changes are a necessary tool for achieving these goals.`,
               skipped: false,
             },
           },
@@ -1027,13 +563,15 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: 'a5e91c48-21f2-4367-b3bc-2c33413177aa',
+              id: 'f1d1a972-f545-42b6-8e40-8c056f15719a',
               userId: '04a990af-a61e-41f2-beb0-d4098b533de5',
-              questionId: 'a0eecdee-4dc3-4703-99db-d87168e64425',
-              agree: true,
-              rating: calcRating(),
+              questionId: 'e4adcd2f-a41a-4815-90b0-e9a4d178052f',
+              agree: false,
+              rating: calcRating(55),
               dateUpdated: now,
-              notes: '',
+              notes: String.raw`**Answer:** Donald Trump would likely argue that while affordable housing is important, zoning changes should be implemented in a way that promotes economic growth and respects property rights. He might emphasize the need for reducing bureaucratic red tape and regulatory barriers that can hinder housing development. Trump could advocate for policies that encourage private sector investment in affordable housing through incentives and public-private partnerships, rather than relying solely on government mandates. He might highlight the importance of local control, suggesting that communities should have the flexibility to determine the best approaches to zoning changes based on their unique needs and circumstances.
+
+**Percentage of Importance:** Given his focus on economic development and reducing government intervention, Trump would likely assign a moderate importance to this issue, possibly in the range of 50-60%. This reflects his belief in the importance of affordable housing, balanced with the need to ensure that zoning changes do not stifle economic growth or infringe on property rights.`,
               skipped: false,
             },
           },
@@ -1046,13 +584,15 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: '2402152a-ae04-4844-bdc5-212568b2e3f9',
+              id: '366ecd02-b179-49bf-9f33-2ac82c796aec',
               userId: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
-              questionId: 'a0eecdee-4dc3-4703-99db-d87168e64425',
+              questionId: 'e4adcd2f-a41a-4815-90b0-e9a4d178052f',
               agree: true,
-              rating: calcRating(),
+              rating: calcRating(85),
               dateUpdated: now,
-              notes: '',
+              notes: String.raw`**Answer:** Jill Stein would likely argue that zoning changes to allow more affordable housing developments are essential for addressing the housing crisis, reducing homelessness, and promoting social and economic equity. She might emphasize that access to affordable housing is a fundamental human right and a key component of a just society. Stein could advocate for policies that ensure affordable housing is available to low-income families, minorities, and other marginalized groups who are disproportionately affected by housing shortages and high costs. She would likely highlight the environmental benefits of well-planned affordable housing developments, such as reducing urban sprawl and promoting sustainable communities. Stein might also stress the importance of community involvement in planning and implementing these zoning changes to ensure they meet the needs of local residents.
+
+**Percentage of Importance:** Given her focus on social justice and sustainability, Stein would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that affordable housing is crucial for creating equitable and sustainable communities and that zoning changes are necessary to make housing more accessible and just for all residents.`,
               skipped: false,
             },
           },
@@ -1065,13 +605,36 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: '0085f9c2-adee-4e8d-b77f-883635eb6fc7',
+              id: '13ac1f6d-856b-4411-83ea-69c6e345e40a',
               userId: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
-              questionId: 'a0eecdee-4dc3-4703-99db-d87168e64425',
+              questionId: 'e4adcd2f-a41a-4815-90b0-e9a4d178052f',
               agree: true,
-              rating: calcRating(),
+              rating: calcRating(75),
               dateUpdated: now,
-              notes: '',
+              notes: String.raw`**Answer:** Joe Biden would likely argue that zoning changes to allow more affordable housing developments are crucial for tackling the housing crisis, reducing homelessness, and promoting inclusive economic growth. He might emphasize that access to affordable housing is essential for creating strong, resilient communities and ensuring that all Americans have a stable place to live. Biden could highlight his administration's efforts to increase federal support for affordable housing, including funding for housing construction, rental assistance, and initiatives aimed at eliminating discriminatory practices in housing. He would likely advocate for local governments to adopt zoning reforms that facilitate the development of affordable housing while ensuring that these changes are implemented in a way that benefits all community members and protects environmental standards.
+
+**Percentage of Importance:** Given his administration's focus on housing affordability and community development, Biden would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects his belief that zoning changes are an essential tool for increasing the supply of affordable housing and addressing broader social and economic challenges.`,
+              skipped: false,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '9823c269-e39e-4ac7-affe-49c9a32422ea',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'e4adcd2f-a41a-4815-90b0-e9a4d178052f',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that zoning changes to allow more affordable housing developments are essential for addressing the housing crisis, reducing homelessness, and promoting economic and social equity. She might emphasize the need for inclusive zoning policies that facilitate the development of affordable housing in diverse neighborhoods, ensuring that all residents have access to safe and affordable housing options. Harris could highlight the benefits of such policies, including increased housing supply, more equitable communities, and economic growth. She would likely advocate for comprehensive approaches that include community input and collaboration with local governments, developers, and non-profits to create sustainable and inclusive housing solutions.
+
+**Percentage of Importance:** Given her focus on housing affordability and equity, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that zoning changes are a crucial tool for addressing systemic housing challenges, promoting fair housing practices, and ensuring that all individuals have the opportunity to live in affordable, quality housing.`,
               skipped: false,
             },
           },
@@ -1084,23 +647,25 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: '77805beb-90aa-4c91-bab4-08583e196668',
+              id: '1b1cc33e-e700-42da-a858-53fe324f4a2e',
               userId: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
-              questionId: 'a0eecdee-4dc3-4703-99db-d87168e64425',
+              questionId: 'e4adcd2f-a41a-4815-90b0-e9a4d178052f',
               agree: true,
-              rating: calcRating(),
+              rating: calcRating(75),
               dateUpdated: now,
-              notes: '',
+              notes: String.raw`**Answer:** Robert F. Kennedy Jr. would likely argue that zoning changes to allow more affordable housing developments are essential for addressing the housing crisis, promoting social equity, and fostering sustainable urban growth. He might emphasize the importance of ensuring that affordable housing is accessible to low-income families and marginalized communities who are disproportionately affected by housing shortages and high costs. Kennedy Jr. could highlight the need for these developments to be environmentally sustainable, incorporating green building practices and ensuring that new housing projects do not contribute to urban sprawl or environmental degradation. He would likely advocate for community involvement in the planning process to ensure that the needs and voices of local residents are heard and addressed.
+
+**Percentage of Importance:** Given his focus on environmental sustainability and social justice, Kennedy Jr. would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects his belief that affordable housing is a critical component of a just and sustainable society, and that zoning changes are necessary to facilitate the development of such housing.`,
               skipped: false,
             },
           },
         ],
       },
       {
-        id: '86dea7a3-e54d-49ac-a680-2cb644d5f2f2',
+        id: '081b7aaf-3c0d-4e07-ac53-4f030b89e946',
         localityId: 'fefab2ef-61cd-4ffa-b480-2439f34f7b7e',
-        categoryId: '24fbb8ac-3411-4a64-8dd4-9397770a0e8d',
-        question: 'Should local government increase support for homeless shelters and services?',
+        categoryId: 'cb791c95-210b-48c8-ae67-b539d7e1a470',
+        question: 'Do you support the expansion of public parks and green spaces within the city?',
         candidates: [
           {
             id: 'b047056f-6d63-4afc-8870-e616abaf7505',
@@ -1111,13 +676,15 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: 'ee1381e8-d081-45ce-a19f-8289d050a22c',
+              id: '3aee2ea6-e2c0-4105-ad33-1db3105ec62d',
               userId: 'b047056f-6d63-4afc-8870-e616abaf7505',
-              questionId: '86dea7a3-e54d-49ac-a680-2cb644d5f2f2',
+              questionId: '081b7aaf-3c0d-4e07-ac53-4f030b89e946',
               agree: false,
-              rating: calcRating(),
+              rating: calcRating(45),
               dateUpdated: now,
-              notes: '',
+              notes: String.raw`**Answer:** Chase Oliver might argue that while public parks and green spaces provide valuable benefits to communities, the expansion of such areas should be driven by local initiatives and private funding rather than relying heavily on government resources. He could support the idea of public parks if they are managed efficiently and do not place a significant financial burden on taxpayers. Oliver might also emphasize the importance of protecting property rights and ensuring that any expansion of green spaces respects the rights of landowners and is done in a way that encourages voluntary community involvement and private sector contributions.
+
+**Percentage of Importance:** Given his Libertarian principles, Oliver might assign a moderate importance to this issue, possibly in the range of 40-50%. This reflects an acknowledgment of the benefits of public parks and green spaces, balanced with a strong emphasis on limited government intervention and the promotion of private and community-led solutions.`,
               skipped: false,
             },
           },
@@ -1130,13 +697,15 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: true,
             answer: {
-              id: '5f090287-cefc-41d0-866a-e009e062fd17',
+              id: 'e142434d-fee4-45de-9a8a-215ef17e4465',
               userId: '267a857e-d76f-4223-884f-076c0c66e85e',
-              questionId: '86dea7a3-e54d-49ac-a680-2cb644d5f2f2',
+              questionId: '081b7aaf-3c0d-4e07-ac53-4f030b89e946',
               agree: true,
-              rating: calcRating(),
+              rating: calcRating(85),
               dateUpdated: now,
-              notes: '',
+              notes: String.raw`**Answer:** Cornel West would likely argue that expanding public parks and green spaces is essential for promoting environmental justice, enhancing community health, and providing equitable access to recreational opportunities. He might emphasize that such spaces are crucial for creating livable, inclusive communities, particularly in underserved and marginalized neighborhoods. West could highlight the multiple benefits of public parks, including their role in reducing urban heat islands, improving air quality, providing spaces for physical activity and community gatherings, and fostering a connection to nature. He would likely advocate for policies that ensure these green spaces are accessible to all residents and are maintained in a way that reflects the community's needs and desires.
+
+**Percentage of Importance:** Given his focus on social and environmental justice, West would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects his belief that public parks and green spaces are vital components of a just and equitable society, contributing to the overall well-being and resilience of communities.`,
               skipped: false,
             },
           },
@@ -1149,13 +718,15 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: '1c264a5f-748d-4467-864d-eac169e147b2',
+              id: '35a1b511-fd11-47c5-ba84-e7320a4dd288',
               userId: '04a990af-a61e-41f2-beb0-d4098b533de5',
-              questionId: '86dea7a3-e54d-49ac-a680-2cb644d5f2f2',
+              questionId: '081b7aaf-3c0d-4e07-ac53-4f030b89e946',
               agree: false,
-              rating: calcRating(),
+              rating: calcRating(45),
               dateUpdated: now,
-              notes: '',
+              notes: String.raw`**Answer:** Donald Trump would likely argue that while public parks and green spaces can enhance the quality of life in cities, the decision to expand these areas should be carefully considered to ensure it does not impede economic development and job creation. He might emphasize the importance of public-private partnerships to fund and maintain these spaces, reducing the financial burden on taxpayers. Trump could also highlight the need for efficient use of public land and resources, suggesting that any expansion of parks and green spaces should be balanced with the city's broader economic and development goals.
+
+**Percentage of Importance:** Given his focus on economic development and reducing government spending, Trump might assign a moderate importance to this issue, possibly in the range of 40-50%. This reflects an acknowledgment of the benefits of public parks and green spaces, balanced with a strong emphasis on economic considerations and the role of private sector involvement.`,
               skipped: false,
             },
           },
@@ -1168,13 +739,15 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: 'e28ca86e-5d27-45a6-ad43-43d3022f7840',
+              id: '627b324f-a58d-44ce-9059-127448a55e2f',
               userId: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
-              questionId: '86dea7a3-e54d-49ac-a680-2cb644d5f2f2',
+              questionId: '081b7aaf-3c0d-4e07-ac53-4f030b89e946',
               agree: true,
-              rating: calcRating(),
+              rating: calcRating(95),
               dateUpdated: now,
-              notes: '',
+              notes: String.raw`**Answer:** Jill Stein would likely argue that expanding public parks and green spaces is crucial for promoting environmental sustainability, enhancing public health, and creating vibrant, livable communities. She might emphasize the multiple benefits of green spaces, including their role in mitigating climate change, improving air and water quality, providing habitats for wildlife, and offering residents opportunities for recreation, relaxation, and community engagement. Stein would likely advocate for equitable access to these spaces, ensuring that all communities, particularly those that are underserved or marginalized, have access to quality parks and green spaces.
+
+**Percentage of Importance:** Given her strong environmental focus and commitment to green policies, Stein would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects her belief that the expansion of public parks and green spaces is essential for fostering sustainable and healthy communities, addressing environmental justice, and improving overall quality of life for city residents.`,
               skipped: false,
             },
           },
@@ -1187,13 +760,36 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: 'a6ea3fdc-782e-4279-9ca8-a18a76f8f916',
+              id: '606d4bca-f81f-447c-b6f3-b829f386669f',
               userId: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
-              questionId: '86dea7a3-e54d-49ac-a680-2cb644d5f2f2',
+              questionId: '081b7aaf-3c0d-4e07-ac53-4f030b89e946',
               agree: true,
-              rating: calcRating(),
+              rating: calcRating(75),
               dateUpdated: now,
-              notes: '',
+              notes: String.raw`**Answer:** Joe Biden would likely argue that expanding public parks and green spaces is essential for creating healthy, vibrant, and resilient communities. He might emphasize the benefits of such spaces in terms of improving public health by providing areas for exercise and recreation, enhancing mental well-being, reducing urban heat islands, and improving air quality. Biden would also highlight the importance of equitable access to these spaces, ensuring that all neighborhoods, particularly underserved and marginalized communities, have access to quality parks and green spaces. He could point to his administration's investments in infrastructure and community development as part of a broader strategy to promote sustainable urban development.
+
+**Percentage of Importance:** Given his administration's focus on climate action, infrastructure improvement, and community well-being, Biden would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects his belief in the multifaceted benefits of public parks and green spaces for urban environments and their role in promoting environmental and social equity.`,
+              skipped: false,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '8f16cc35-0b8e-406d-aa36-35f962d154d4',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '081b7aaf-3c0d-4e07-ac53-4f030b89e946',
+              agree: true,
+              rating: calcRating(75),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that expanding public parks and green spaces is essential for promoting environmental sustainability, improving public health, and enhancing the quality of life in urban areas. She might emphasize that green spaces provide critical benefits, including reducing urban heat islands, improving air quality, and offering residents places for recreation, relaxation, and community gatherings. Harris could highlight the importance of ensuring that all communities, particularly underserved and marginalized ones, have access to green spaces to promote equity and inclusivity. She would likely advocate for policies that prioritize the development and maintenance of parks and green spaces, ensuring they are safe, accessible, and beneficial to all residents.
+
+**Percentage of Importance:** Given her focus on environmental and community health, Harris would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects her belief that public parks and green spaces are vital for creating sustainable, healthy, and vibrant communities.`,
               skipped: false,
             },
           },
@@ -1206,13 +802,15 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: 'a2694296-57dd-4bed-965f-a9e02295d601',
+              id: '1df18dce-4ae7-4ec8-b0cc-ea3d1a423a02',
               userId: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
-              questionId: '86dea7a3-e54d-49ac-a680-2cb644d5f2f2',
+              questionId: '081b7aaf-3c0d-4e07-ac53-4f030b89e946',
               agree: true,
-              rating: calcRating(),
+              rating: calcRating(85),
               dateUpdated: now,
-              notes: '',
+              notes: String.raw`**Answer:** Robert F. Kennedy Jr. would likely argue that expanding public parks and green spaces is essential for promoting environmental sustainability, public health, and social equity. He would emphasize the importance of green spaces in reducing pollution, mitigating climate change, and providing recreational opportunities for urban residents. Kennedy Jr. might highlight the role of parks in enhancing community cohesion and improving the quality of life, particularly in underserved and marginalized communities that often lack access to such amenities. He would likely advocate for policies that ensure equitable distribution of green spaces across all neighborhoods and support community involvement in the planning and maintenance of these areas.
+
+**Percentage of Importance:** Given his strong environmental focus and advocacy for social justice, Kennedy Jr. would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects his belief that public parks and green spaces are vital components of a sustainable, healthy, and equitable urban environment.`,
               skipped: false,
             },
           },
@@ -1330,6 +928,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '82b69b90-3938-4d72-8214-55ae983b263f',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '82cf5c24-0351-4d35-a36a-759bd4db0443',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that implementing stricter gun control measures within city limits is essential for reducing gun violence, protecting communities, and saving lives. She might emphasize the importance of comprehensive gun control policies, including universal background checks, restrictions on high-capacity magazines and assault weapons, and measures to prevent individuals with a history of violence or mental illness from obtaining firearms. Harris could highlight the need for collaboration between local, state, and federal authorities to enforce these measures effectively. She would likely advocate for community-based approaches to gun violence prevention, including investment in mental health services, education, and community outreach programs.
+
+**Percentage of Importance:** Given her focus on public safety and gun violence prevention, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that stricter gun control measures are crucial for creating safer communities and protecting the lives and well-being of all residents.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -1347,6 +966,161 @@ export const answersMap = [
               notes: String.raw`**Answer:** Robert F. Kennedy Jr. would likely argue that while it is important to address gun violence and improve public safety, any gun control measures implemented should respect the Second Amendment rights of law-abiding citizens. He might support specific measures such as universal background checks, improving mental health services, and closing loopholes that allow guns to fall into the wrong hands. Kennedy Jr. could also emphasize the need for community-based approaches to violence prevention and the importance of addressing the root causes of violence, such as poverty and lack of access to education and healthcare.
 
 **Percentage of Importance:** Given his focus on balancing public safety with individual rights, Kennedy Jr. would likely assign a moderate to high importance to this issue, possibly in the range of 60-70%. This reflects his belief that while gun control is an important aspect of reducing violence and improving public safety, it must be carefully designed to protect constitutional rights and address broader social issues.`,
+              skipped: false,
+            },
+          },
+        ],
+      },
+      {
+        id: 'eba2966b-aa5f-4d3e-9e38-1dda14cb3eb4',
+        localityId: 'fefab2ef-61cd-4ffa-b480-2439f34f7b7e',
+        categoryId: 'ad14126f-93a8-49d8-8d7f-16c9d0f4110c',
+        question: 'Do you support the increase of local funding for public schools?',
+        candidates: [
+          {
+            id: 'b047056f-6d63-4afc-8870-e616abaf7505',
+            name: 'Chase Oliver',
+            email: 'chaseoliver@fourscore.app',
+            emailVerified: null,
+            image: '/images/chase-oliver.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'b98097d3-11e0-48ba-95c4-25cb1469bd76',
+              userId: 'b047056f-6d63-4afc-8870-e616abaf7505',
+              questionId: 'eba2966b-aa5f-4d3e-9e38-1dda14cb3eb4',
+              agree: false,
+              rating: calcRating(55),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Chase Oliver might argue that while the quality of education is crucial, simply increasing local funding for public schools is not the most effective solution. He could suggest that the current education system suffers from inefficiencies and a lack of competition. Oliver might advocate for school choice policies, such as vouchers or education savings accounts, to allow parents to choose the best educational setting for their children, whether it be public, private, charter, or homeschooling. He could also emphasize the importance of local control over education, suggesting that decisions about funding and resource allocation should be made by communities and parents rather than centralized authorities.
+
+**Percentage of Importance:** Given his Libertarian principles, Oliver might assign a moderate importance to this issue, possibly in the range of 50-60%. This reflects a recognition of the importance of education, balanced with a strong emphasis on promoting competition, efficiency, and individual choice in the education system.`,
+              skipped: false,
+            },
+          },
+          {
+            id: '267a857e-d76f-4223-884f-076c0c66e85e',
+            name: 'Cornel West',
+            email: 'cornelwest@fourscore.app',
+            emailVerified: null,
+            image: '/images/cornel-west.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: true,
+            answer: {
+              id: '0dc0f15f-6ab0-41bc-9fe3-f8c1cfa519ef',
+              userId: '267a857e-d76f-4223-884f-076c0c66e85e',
+              questionId: 'eba2966b-aa5f-4d3e-9e38-1dda14cb3eb4',
+              agree: true,
+              rating: calcRating(95),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Cornel West would likely argue that increasing local funding for public schools is essential for providing every child with a high-quality education, regardless of their socioeconomic background. He might emphasize the importance of investing in public education as a means of promoting social and economic equity, reducing disparities, and empowering communities. West could highlight the need for adequate funding to ensure smaller class sizes, better teacher salaries, updated facilities, and access to comprehensive educational resources and support services. He would likely advocate for a more equitable distribution of resources to ensure that underserved and marginalized communities receive the support they need to provide a robust educational experience for their students.
+
+**Percentage of Importance:** Given his focus on social justice and education, West would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects his belief that increasing local funding for public schools is critical for achieving educational equity and fostering a more just and inclusive society.`,
+              skipped: false,
+            },
+          },
+          {
+            id: '04a990af-a61e-41f2-beb0-d4098b533de5',
+            name: 'Donald J. Trump',
+            email: 'donaldjtrump@fourscore.app',
+            emailVerified: null,
+            image: '/images/donald-trump.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'af63a5e2-2521-4a6e-a05e-067af5fd6f81',
+              userId: '04a990af-a61e-41f2-beb0-d4098b533de5',
+              questionId: 'eba2966b-aa5f-4d3e-9e38-1dda14cb3eb4',
+              agree: false,
+              rating: calcRating(65),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Donald Trump would likely argue that while improving education is important, simply increasing local funding for public schools is not the best solution. He might emphasize the need for school choice, allowing parents to choose the best educational environment for their children, whether it be public, private, charter, or homeschooling. Trump could advocate for policies that promote competition among schools to drive improvements in quality and efficiency. He might also stress the importance of ensuring that any funding increases are used effectively and efficiently, with a focus on improving educational outcomes rather than just increasing spending. Trump could highlight the success of charter schools and other alternatives as models for improving education through innovation and accountability.
+
+**Percentage of Importance:** Given his focus on school choice and fiscal responsibility, Trump would likely assign a moderate importance to this issue, possibly in the range of 60-70%. This reflects his belief that improving education requires more than just increased funding and that empowering parents and promoting competition among schools are key to achieving better educational outcomes.`,
+              skipped: false,
+            },
+          },
+          {
+            id: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
+            name: 'Jill Stein',
+            email: 'jillstein@fourscore.app',
+            emailVerified: null,
+            image: '/images/jill-stein.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '3128970f-6418-4056-ab92-baff4c9d5f09',
+              userId: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
+              questionId: 'eba2966b-aa5f-4d3e-9e38-1dda14cb3eb4',
+              agree: true,
+              rating: calcRating(95),
+              dateUpdated: now,
+              notes: String.raw`=**Answer:** Jill Stein would likely argue that increasing local funding for public schools is essential for providing every child with a high-quality education, regardless of their socioeconomic background. She might emphasize the importance of investing in public education to reduce disparities, promote social and economic equity, and empower communities. Stein could highlight the need for adequate funding to ensure smaller class sizes, better teacher salaries, updated facilities, and access to comprehensive educational resources and support services. She would likely advocate for policies that ensure equitable distribution of resources so that underserved and marginalized communities receive the support they need to provide a robust educational experience for their students.
+
+**Percentage of Importance:** Given her focus on social justice and education, Stein would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects her belief that increasing local funding for public schools is critical for achieving educational equity and fostering a more just and inclusive society.`,
+              skipped: false,
+            },
+          },
+          {
+            id: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
+            name: 'Joe Biden',
+            email: 'joebiden@fourscore.app',
+            emailVerified: null,
+            image: '/images/joe-biden.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '503b3377-cfb9-4c24-ac16-6ff9345852d3',
+              userId: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
+              questionId: 'eba2966b-aa5f-4d3e-9e38-1dda14cb3eb4',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Joe Biden would likely argue that increasing local funding for public schools is essential for ensuring that all children have access to a high-quality education, regardless of their background or socioeconomic status. He might emphasize the importance of providing adequate resources to schools to address disparities, improve educational outcomes, and prepare students for future success. Biden could highlight his administration's efforts to support public education, such as increasing federal funding for schools, expanding access to early childhood education, and promoting teacher training and professional development. He would likely advocate for local governments to prioritize education funding to ensure that schools have the resources they need to provide a comprehensive and equitable education for all students.
+
+**Percentage of Importance:** Given his administration's focus on education and equity, Biden would likely assign a high importance to this issue, possibly in the range of 80-90%. This reflects his belief that investing in public education is crucial for promoting social and economic mobility, closing achievement gaps, and fostering a strong, inclusive society.`,
+              skipped: false,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '47d7bbdb-41a6-4e6b-87e2-05e18e5cb06e',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'eba2966b-aa5f-4d3e-9e38-1dda14cb3eb4',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that increasing local funding for public schools is essential for providing every child with a high-quality education, regardless of their socioeconomic background. She might emphasize that adequate funding is crucial for hiring and retaining qualified teachers, reducing class sizes, updating facilities, and providing students with the resources they need to succeed. Harris could highlight the importance of addressing educational disparities and ensuring that underserved and marginalized communities receive the support they need. She would likely advocate for policies that prioritize education funding and promote equitable distribution of resources to ensure that all students have access to the tools and opportunities necessary for their academic and personal development.
+
+**Percentage of Importance:** Given her focus on education and equity, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that increasing local funding for public schools is critical for promoting social and economic mobility, closing achievement gaps, and ensuring that every child has the opportunity to reach their full potential.`,
+              skipped: false,
+            },
+          },
+          {
+            id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
+            name: 'Robert F. Kennedy Jr.',
+            email: 'robertfkennedyjr@fourscore.app',
+            emailVerified: null,
+            image: '/images/robert-f-kennedy-jr.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'cf669368-7f43-4eeb-93fe-1f4561b26c6c',
+              userId: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
+              questionId: 'eba2966b-aa5f-4d3e-9e38-1dda14cb3eb4',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Robert F. Kennedy Jr. would likely argue that increasing local funding for public schools is essential for addressing educational disparities and ensuring that all children have access to quality education. He might emphasize that adequate funding is crucial for providing necessary resources, improving school infrastructure, reducing class sizes, and attracting and retaining qualified teachers. Kennedy Jr. could highlight the importance of public education in promoting social equity, economic mobility, and community empowerment. He would likely advocate for policies that ensure equitable distribution of resources to underserved and marginalized communities, ensuring that every child has the opportunity to succeed.
+
+**Percentage of Importance:** Given his commitment to social justice and equity, Kennedy Jr. would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects his belief that increasing local funding for public schools is a critical step towards creating a more just and equitable society, where every child has access to the education they deserve.`,
               skipped: false,
             },
           },
@@ -1462,6 +1236,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '4e2e1fbd-9297-448b-b6a7-85fcfc307b88',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '8192ffe5-b35b-4f44-97ce-d754de35e4ef',
+              agree: true,
+              rating: calcRating(75),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that providing free public Wi-Fi in key areas of the city is essential for bridging the digital divide, promoting economic opportunity, and enhancing access to education and public services. She might emphasize that internet access is a critical utility in the modern age, necessary for job searches, education, healthcare, and civic engagement. Harris could highlight that free public Wi-Fi would particularly benefit low-income and underserved communities, ensuring that all residents can participate fully in the digital economy. She would likely advocate for public-private partnerships to implement this initiative efficiently and sustainably, ensuring that the infrastructure is robust and accessible.
+
+**Percentage of Importance:** Given her focus on equity and access to resources, Harris would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects her belief that free public Wi-Fi is crucial for creating inclusive, connected communities and for providing all residents with the tools they need to thrive in a digital world.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -1483,11 +1278,10 @@ export const answersMap = [
         ],
       },
       {
-        id: '5706bf8e-02a1-4e62-87ad-572092aed271',
+        id: '86dea7a3-e54d-49ac-a680-2cb644d5f2f2',
         localityId: 'fefab2ef-61cd-4ffa-b480-2439f34f7b7e',
-        categoryId: 'fa72ab83-776a-46a2-902a-22e9c67731ef',
-        question:
-          'Should the city invest in smart technology to improve public services (e.g., waste management, water supply)?',
+        categoryId: '24fbb8ac-3411-4a64-8dd4-9397770a0e8d',
+        question: 'Should local government increase support for homeless shelters and services?',
         candidates: [
           {
             id: 'b047056f-6d63-4afc-8870-e616abaf7505',
@@ -1498,15 +1292,13 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: '1d2762f6-987b-4821-b6bd-8258474106d8',
+              id: 'ee1381e8-d081-45ce-a19f-8289d050a22c',
               userId: 'b047056f-6d63-4afc-8870-e616abaf7505',
-              questionId: '5706bf8e-02a1-4e62-87ad-572092aed271',
+              questionId: '86dea7a3-e54d-49ac-a680-2cb644d5f2f2',
               agree: false,
-              rating: calcRating(55),
+              rating: calcRating(),
               dateUpdated: now,
-              notes: String.raw`**Answer:** Chase Oliver might argue that while smart technology can improve public services, the city should focus on fostering an environment that encourages private sector innovation and investment in these technologies rather than relying on government-led initiatives. He could suggest that public-private partnerships and competition in the marketplace are more effective ways to drive technological advancements and improve service delivery. Oliver might emphasize the importance of reducing regulatory barriers and providing incentives for private companies to develop and implement smart technology solutions. He could also highlight the need for transparency and accountability to ensure that any public investment in smart technology is efficient and benefits taxpayers.
-
-**Percentage of Importance:** Given his Libertarian principles, Oliver might assign a moderate importance to this issue, possibly in the range of 50-60%. This reflects a recognition of the potential benefits of smart technology for public services, balanced with a strong emphasis on reducing government intervention and promoting private sector solutions.`,
+              notes: String.raw``,
               skipped: false,
             },
           },
@@ -1519,15 +1311,13 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: true,
             answer: {
-              id: 'f23117cb-9906-49bd-9fe4-d718ca6556b6',
+              id: '5f090287-cefc-41d0-866a-e009e062fd17',
               userId: '267a857e-d76f-4223-884f-076c0c66e85e',
-              questionId: '5706bf8e-02a1-4e62-87ad-572092aed271',
+              questionId: '86dea7a3-e54d-49ac-a680-2cb644d5f2f2',
               agree: true,
-              rating: calcRating(85),
+              rating: calcRating(),
               dateUpdated: now,
-              notes: String.raw`**Answer:** Cornel West would likely argue that investing in smart technology to improve public services is essential for creating more efficient, sustainable, and equitable communities. He might emphasize that smart technology can enhance the quality of public services like waste management and water supply, making them more reliable and environmentally friendly. West could highlight how these investments can address systemic inequalities by ensuring that all communities, particularly underserved and marginalized ones, benefit from high-quality public services. He would likely advocate for an inclusive approach to implementing smart technology, involving community input and ensuring that the benefits are equitably distributed.
-
-**Percentage of Importance:** Given his focus on social justice and sustainability, West would likely assign a high importance to this issue, possibly in the range of 80-90%. This reflects his belief that investing in smart technology is crucial for promoting environmental sustainability, improving public service delivery, and addressing social inequities.`,
+              notes: String.raw``,
               skipped: false,
             },
           },
@@ -1540,15 +1330,13 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: 'eab14d89-d406-4b2d-818b-283fb5eef6b5',
+              id: '1c264a5f-748d-4467-864d-eac169e147b2',
               userId: '04a990af-a61e-41f2-beb0-d4098b533de5',
-              questionId: '5706bf8e-02a1-4e62-87ad-572092aed271',
-              agree: true,
-              rating: calcRating(75),
+              questionId: '86dea7a3-e54d-49ac-a680-2cb644d5f2f2',
+              agree: false,
+              rating: calcRating(),
               dateUpdated: now,
-              notes: String.raw`**Answer:** Donald Trump would likely argue that investing in smart technology to improve public services can be beneficial for enhancing efficiency, reducing costs, and modernizing infrastructure. He might emphasize the importance of leveraging technology to improve services like waste management and water supply, which are essential for the well-being of communities. Trump could highlight the potential for creating jobs and stimulating economic growth through such investments. He would likely advocate for public-private partnerships to implement these technologies, ensuring that the private sector plays a significant role in driving innovation and investment while reducing the financial burden on taxpayers. Trump might also stress the need for practical and cost-effective solutions that deliver tangible benefits to residents.
-
-**Percentage of Importance:** Given his focus on economic growth and infrastructure improvement, Trump would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects his belief that smart technology investments can drive economic development, improve public services, and enhance the overall efficiency of city operations.`,
+              notes: String.raw``,
               skipped: false,
             },
           },
@@ -1561,15 +1349,13 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: '91329d35-9754-4040-b398-f3f90074fccf',
+              id: 'e28ca86e-5d27-45a6-ad43-43d3022f7840',
               userId: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
-              questionId: '5706bf8e-02a1-4e62-87ad-572092aed271',
+              questionId: '86dea7a3-e54d-49ac-a680-2cb644d5f2f2',
               agree: true,
-              rating: calcRating(85),
+              rating: calcRating(),
               dateUpdated: now,
-              notes: String.raw`**Answer:** Jill Stein would likely argue that investing in smart technology to improve public services is essential for promoting environmental sustainability, enhancing public health, and ensuring that all communities have access to high-quality services. She might emphasize that smart technology can make services like waste management and water supply more efficient, reduce environmental impact, and help conserve resources. Stein could highlight the importance of using technology to address systemic inequalities, ensuring that underserved and marginalized communities benefit from improved public services. She would likely advocate for policies that prioritize green and sustainable technologies, community involvement in decision-making, and equitable distribution of the benefits of these investments.
-
-**Percentage of Importance:** Given her focus on sustainability and social justice, Stein would likely assign a high importance to this issue, possibly in the range of 80-90%. This reflects her belief that investing in smart technology is crucial for building sustainable, equitable, and healthy communities and addressing both environmental and social challenges.`,
+              notes: String.raw``,
               skipped: false,
             },
           },
@@ -1582,15 +1368,34 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: '0a087985-77e6-4cce-b2f2-8ab1628fe7da',
+              id: 'a6ea3fdc-782e-4279-9ca8-a18a76f8f916',
               userId: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
-              questionId: '5706bf8e-02a1-4e62-87ad-572092aed271',
+              questionId: '86dea7a3-e54d-49ac-a680-2cb644d5f2f2',
               agree: true,
-              rating: calcRating(75),
+              rating: calcRating(),
               dateUpdated: now,
-              notes: String.raw`**Answer:** Joe Biden would likely argue that investing in smart technology to improve public services is essential for modernizing infrastructure, enhancing efficiency, and promoting sustainability. He might emphasize that smart technologies can optimize waste management and water supply systems, leading to cost savings, reduced environmental impact, and better service delivery for residents. Biden could highlight his administration's investments in infrastructure and technology as part of a broader strategy to build resilient and future-ready communities. He would likely advocate for federal support and funding to assist local governments in adopting these technologies, ensuring that all communities, especially underserved ones, benefit from these advancements.
+              notes: String.raw``,
+              skipped: false,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'a467c32e-a90c-45de-b350-7c81c0c03549',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '86dea7a3-e54d-49ac-a680-2cb644d5f2f2',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that increasing support for homeless shelters and services is essential for addressing the homelessness crisis, providing immediate relief to those in need, and working towards long-term solutions. She might emphasize that homelessness is a complex issue that requires a comprehensive approach, including emergency shelter, transitional housing, mental health services, job training, and affordable housing initiatives. Harris could highlight the importance of collaboration between local, state, and federal governments, as well as partnerships with non-profits and community organizations, to create effective and sustainable solutions. She would likely advocate for policies that ensure adequate funding and resources for homeless shelters and services, with a focus on helping individuals transition to stable housing and self-sufficiency.
 
-**Percentage of Importance:** Given his administration's focus on infrastructure and technological innovation, Biden would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects his belief that investing in smart technology is crucial for improving public services, promoting sustainability, and ensuring that cities are equipped to meet future challenges.`,
+**Percentage of Importance:** Given her focus on social justice and community well-being, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that addressing homelessness is crucial for creating equitable communities and ensuring that all individuals have the opportunity to live with dignity and security.`,
               skipped: false,
             },
           },
@@ -1603,149 +1408,13 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: '72b4c5cb-4ec2-4679-bf38-afd5a8482d27',
+              id: 'a2694296-57dd-4bed-965f-a9e02295d601',
               userId: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
-              questionId: '5706bf8e-02a1-4e62-87ad-572092aed271',
+              questionId: '86dea7a3-e54d-49ac-a680-2cb644d5f2f2',
               agree: true,
-              rating: calcRating(75),
+              rating: calcRating(),
               dateUpdated: now,
-              notes: String.raw`**Answer:** Robert F. Kennedy Jr. would likely argue that investing in smart technology to improve public services is essential for promoting environmental sustainability, enhancing public health, and ensuring efficient use of resources. He might emphasize that smart technologies can lead to significant improvements in waste management and water supply, reducing pollution and conserving resources. Kennedy Jr. could highlight the importance of integrating these technologies in a way that benefits all communities, particularly underserved and marginalized ones. He would likely advocate for policies that prioritize green and sustainable technologies, ensuring that the environmental benefits are maximized and that the implementation of these technologies is done in an equitable manner.
-
-**Percentage of Importance:** Given his focus on environmental sustainability and public health, Kennedy Jr. would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects his belief that investing in smart technology is crucial for creating sustainable, healthy, and equitable communities, addressing environmental challenges, and improving the quality of public services.`,
-              skipped: false,
-            },
-          },
-        ],
-      },
-      {
-        id: '560150b9-8703-4aaf-9615-4f2023b831d7',
-        localityId: 'fefab2ef-61cd-4ffa-b480-2439f34f7b7e',
-        categoryId: 'cb791c95-210b-48c8-ae67-b539d7e1a470',
-        question: 'Should the city invest more in renewable energy sources for public buildings?',
-        candidates: [
-          {
-            id: 'b047056f-6d63-4afc-8870-e616abaf7505',
-            name: 'Chase Oliver',
-            email: 'chaseoliver@fourscore.app',
-            emailVerified: null,
-            image: '/images/chase-oliver.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: '2edbeaeb-7ff4-40f4-bf6c-447006f07f3c',
-              userId: 'b047056f-6d63-4afc-8870-e616abaf7505',
-              questionId: '560150b9-8703-4aaf-9615-4f2023b831d7',
-              agree: false,
-              rating: calcRating(25),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Chase Oliver might argue that while renewable energy is important for the future, the decision to invest in such technologies should not be made by the government but rather left to the private sector and market forces. He might suggest that if renewable energy sources are economically viable, businesses and individuals will naturally adopt them without the need for government investment. He could also emphasize the importance of reducing overall government spending and taxes, allowing the private sector more freedom to innovate and invest in renewable technologies independently.
-
-**Percentage of Importance:** Oliver might assign a relatively low importance to this issue in terms of government action, possibly in the range of 20-30%. This reflects a belief that the role of the government should be limited and that market-driven solutions are preferable. He would likely prioritize policies that reduce government intervention and foster a more free-market approach to energy and environmental issues.`,
-              skipped: false,
-            },
-          },
-          {
-            id: '267a857e-d76f-4223-884f-076c0c66e85e',
-            name: 'Cornel West',
-            email: 'cornelwest@fourscore.app',
-            emailVerified: null,
-            image: '/images/cornel-west.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: true,
-            answer: {
-              id: 'e184799d-c120-4f64-a338-039c9a0a296f',
-              userId: '267a857e-d76f-4223-884f-076c0c66e85e',
-              questionId: '560150b9-8703-4aaf-9615-4f2023b831d7',
-              agree: true,
-              rating: calcRating(85),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Cornel West would likely argue that investing in renewable energy sources for public buildings is not only an essential step in combating climate change but also a moral imperative to ensure a sustainable and just future for all. He might emphasize that such investments can create green jobs, reduce energy costs in the long term, and contribute to a healthier environment, particularly in underserved communities that are disproportionately affected by pollution and environmental degradation. West could also highlight the importance of leading by example, suggesting that public buildings powered by renewable energy can inspire broader community efforts and innovations in sustainability.
-
-**Percentage of Importance:** Given his focus on environmental justice and the interconnectedness of social and economic issues, West might assign a high importance to this issue, possibly in the range of 80-90%. This reflects his belief that addressing climate change through local government policy is crucial for creating equitable and sustainable communities.`,
-              skipped: false,
-            },
-          },
-          {
-            id: '04a990af-a61e-41f2-beb0-d4098b533de5',
-            name: 'Donald J. Trump',
-            email: 'donaldjtrump@fourscore.app',
-            emailVerified: null,
-            image: '/images/donald-trump.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: 'a6905f19-4ab5-48d6-bdcb-c108bd6c532e',
-              userId: '04a990af-a61e-41f2-beb0-d4098b533de5',
-              questionId: '560150b9-8703-4aaf-9615-4f2023b831d7',
-              agree: false,
-              rating: calcRating(25),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Trump would likely argue that while renewable energy can be part of the overall energy mix, the city should prioritize investments that ensure energy reliability and economic growth. He might express concerns about the costs associated with transitioning to renewable energy and emphasize the importance of maintaining energy independence through the use of traditional energy sources such as oil, natural gas, and coal. Trump could also highlight the need to balance environmental goals with economic considerations, suggesting that any investment in renewable energy should not come at the expense of taxpayers or local businesses.
-
-**Percentage of Importance:** Given his emphasis on traditional energy sources and economic growth, Trump might assign a relatively low importance to this issue, possibly in the range of 20-30%. This reflects his prioritization of economic considerations and skepticism about the immediate benefits of investing heavily in renewable energy for public buildings.`,
-              skipped: false,
-            },
-          },
-          {
-            id: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
-            name: 'Jill Stein',
-            email: 'jillstein@fourscore.app',
-            emailVerified: null,
-            image: '/images/jill-stein.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: 'b130d388-7d37-4bf3-a1d7-c6136b3d3aa1',
-              userId: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
-              questionId: '560150b9-8703-4aaf-9615-4f2023b831d7',
-              agree: true,
-              rating: calcRating(95),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Jill Stein would likely argue that investing in renewable energy sources for public buildings is a critical step towards creating a sustainable and resilient future. She would emphasize the urgent need to address climate change by reducing greenhouse gas emissions and transitioning away from fossil fuels. Stein might highlight the multiple benefits of such investments, including reducing energy costs in the long term, creating green jobs, improving public health by reducing pollution, and setting an example for other cities and communities to follow. She would likely advocate for ambitious policies to promote renewable energy and support for local governments to make these investments.
-
-**Percentage of Importance:** Given her strong environmental stance and advocacy for green policies, Stein would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects her belief that transitioning to renewable energy is essential for addressing climate change and creating a sustainable and just society.`,
-              skipped: false,
-            },
-          },
-          {
-            id: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
-            name: 'Joe Biden',
-            email: 'joebiden@fourscore.app',
-            emailVerified: null,
-            image: '/images/joe-biden.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: '61531c1f-3012-41a3-99f5-2d27c80c2661',
-              userId: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
-              questionId: '560150b9-8703-4aaf-9615-4f2023b831d7',
-              agree: true,
-              rating: calcRating(85),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Joe Biden would likely argue that investing in renewable energy sources for public buildings is essential for reducing greenhouse gas emissions, combating climate change, and promoting energy independence. He might emphasize the economic benefits of such investments, including job creation in the clean energy sector, long-term savings on energy costs, and the positive impact on public health by reducing pollution. Biden could also highlight federal support and incentives available to local governments to make these investments, ensuring that cities can lead by example in the transition to a sustainable future.
-
-**Percentage of Importance:** Given his administration's focus on clean energy and climate action, Biden would likely assign a high importance to this issue, possibly in the range of 80-90%. This reflects his commitment to advancing renewable energy initiatives and ensuring that cities play a key role in achieving national and global climate goals.`,
-              skipped: false,
-            },
-          },
-          {
-            id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
-            name: 'Robert F. Kennedy Jr.',
-            email: 'robertfkennedyjr@fourscore.app',
-            emailVerified: null,
-            image: '/images/robert-f-kennedy-jr.jpg',
-            dateUpdated: null,
-            seenVotingTutorial: false,
-            answer: {
-              id: 'e1fa70e4-98ad-47d0-96ce-2e80d6d270d5',
-              userId: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
-              questionId: '560150b9-8703-4aaf-9615-4f2023b831d7',
-              agree: true,
-              rating: calcRating(95),
-              dateUpdated: now,
-              notes: String.raw`**Answer:** Robert F. Kennedy Jr. would likely argue that investing in renewable energy sources for public buildings is not only essential for addressing climate change but also for improving public health and fostering economic resilience. He would emphasize the importance of transitioning away from fossil fuels to reduce carbon emissions and combat global warming. Kennedy Jr. might also highlight the economic benefits of such investments, including job creation in the renewable energy sector and long-term cost savings for the city. Additionally, he would likely stress the moral imperative to protect the environment for future generations and the leadership role cities can play in setting an example for sustainable practices.
-
-**Percentage of Importance:** Given his environmental focus, Kennedy Jr. would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects his belief that transitioning to renewable energy is a critical component of a comprehensive strategy to address climate change and promote environmental sustainability.`,
+              notes: String.raw``,
               skipped: false,
             },
           },
@@ -1859,6 +1528,27 @@ export const answersMap = [
               notes: String.raw`**Answer:** Joe Biden would likely argue that providing tax incentives to attract small businesses is essential for fostering economic growth, creating jobs, and revitalizing communities. He might emphasize the importance of small businesses as the backbone of the American economy and highlight the role of government in creating a supportive environment for their success. Biden could point to his administration's efforts to provide relief and support to small businesses through various stimulus packages and emphasize the need for local governments to continue these efforts through targeted tax incentives. He might also stress the importance of ensuring these incentives are accessible to minority-owned and women-owned businesses, promoting inclusivity and equity in economic development.
 
 **Percentage of Importance:** Given his administration's focus on economic recovery and support for small businesses, Biden would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects his belief that tax incentives for small businesses are a crucial tool for promoting economic vitality, job creation, and equitable growth at the local level.`,
+              skipped: false,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'f039a9fb-64da-403b-bd5f-6853f3087342',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '29b31426-88ad-49aa-8642-341c9c0a46df',
+              agree: true,
+              rating: calcRating(75),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that providing tax incentives to attract small businesses is essential for stimulating economic growth, creating jobs, and fostering vibrant local communities. She might emphasize that small businesses are the backbone of the American economy and that supporting their growth and development can lead to more resilient and diverse local economies. Harris could highlight the importance of creating an environment where small businesses can thrive, including access to capital, support for innovation, and reducing regulatory barriers. She would likely advocate for targeted tax incentives that support small businesses, particularly those owned by women, minorities, and individuals in underserved communities, to promote economic equity and inclusivity.
+
+**Percentage of Importance:** Given her focus on economic development and equity, Harris would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects her belief that tax incentives for small businesses are a crucial tool for driving economic growth, creating opportunities, and building strong, inclusive communities.`,
               skipped: false,
             },
           },
@@ -1997,6 +1687,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'd64e3a0d-fe60-4b59-909f-c442b75b096b',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '29834eb8-1112-404f-acd1-1f4c5b979f87',
+              agree: true,
+              rating: calcRating(75),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that increasing funding for community policing initiatives is essential for enhancing public safety, building trust between law enforcement and communities, and addressing systemic issues within the criminal justice system. She might emphasize that community policing can lead to better relationships between police officers and the communities they serve, resulting in more effective crime prevention and improved public trust. Harris could highlight the importance of providing law enforcement with the training and resources necessary to engage in community-oriented policing, including de-escalation techniques, cultural competency, and mental health support. She would likely advocate for a comprehensive approach that includes community input and collaboration, ensuring that community policing initiatives are tailored to the specific needs and concerns of the community.
+
+**Percentage of Importance:** Given her focus on public safety and criminal justice reform, Harris would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects her belief that community policing is a critical component of creating safer, more just, and more equitable communities.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -2020,10 +1731,10 @@ export const answersMap = [
         ],
       },
       {
-        id: '081b7aaf-3c0d-4e07-ac53-4f030b89e946',
+        id: 'f15804f2-738c-4b9f-8bb7-e6064fb73e17',
         localityId: 'fefab2ef-61cd-4ffa-b480-2439f34f7b7e',
-        categoryId: 'cb791c95-210b-48c8-ae67-b539d7e1a470',
-        question: 'Do you support the expansion of public parks and green spaces within the city?',
+        categoryId: 'ab47e6b6-985e-4a9f-b025-1e26ae06ac5f',
+        question: 'Should the city invest in infrastructure improvements in underserved neighborhoods?',
         candidates: [
           {
             id: 'b047056f-6d63-4afc-8870-e616abaf7505',
@@ -2034,15 +1745,15 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: '3aee2ea6-e2c0-4105-ad33-1db3105ec62d',
+              id: '0a2341bb-fc8d-4bf7-bab1-2f2663f6a3ed',
               userId: 'b047056f-6d63-4afc-8870-e616abaf7505',
-              questionId: '081b7aaf-3c0d-4e07-ac53-4f030b89e946',
+              questionId: 'f15804f2-738c-4b9f-8bb7-e6064fb73e17',
               agree: false,
-              rating: calcRating(45),
+              rating: calcRating(55),
               dateUpdated: now,
-              notes: String.raw`**Answer:** Chase Oliver might argue that while public parks and green spaces provide valuable benefits to communities, the expansion of such areas should be driven by local initiatives and private funding rather than relying heavily on government resources. He could support the idea of public parks if they are managed efficiently and do not place a significant financial burden on taxpayers. Oliver might also emphasize the importance of protecting property rights and ensuring that any expansion of green spaces respects the rights of landowners and is done in a way that encourages voluntary community involvement and private sector contributions.
+              notes: String.raw`**Answer:** Chase Oliver might argue that while infrastructure improvements in underserved neighborhoods are important, the best approach is to encourage private investment and community-led initiatives rather than relying on government funding. He might suggest that reducing regulatory barriers and offering incentives for private companies to invest in these areas could lead to more sustainable and efficient outcomes. Oliver could emphasize the importance of local control and decision-making, ensuring that any infrastructure projects are driven by the needs and priorities of the community members themselves. He might also highlight the role of public-private partnerships in addressing infrastructure needs without overburdening taxpayers.
 
-**Percentage of Importance:** Given his Libertarian principles, Oliver might assign a moderate importance to this issue, possibly in the range of 40-50%. This reflects an acknowledgment of the benefits of public parks and green spaces, balanced with a strong emphasis on limited government intervention and the promotion of private and community-led solutions.`,
+**Percentage of Importance:** Given his Libertarian principles, Oliver might assign a moderate importance to this issue, possibly in the range of 50-60%. This reflects a recognition of the importance of infrastructure improvements for community development, balanced with a strong emphasis on reducing government intervention and fostering private sector solutions.`,
               skipped: false,
             },
           },
@@ -2055,15 +1766,15 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: true,
             answer: {
-              id: 'e142434d-fee4-45de-9a8a-215ef17e4465',
+              id: 'b2ba3002-0328-48f8-8815-8175711672de',
               userId: '267a857e-d76f-4223-884f-076c0c66e85e',
-              questionId: '081b7aaf-3c0d-4e07-ac53-4f030b89e946',
+              questionId: 'f15804f2-738c-4b9f-8bb7-e6064fb73e17',
               agree: true,
-              rating: calcRating(85),
+              rating: calcRating(95),
               dateUpdated: now,
-              notes: String.raw`**Answer:** Cornel West would likely argue that expanding public parks and green spaces is essential for promoting environmental justice, enhancing community health, and providing equitable access to recreational opportunities. He might emphasize that such spaces are crucial for creating livable, inclusive communities, particularly in underserved and marginalized neighborhoods. West could highlight the multiple benefits of public parks, including their role in reducing urban heat islands, improving air quality, providing spaces for physical activity and community gatherings, and fostering a connection to nature. He would likely advocate for policies that ensure these green spaces are accessible to all residents and are maintained in a way that reflects the community's needs and desires.
+              notes: String.raw`**Answer:** Cornel West would likely argue that investing in infrastructure improvements in underserved neighborhoods is crucial for addressing long-standing disparities and promoting social and economic justice. He might emphasize that such investments are necessary to provide all residents with access to essential services, safe and healthy living conditions, and economic opportunities. West could highlight the importance of modernizing infrastructure such as roads, public transportation, schools, healthcare facilities, and green spaces to ensure that underserved communities are not left behind. He would likely advocate for comprehensive and inclusive planning processes that involve community members in decision-making to ensure that the investments meet the actual needs and priorities of the residents.
 
-**Percentage of Importance:** Given his focus on social and environmental justice, West would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects his belief that public parks and green spaces are vital components of a just and equitable society, contributing to the overall well-being and resilience of communities.`,
+**Percentage of Importance:** Given his focus on social justice and equity, West would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects his belief that investing in underserved neighborhoods is a fundamental step toward creating a more just and equitable society, addressing systemic inequities, and empowering communities.`,
               skipped: false,
             },
           },
@@ -2076,15 +1787,15 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: '35a1b511-fd11-47c5-ba84-e7320a4dd288',
+              id: '3e7d989b-a6ba-4292-b888-97f90b10e636',
               userId: '04a990af-a61e-41f2-beb0-d4098b533de5',
-              questionId: '081b7aaf-3c0d-4e07-ac53-4f030b89e946',
-              agree: false,
-              rating: calcRating(45),
+              questionId: 'f15804f2-738c-4b9f-8bb7-e6064fb73e17',
+              agree: true,
+              rating: calcRating(75),
               dateUpdated: now,
-              notes: String.raw`**Answer:** Donald Trump would likely argue that while public parks and green spaces can enhance the quality of life in cities, the decision to expand these areas should be carefully considered to ensure it does not impede economic development and job creation. He might emphasize the importance of public-private partnerships to fund and maintain these spaces, reducing the financial burden on taxpayers. Trump could also highlight the need for efficient use of public land and resources, suggesting that any expansion of parks and green spaces should be balanced with the city's broader economic and development goals.
+              notes: String.raw`A**Answer:** Donald Trump would likely argue that investing in infrastructure improvements in underserved neighborhoods is essential for stimulating economic growth, creating jobs, and improving the quality of life for residents. He might emphasize the importance of modernizing infrastructure such as roads, bridges, and public facilities to attract businesses and investment to these areas. Trump could highlight the potential for public-private partnerships to leverage private sector resources and expertise in these projects, reducing the burden on taxpayers while ensuring high-quality outcomes. He would likely advocate for targeted investments that have clear economic benefits and contribute to the broader goal of revitalizing underserved communities.
 
-**Percentage of Importance:** Given his focus on economic development and reducing government spending, Trump might assign a moderate importance to this issue, possibly in the range of 40-50%. This reflects an acknowledgment of the benefits of public parks and green spaces, balanced with a strong emphasis on economic considerations and the role of private sector involvement.`,
+**Percentage of Importance:** Given his focus on economic development and infrastructure during his previous presidency, Trump would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects his belief that infrastructure investments are crucial for economic revitalization and community improvement, aligning with his broader goals of promoting economic growth and job creation.`,
               skipped: false,
             },
           },
@@ -2097,15 +1808,15 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: '627b324f-a58d-44ce-9059-127448a55e2f',
+              id: '44b44aa0-aed2-42fb-a0d9-1e98f3bb092f',
               userId: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
-              questionId: '081b7aaf-3c0d-4e07-ac53-4f030b89e946',
+              questionId: 'f15804f2-738c-4b9f-8bb7-e6064fb73e17',
               agree: true,
               rating: calcRating(95),
               dateUpdated: now,
-              notes: String.raw`**Answer:** Jill Stein would likely argue that expanding public parks and green spaces is crucial for promoting environmental sustainability, enhancing public health, and creating vibrant, livable communities. She might emphasize the multiple benefits of green spaces, including their role in mitigating climate change, improving air and water quality, providing habitats for wildlife, and offering residents opportunities for recreation, relaxation, and community engagement. Stein would likely advocate for equitable access to these spaces, ensuring that all communities, particularly those that are underserved or marginalized, have access to quality parks and green spaces.
+              notes: String.raw`**Answer:** Jill Stein would likely argue that investing in infrastructure improvements in underserved neighborhoods is crucial for addressing social and economic disparities and promoting environmental sustainability. She might emphasize that such investments are necessary to provide all residents with access to essential services, safe and healthy living conditions, and economic opportunities. Stein could highlight the importance of modernizing infrastructure, such as public transportation, clean energy, water and sanitation systems, schools, healthcare facilities, and green spaces, to ensure that underserved communities are not left behind. She would likely advocate for a holistic approach that includes community involvement in planning and decision-making processes, ensuring that investments meet the actual needs and priorities of the residents. Stein might also stress the importance of using sustainable and green technologies in these infrastructure projects to promote long-term environmental benefits.
 
-**Percentage of Importance:** Given her strong environmental focus and commitment to green policies, Stein would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects her belief that the expansion of public parks and green spaces is essential for fostering sustainable and healthy communities, addressing environmental justice, and improving overall quality of life for city residents.`,
+**Percentage of Importance:** Given her focus on social justice, equity, and sustainability, Stein would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects her belief that investing in underserved neighborhoods is a fundamental step toward creating a more just and equitable society, addressing systemic inequities, and promoting sustainable development.`,
               skipped: false,
             },
           },
@@ -2118,15 +1829,36 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: '606d4bca-f81f-447c-b6f3-b829f386669f',
+              id: 'd912260d-2cf4-4ddd-a95e-e7ab50097e39',
               userId: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
-              questionId: '081b7aaf-3c0d-4e07-ac53-4f030b89e946',
+              questionId: 'f15804f2-738c-4b9f-8bb7-e6064fb73e17',
               agree: true,
-              rating: calcRating(75),
+              rating: calcRating(85),
               dateUpdated: now,
-              notes: String.raw`**Answer:** Joe Biden would likely argue that expanding public parks and green spaces is essential for creating healthy, vibrant, and resilient communities. He might emphasize the benefits of such spaces in terms of improving public health by providing areas for exercise and recreation, enhancing mental well-being, reducing urban heat islands, and improving air quality. Biden would also highlight the importance of equitable access to these spaces, ensuring that all neighborhoods, particularly underserved and marginalized communities, have access to quality parks and green spaces. He could point to his administration's investments in infrastructure and community development as part of a broader strategy to promote sustainable urban development.
+              notes: String.raw`**Answer:** Joe Biden would likely argue that investing in infrastructure improvements in underserved neighborhoods is essential for promoting economic equity, enhancing public health, and ensuring that all communities have access to quality infrastructure. He might emphasize the importance of addressing historical neglect and systemic disparities that have left many neighborhoods without adequate infrastructure. Biden could highlight his administration's commitment to rebuilding and modernizing America's infrastructure, including roads, bridges, public transportation, water systems, broadband access, and public facilities, in a way that prioritizes underserved communities. He would likely advocate for a comprehensive approach that involves local communities in the planning process to ensure that investments meet their specific needs and priorities.
 
-**Percentage of Importance:** Given his administration's focus on climate action, infrastructure improvement, and community well-being, Biden would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects his belief in the multifaceted benefits of public parks and green spaces for urban environments and their role in promoting environmental and social equity.`,
+**Percentage of Importance:** Given his administration's focus on infrastructure and equity, Biden would likely assign a high importance to this issue, possibly in the range of 80-90%. This reflects his belief that infrastructure investments are crucial for fostering inclusive economic growth, improving quality of life, and addressing long-standing disparities in underserved neighborhoods.`,
+              skipped: false,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '779b4c48-cd48-470e-9957-0107b16255cc',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'f15804f2-738c-4b9f-8bb7-e6064fb73e17',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that investing in infrastructure improvements in underserved neighborhoods is essential for addressing long-standing disparities, promoting economic growth, and improving the quality of life for residents. She might emphasize that infrastructure investments, such as repairing roads, improving public transportation, upgrading water and sewage systems, and developing parks and recreational facilities, are crucial for creating safe, healthy, and vibrant communities. Harris could highlight the importance of ensuring that these investments are equitable and targeted toward the areas that need them most, particularly those that have been historically neglected or marginalized. She would likely advocate for comprehensive infrastructure plans that involve community input and are designed to meet the specific needs and priorities of underserved neighborhoods.
+
+**Percentage of Importance:** Given her focus on social justice and equity, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that investing in infrastructure improvements in underserved neighborhoods is critical for promoting fairness, economic opportunity, and enhancing the overall well-being of all community members.`,
               skipped: false,
             },
           },
@@ -2139,15 +1871,624 @@ export const answersMap = [
             dateUpdated: null,
             seenVotingTutorial: false,
             answer: {
-              id: '1df18dce-4ae7-4ec8-b0cc-ea3d1a423a02',
+              id: '56f9f608-cad6-4962-88a8-0d1281928531',
               userId: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
-              questionId: '081b7aaf-3c0d-4e07-ac53-4f030b89e946',
+              questionId: 'f15804f2-738c-4b9f-8bb7-e6064fb73e17',
               agree: true,
               rating: calcRating(85),
               dateUpdated: now,
-              notes: String.raw`**Answer:** Robert F. Kennedy Jr. would likely argue that expanding public parks and green spaces is essential for promoting environmental sustainability, public health, and social equity. He would emphasize the importance of green spaces in reducing pollution, mitigating climate change, and providing recreational opportunities for urban residents. Kennedy Jr. might highlight the role of parks in enhancing community cohesion and improving the quality of life, particularly in underserved and marginalized communities that often lack access to such amenities. He would likely advocate for policies that ensure equitable distribution of green spaces across all neighborhoods and support community involvement in the planning and maintenance of these areas.
+              notes: String.raw`**Answer:** Robert F. Kennedy Jr. would likely argue that investing in infrastructure improvements in underserved neighborhoods is essential for addressing systemic inequities, promoting social justice, and fostering sustainable development. He might emphasize that such investments are crucial for ensuring that all residents have access to basic services, safe living conditions, and economic opportunities. Kennedy Jr. could highlight the need for modernizing infrastructure in a way that prioritizes clean energy, environmental sustainability, and resilience to climate change. He would likely advocate for community involvement in planning and decision-making processes to ensure that the infrastructure projects meet the specific needs and priorities of the residents. Kennedy Jr. might also stress the importance of integrating green technologies and sustainable practices into these projects to promote long-term environmental and public health benefits.
 
-**Percentage of Importance:** Given his strong environmental focus and advocacy for social justice, Kennedy Jr. would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects his belief that public parks and green spaces are vital components of a sustainable, healthy, and equitable urban environment.`,
+**Percentage of Importance:** Given his focus on environmental sustainability and social justice, Kennedy Jr. would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects his belief that infrastructure investments in underserved neighborhoods are a critical component of creating equitable, sustainable, and resilient communities.`,
+              skipped: false,
+            },
+          },
+        ],
+      },
+      {
+        id: '5706bf8e-02a1-4e62-87ad-572092aed271',
+        localityId: 'fefab2ef-61cd-4ffa-b480-2439f34f7b7e',
+        categoryId: 'fa72ab83-776a-46a2-902a-22e9c67731ef',
+        question:
+          'Should the city invest in smart technology to improve public services (e.g., waste management, water supply)?',
+        candidates: [
+          {
+            id: 'b047056f-6d63-4afc-8870-e616abaf7505',
+            name: 'Chase Oliver',
+            email: 'chaseoliver@fourscore.app',
+            emailVerified: null,
+            image: '/images/chase-oliver.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '1d2762f6-987b-4821-b6bd-8258474106d8',
+              userId: 'b047056f-6d63-4afc-8870-e616abaf7505',
+              questionId: '5706bf8e-02a1-4e62-87ad-572092aed271',
+              agree: false,
+              rating: calcRating(55),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Chase Oliver might argue that while smart technology can improve public services, the city should focus on fostering an environment that encourages private sector innovation and investment in these technologies rather than relying on government-led initiatives. He could suggest that public-private partnerships and competition in the marketplace are more effective ways to drive technological advancements and improve service delivery. Oliver might emphasize the importance of reducing regulatory barriers and providing incentives for private companies to develop and implement smart technology solutions. He could also highlight the need for transparency and accountability to ensure that any public investment in smart technology is efficient and benefits taxpayers.
+
+**Percentage of Importance:** Given his Libertarian principles, Oliver might assign a moderate importance to this issue, possibly in the range of 50-60%. This reflects a recognition of the potential benefits of smart technology for public services, balanced with a strong emphasis on reducing government intervention and promoting private sector solutions.`,
+              skipped: false,
+            },
+          },
+          {
+            id: '267a857e-d76f-4223-884f-076c0c66e85e',
+            name: 'Cornel West',
+            email: 'cornelwest@fourscore.app',
+            emailVerified: null,
+            image: '/images/cornel-west.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: true,
+            answer: {
+              id: 'f23117cb-9906-49bd-9fe4-d718ca6556b6',
+              userId: '267a857e-d76f-4223-884f-076c0c66e85e',
+              questionId: '5706bf8e-02a1-4e62-87ad-572092aed271',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Cornel West would likely argue that investing in smart technology to improve public services is essential for creating more efficient, sustainable, and equitable communities. He might emphasize that smart technology can enhance the quality of public services like waste management and water supply, making them more reliable and environmentally friendly. West could highlight how these investments can address systemic inequalities by ensuring that all communities, particularly underserved and marginalized ones, benefit from high-quality public services. He would likely advocate for an inclusive approach to implementing smart technology, involving community input and ensuring that the benefits are equitably distributed.
+
+**Percentage of Importance:** Given his focus on social justice and sustainability, West would likely assign a high importance to this issue, possibly in the range of 80-90%. This reflects his belief that investing in smart technology is crucial for promoting environmental sustainability, improving public service delivery, and addressing social inequities.`,
+              skipped: false,
+            },
+          },
+          {
+            id: '04a990af-a61e-41f2-beb0-d4098b533de5',
+            name: 'Donald J. Trump',
+            email: 'donaldjtrump@fourscore.app',
+            emailVerified: null,
+            image: '/images/donald-trump.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'eab14d89-d406-4b2d-818b-283fb5eef6b5',
+              userId: '04a990af-a61e-41f2-beb0-d4098b533de5',
+              questionId: '5706bf8e-02a1-4e62-87ad-572092aed271',
+              agree: true,
+              rating: calcRating(75),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Donald Trump would likely argue that investing in smart technology to improve public services can be beneficial for enhancing efficiency, reducing costs, and modernizing infrastructure. He might emphasize the importance of leveraging technology to improve services like waste management and water supply, which are essential for the well-being of communities. Trump could highlight the potential for creating jobs and stimulating economic growth through such investments. He would likely advocate for public-private partnerships to implement these technologies, ensuring that the private sector plays a significant role in driving innovation and investment while reducing the financial burden on taxpayers. Trump might also stress the need for practical and cost-effective solutions that deliver tangible benefits to residents.
+
+**Percentage of Importance:** Given his focus on economic growth and infrastructure improvement, Trump would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects his belief that smart technology investments can drive economic development, improve public services, and enhance the overall efficiency of city operations.`,
+              skipped: false,
+            },
+          },
+          {
+            id: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
+            name: 'Jill Stein',
+            email: 'jillstein@fourscore.app',
+            emailVerified: null,
+            image: '/images/jill-stein.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '91329d35-9754-4040-b398-f3f90074fccf',
+              userId: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
+              questionId: '5706bf8e-02a1-4e62-87ad-572092aed271',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Jill Stein would likely argue that investing in smart technology to improve public services is essential for promoting environmental sustainability, enhancing public health, and ensuring that all communities have access to high-quality services. She might emphasize that smart technology can make services like waste management and water supply more efficient, reduce environmental impact, and help conserve resources. Stein could highlight the importance of using technology to address systemic inequalities, ensuring that underserved and marginalized communities benefit from improved public services. She would likely advocate for policies that prioritize green and sustainable technologies, community involvement in decision-making, and equitable distribution of the benefits of these investments.
+
+**Percentage of Importance:** Given her focus on sustainability and social justice, Stein would likely assign a high importance to this issue, possibly in the range of 80-90%. This reflects her belief that investing in smart technology is crucial for building sustainable, equitable, and healthy communities and addressing both environmental and social challenges.`,
+              skipped: false,
+            },
+          },
+          {
+            id: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
+            name: 'Joe Biden',
+            email: 'joebiden@fourscore.app',
+            emailVerified: null,
+            image: '/images/joe-biden.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '0a087985-77e6-4cce-b2f2-8ab1628fe7da',
+              userId: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
+              questionId: '5706bf8e-02a1-4e62-87ad-572092aed271',
+              agree: true,
+              rating: calcRating(75),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Joe Biden would likely argue that investing in smart technology to improve public services is essential for modernizing infrastructure, enhancing efficiency, and promoting sustainability. He might emphasize that smart technologies can optimize waste management and water supply systems, leading to cost savings, reduced environmental impact, and better service delivery for residents. Biden could highlight his administration's investments in infrastructure and technology as part of a broader strategy to build resilient and future-ready communities. He would likely advocate for federal support and funding to assist local governments in adopting these technologies, ensuring that all communities, especially underserved ones, benefit from these advancements.
+
+**Percentage of Importance:** Given his administration's focus on infrastructure and technological innovation, Biden would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects his belief that investing in smart technology is crucial for improving public services, promoting sustainability, and ensuring that cities are equipped to meet future challenges.`,
+              skipped: false,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'bbce749b-4fae-4642-918b-8df0832860bc',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '5706bf8e-02a1-4e62-87ad-572092aed271',
+              agree: true,
+              rating: calcRating(75),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that investing in smart technology to improve public services is essential for creating more efficient, sustainable, and responsive urban environments. She might emphasize that smart technology can optimize public services such as waste management and water supply, leading to cost savings, improved resource management, and enhanced quality of life for residents. Harris could highlight the environmental benefits of smart technologies, such as reducing waste and conserving water, which are crucial for addressing climate change and promoting sustainability. She would likely advocate for the integration of smart technology in a way that ensures equitable access and benefits for all communities, particularly underserved and marginalized ones.
+
+**Percentage of Importance:** Given her focus on sustainability, innovation, and equity, Harris would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects her belief that investing in smart technology is crucial for modernizing public services, improving efficiency, and ensuring that cities are equipped to meet future challenges while promoting environmental sustainability and social equity.`,
+              skipped: false,
+            },
+          },
+          {
+            id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
+            name: 'Robert F. Kennedy Jr.',
+            email: 'robertfkennedyjr@fourscore.app',
+            emailVerified: null,
+            image: '/images/robert-f-kennedy-jr.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '72b4c5cb-4ec2-4679-bf38-afd5a8482d27',
+              userId: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
+              questionId: '5706bf8e-02a1-4e62-87ad-572092aed271',
+              agree: true,
+              rating: calcRating(75),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Robert F. Kennedy Jr. would likely argue that investing in smart technology to improve public services is essential for promoting environmental sustainability, enhancing public health, and ensuring efficient use of resources. He might emphasize that smart technologies can lead to significant improvements in waste management and water supply, reducing pollution and conserving resources. Kennedy Jr. could highlight the importance of integrating these technologies in a way that benefits all communities, particularly underserved and marginalized ones. He would likely advocate for policies that prioritize green and sustainable technologies, ensuring that the environmental benefits are maximized and that the implementation of these technologies is done in an equitable manner.
+
+**Percentage of Importance:** Given his focus on environmental sustainability and public health, Kennedy Jr. would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects his belief that investing in smart technology is crucial for creating sustainable, healthy, and equitable communities, addressing environmental challenges, and improving the quality of public services.`,
+              skipped: false,
+            },
+          },
+        ],
+      },
+      {
+        id: '560150b9-8703-4aaf-9615-4f2023b831d7',
+        localityId: 'fefab2ef-61cd-4ffa-b480-2439f34f7b7e',
+        categoryId: 'cb791c95-210b-48c8-ae67-b539d7e1a470',
+        question: 'Should the city invest more in renewable energy sources for public buildings?',
+        candidates: [
+          {
+            id: 'b047056f-6d63-4afc-8870-e616abaf7505',
+            name: 'Chase Oliver',
+            email: 'chaseoliver@fourscore.app',
+            emailVerified: null,
+            image: '/images/chase-oliver.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '2edbeaeb-7ff4-40f4-bf6c-447006f07f3c',
+              userId: 'b047056f-6d63-4afc-8870-e616abaf7505',
+              questionId: '560150b9-8703-4aaf-9615-4f2023b831d7',
+              agree: false,
+              rating: calcRating(25),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Chase Oliver might argue that while renewable energy is important for the future, the decision to invest in such technologies should not be made by the government but rather left to the private sector and market forces. He might suggest that if renewable energy sources are economically viable, businesses and individuals will naturally adopt them without the need for government investment. He could also emphasize the importance of reducing overall government spending and taxes, allowing the private sector more freedom to innovate and invest in renewable technologies independently.
+
+**Percentage of Importance:** Oliver might assign a relatively low importance to this issue in terms of government action, possibly in the range of 20-30%. This reflects a belief that the role of the government should be limited and that market-driven solutions are preferable. He would likely prioritize policies that reduce government intervention and foster a more free-market approach to energy and environmental issues.`,
+              skipped: false,
+            },
+          },
+          {
+            id: '267a857e-d76f-4223-884f-076c0c66e85e',
+            name: 'Cornel West',
+            email: 'cornelwest@fourscore.app',
+            emailVerified: null,
+            image: '/images/cornel-west.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: true,
+            answer: {
+              id: 'e184799d-c120-4f64-a338-039c9a0a296f',
+              userId: '267a857e-d76f-4223-884f-076c0c66e85e',
+              questionId: '560150b9-8703-4aaf-9615-4f2023b831d7',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Cornel West would likely argue that investing in renewable energy sources for public buildings is not only an essential step in combating climate change but also a moral imperative to ensure a sustainable and just future for all. He might emphasize that such investments can create green jobs, reduce energy costs in the long term, and contribute to a healthier environment, particularly in underserved communities that are disproportionately affected by pollution and environmental degradation. West could also highlight the importance of leading by example, suggesting that public buildings powered by renewable energy can inspire broader community efforts and innovations in sustainability.
+
+**Percentage of Importance:** Given his focus on environmental justice and the interconnectedness of social and economic issues, West might assign a high importance to this issue, possibly in the range of 80-90%. This reflects his belief that addressing climate change through local government policy is crucial for creating equitable and sustainable communities.`,
+              skipped: false,
+            },
+          },
+          {
+            id: '04a990af-a61e-41f2-beb0-d4098b533de5',
+            name: 'Donald J. Trump',
+            email: 'donaldjtrump@fourscore.app',
+            emailVerified: null,
+            image: '/images/donald-trump.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'a6905f19-4ab5-48d6-bdcb-c108bd6c532e',
+              userId: '04a990af-a61e-41f2-beb0-d4098b533de5',
+              questionId: '560150b9-8703-4aaf-9615-4f2023b831d7',
+              agree: false,
+              rating: calcRating(25),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Trump would likely argue that while renewable energy can be part of the overall energy mix, the city should prioritize investments that ensure energy reliability and economic growth. He might express concerns about the costs associated with transitioning to renewable energy and emphasize the importance of maintaining energy independence through the use of traditional energy sources such as oil, natural gas, and coal. Trump could also highlight the need to balance environmental goals with economic considerations, suggesting that any investment in renewable energy should not come at the expense of taxpayers or local businesses.
+
+**Percentage of Importance:** Given his emphasis on traditional energy sources and economic growth, Trump might assign a relatively low importance to this issue, possibly in the range of 20-30%. This reflects his prioritization of economic considerations and skepticism about the immediate benefits of investing heavily in renewable energy for public buildings.`,
+              skipped: false,
+            },
+          },
+          {
+            id: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
+            name: 'Jill Stein',
+            email: 'jillstein@fourscore.app',
+            emailVerified: null,
+            image: '/images/jill-stein.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'b130d388-7d37-4bf3-a1d7-c6136b3d3aa1',
+              userId: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
+              questionId: '560150b9-8703-4aaf-9615-4f2023b831d7',
+              agree: true,
+              rating: calcRating(95),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Jill Stein would likely argue that investing in renewable energy sources for public buildings is a critical step towards creating a sustainable and resilient future. She would emphasize the urgent need to address climate change by reducing greenhouse gas emissions and transitioning away from fossil fuels. Stein might highlight the multiple benefits of such investments, including reducing energy costs in the long term, creating green jobs, improving public health by reducing pollution, and setting an example for other cities and communities to follow. She would likely advocate for ambitious policies to promote renewable energy and support for local governments to make these investments.
+
+**Percentage of Importance:** Given her strong environmental stance and advocacy for green policies, Stein would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects her belief that transitioning to renewable energy is essential for addressing climate change and creating a sustainable and just society.`,
+              skipped: false,
+            },
+          },
+          {
+            id: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
+            name: 'Joe Biden',
+            email: 'joebiden@fourscore.app',
+            emailVerified: null,
+            image: '/images/joe-biden.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '61531c1f-3012-41a3-99f5-2d27c80c2661',
+              userId: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
+              questionId: '560150b9-8703-4aaf-9615-4f2023b831d7',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Joe Biden would likely argue that investing in renewable energy sources for public buildings is essential for reducing greenhouse gas emissions, combating climate change, and promoting energy independence. He might emphasize the economic benefits of such investments, including job creation in the clean energy sector, long-term savings on energy costs, and the positive impact on public health by reducing pollution. Biden could also highlight federal support and incentives available to local governments to make these investments, ensuring that cities can lead by example in the transition to a sustainable future.
+
+**Percentage of Importance:** Given his administration's focus on clean energy and climate action, Biden would likely assign a high importance to this issue, possibly in the range of 80-90%. This reflects his commitment to advancing renewable energy initiatives and ensuring that cities play a key role in achieving national and global climate goals.`,
+              skipped: false,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '3337d207-51d3-4842-80ab-9b09c1289300',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '560150b9-8703-4aaf-9615-4f2023b831d7',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that investing in renewable energy sources for public buildings is essential for reducing greenhouse gas emissions, promoting environmental sustainability, and setting an example for private sectors and other cities to follow. She might emphasize that transitioning to renewable energy can lead to long-term cost savings, create green jobs, and improve public health by reducing pollution. Harris could highlight the importance of public buildings as a starting point for broader renewable energy initiatives, demonstrating a commitment to sustainability and innovation. She would likely advocate for comprehensive policies that support the development and implementation of renewable energy projects, ensuring that the benefits are equitably distributed across all communities, particularly those that are underserved or disproportionately affected by environmental issues.
+
+**Percentage of Importance:** Given her focus on environmental sustainability and climate action, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that investing in renewable energy for public buildings is a critical step toward achieving broader climate goals and promoting a sustainable future for all.`,
+              skipped: false,
+            },
+          },
+          {
+            id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
+            name: 'Robert F. Kennedy Jr.',
+            email: 'robertfkennedyjr@fourscore.app',
+            emailVerified: null,
+            image: '/images/robert-f-kennedy-jr.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'e1fa70e4-98ad-47d0-96ce-2e80d6d270d5',
+              userId: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
+              questionId: '560150b9-8703-4aaf-9615-4f2023b831d7',
+              agree: true,
+              rating: calcRating(95),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Robert F. Kennedy Jr. would likely argue that investing in renewable energy sources for public buildings is not only essential for addressing climate change but also for improving public health and fostering economic resilience. He would emphasize the importance of transitioning away from fossil fuels to reduce carbon emissions and combat global warming. Kennedy Jr. might also highlight the economic benefits of such investments, including job creation in the renewable energy sector and long-term cost savings for the city. Additionally, he would likely stress the moral imperative to protect the environment for future generations and the leadership role cities can play in setting an example for sustainable practices.
+
+**Percentage of Importance:** Given his environmental focus, Kennedy Jr. would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects his belief that transitioning to renewable energy is a critical component of a comprehensive strategy to address climate change and promote environmental sustainability.`,
+              skipped: false,
+            },
+          },
+        ],
+      },
+      {
+        id: 'cdb4d376-d205-44ea-a7bf-47f21522ee50',
+        localityId: 'fefab2ef-61cd-4ffa-b480-2439f34f7b7e',
+        categoryId: 'ad14126f-93a8-49d8-8d7f-16c9d0f4110c',
+        question: 'Should the city offer free community college tuition to residents?',
+        candidates: [
+          {
+            id: 'b047056f-6d63-4afc-8870-e616abaf7505',
+            name: 'Chase Oliver',
+            email: 'chaseoliver@fourscore.app',
+            emailVerified: null,
+            image: '/images/chase-oliver.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'd1c2aed0-41c5-4701-8422-4b31c384c579',
+              userId: 'b047056f-6d63-4afc-8870-e616abaf7505',
+              questionId: 'cdb4d376-d205-44ea-a7bf-47f21522ee50',
+              agree: false,
+              rating: calcRating(45),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Chase Oliver might argue that while education is important, the city offering free community college tuition is not the most effective or sustainable solution. He could suggest that government-funded programs often come with high costs and inefficiencies. Instead, Oliver might advocate for policies that encourage private sector involvement, such as scholarships, grants, and partnerships with businesses that can provide funding for education. He could emphasize the importance of promoting competition and innovation in the education sector to drive down costs and improve quality. Oliver might also stress the need for individuals to take personal responsibility for their education and seek out opportunities through private means rather than relying on government programs.
+
+**Percentage of Importance:** Given his Libertarian principles, Oliver might assign a moderate importance to this issue, possibly in the range of 40-50%. This reflects his recognition of the importance of education while maintaining a strong emphasis on reducing government intervention and promoting private sector solutions.`,
+              skipped: false,
+            },
+          },
+          {
+            id: '267a857e-d76f-4223-884f-076c0c66e85e',
+            name: 'Cornel West',
+            email: 'cornelwest@fourscore.app',
+            emailVerified: null,
+            image: '/images/cornel-west.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: true,
+            answer: {
+              id: 'ee3b5ba6-e583-4b42-9498-7615d65a22b7',
+              userId: '267a857e-d76f-4223-884f-076c0c66e85e',
+              questionId: 'cdb4d376-d205-44ea-a7bf-47f21522ee50',
+              agree: true,
+              rating: calcRating(95),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Cornel West would likely argue that offering free community college tuition to residents is essential for promoting social and economic equity, providing greater opportunities for all, and addressing the educational disparities that disproportionately affect low-income and marginalized communities. He might emphasize that access to higher education is a fundamental right and a critical component of a just and equitable society. West could highlight the potential long-term benefits of such a policy, including a more educated workforce, reduced economic inequality, and greater social mobility. He would likely advocate for comprehensive policies that not only provide free tuition but also support students with additional resources such as tutoring, mentorship, and career counseling to ensure their success.
+
+**Percentage of Importance:** Given his focus on social justice and education, West would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects his belief that free community college tuition is a crucial step toward creating a more equitable and inclusive society, ensuring that all individuals have the opportunity to pursue higher education and improve their socio-economic status.`,
+              skipped: false,
+            },
+          },
+          {
+            id: '04a990af-a61e-41f2-beb0-d4098b533de5',
+            name: 'Donald J. Trump',
+            email: 'donaldjtrump@fourscore.app',
+            emailVerified: null,
+            image: '/images/donald-trump.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '55624549-df18-42a4-9a30-92ae359db4d6',
+              userId: '04a990af-a61e-41f2-beb0-d4098b533de5',
+              questionId: 'cdb4d376-d205-44ea-a7bf-47f21522ee50',
+              agree: false,
+              rating: calcRating(55),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Donald Trump would likely argue that while education is important, offering free community college tuition to residents may not be the most effective use of government resources. He might emphasize that such policies could lead to increased government spending and higher taxes. Instead, Trump could advocate for initiatives that encourage job training, vocational education, and apprenticeships that align more directly with the needs of the job market. He might also highlight the importance of partnerships between businesses and educational institutions to provide targeted training programs that prepare students for high-demand careers. Trump could suggest that scholarships and grants funded by the private sector or through public-private partnerships might be a better approach than universally free tuition.
+
+**Percentage of Importance:** Given his focus on economic growth and fiscal conservatism, Trump might assign a moderate importance to this issue, possibly in the range of 50-60%. This reflects his belief in the value of education and workforce development while maintaining a strong emphasis on controlling government spending and encouraging private sector involvement.`,
+              skipped: false,
+            },
+          },
+          {
+            id: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
+            name: 'Jill Stein',
+            email: 'jillstein@fourscore.app',
+            emailVerified: null,
+            image: '/images/jill-stein.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'b237dab3-87d1-4e6f-bfdf-07afbaff03fa',
+              userId: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
+              questionId: 'cdb4d376-d205-44ea-a7bf-47f21522ee50',
+              agree: true,
+              rating: calcRating(95),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Jill Stein would likely argue that offering free community college tuition to residents is essential for promoting social and economic equity, providing greater opportunities for all, and addressing the educational disparities that disproportionately affect low-income and marginalized communities. She might emphasize that access to higher education is a fundamental right and a critical component of a just and equitable society. Stein could highlight the potential long-term benefits of such a policy, including a more educated workforce, reduced economic inequality, and greater social mobility. She would likely advocate for comprehensive policies that not only provide free tuition but also support students with additional resources such as tutoring, mentorship, and career counseling to ensure their success.
+
+**Percentage of Importance:** Given her focus on social justice and education, Stein would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects her belief that free community college tuition is a crucial step toward creating a more equitable and inclusive society, ensuring that all individuals have the opportunity to pursue higher education and improve their socio-economic status.`,
+              skipped: false,
+            },
+          },
+          {
+            id: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
+            name: 'Joe Biden',
+            email: 'joebiden@fourscore.app',
+            emailVerified: null,
+            image: '/images/joe-biden.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '6ff66a11-c7b6-4e5d-8461-5fc3349a35cb',
+              userId: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
+              questionId: 'cdb4d376-d205-44ea-a7bf-47f21522ee50',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Joe Biden would likely argue that offering free community college tuition to residents is essential for ensuring that all individuals have the opportunity to pursue higher education, regardless of their financial situation. He might emphasize the importance of education in creating pathways to good-paying jobs, reducing economic inequality, and strengthening the middle class. Biden could highlight his administration's efforts to make higher education more accessible and affordable, such as his support for the America’s College Promise proposal, which aims to make two years of community college free. He would likely advocate for policies that not only provide free tuition but also support wraparound services such as academic advising, tutoring, and career counseling to ensure student success.
+
+**Percentage of Importance:** Given his administration's focus on education and economic equity, Biden would likely assign a high importance to this issue, possibly in the range of 80-90%. This reflects his belief that expanding access to education through initiatives like free community college tuition is crucial for promoting economic mobility, reducing inequality, and ensuring a competitive workforce.`,
+              skipped: false,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '27c213dd-467d-4cb1-8556-54bf8fec9765',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'cdb4d376-d205-44ea-a7bf-47f21522ee50',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that offering free community college tuition to residents is essential for providing equitable access to higher education, reducing financial barriers for students, and preparing a skilled workforce for the future. She might emphasize that access to education is a fundamental right and a key driver of economic opportunity and social mobility. Harris could highlight the benefits of free community college tuition, including reducing student debt, increasing college enrollment and graduation rates, and enhancing the local economy by providing employers with a more educated and skilled workforce. She would likely advocate for policies that ensure all residents, particularly those from low-income and marginalized communities, have the opportunity to pursue higher education without the burden of tuition costs.
+
+**Percentage of Importance:** Given her focus on education and economic equity, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that free community college tuition is a critical step toward creating a more inclusive and equitable society, ensuring that all individuals have the opportunity to achieve their educational and career goals.`,
+              skipped: false,
+            },
+          },
+          {
+            id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
+            name: 'Robert F. Kennedy Jr.',
+            email: 'robertfkennedyjr@fourscore.app',
+            emailVerified: null,
+            image: '/images/robert-f-kennedy-jr.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'e80417f3-4789-4eda-9376-13dbe16ca0e5',
+              userId: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
+              questionId: 'cdb4d376-d205-44ea-a7bf-47f21522ee50',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Robert F. Kennedy Jr. would likely argue that offering free community college tuition to residents is essential for creating a more equitable society and providing opportunities for all individuals, regardless of their financial background. He might emphasize that access to education is a fundamental right and critical for personal and professional development. Kennedy Jr. could highlight the potential benefits of such a policy, including reducing student debt, increasing the skilled workforce, and fostering economic growth. He would likely advocate for a comprehensive approach that includes free tuition along with support services such as tutoring, mentorship, and career counseling to ensure students can succeed and fully benefit from their education.
+
+**Percentage of Importance:** Given his focus on social justice and equity, Kennedy Jr. would likely assign a high importance to this issue, possibly in the range of 80-90%. This reflects his belief that free community college tuition is a crucial step toward addressing educational disparities, promoting social mobility, and ensuring that all residents have the opportunity to pursue higher education and improve their socio-economic status.`,
+              skipped: false,
+            },
+          },
+        ],
+      },
+      {
+        id: 'a0eecdee-4dc3-4703-99db-d87168e64425',
+        localityId: 'fefab2ef-61cd-4ffa-b480-2439f34f7b7e',
+        categoryId: '9c80af67-183f-4abe-90a1-dd9130d434af',
+        question: 'Should the city sponsor annual community events to promote local businesses and tourism?',
+        candidates: [
+          {
+            id: 'b047056f-6d63-4afc-8870-e616abaf7505',
+            name: 'Chase Oliver',
+            email: 'chaseoliver@fourscore.app',
+            emailVerified: null,
+            image: '/images/chase-oliver.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '37675604-9ac5-49cd-b9ce-2b46a42028ca',
+              userId: 'b047056f-6d63-4afc-8870-e616abaf7505',
+              questionId: 'a0eecdee-4dc3-4703-99db-d87168e64425',
+              agree: true,
+              rating: calcRating(),
+              dateUpdated: now,
+              notes: String.raw``,
+              skipped: false,
+            },
+          },
+          {
+            id: '267a857e-d76f-4223-884f-076c0c66e85e',
+            name: 'Cornel West',
+            email: 'cornelwest@fourscore.app',
+            emailVerified: null,
+            image: '/images/cornel-west.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: true,
+            answer: {
+              id: '2b01b350-3183-4c1c-94de-62ac29a35ee4',
+              userId: '267a857e-d76f-4223-884f-076c0c66e85e',
+              questionId: 'a0eecdee-4dc3-4703-99db-d87168e64425',
+              agree: true,
+              rating: calcRating(),
+              dateUpdated: now,
+              notes: String.raw``,
+              skipped: false,
+            },
+          },
+          {
+            id: '04a990af-a61e-41f2-beb0-d4098b533de5',
+            name: 'Donald J. Trump',
+            email: 'donaldjtrump@fourscore.app',
+            emailVerified: null,
+            image: '/images/donald-trump.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'a5e91c48-21f2-4367-b3bc-2c33413177aa',
+              userId: '04a990af-a61e-41f2-beb0-d4098b533de5',
+              questionId: 'a0eecdee-4dc3-4703-99db-d87168e64425',
+              agree: true,
+              rating: calcRating(),
+              dateUpdated: now,
+              notes: String.raw``,
+              skipped: false,
+            },
+          },
+          {
+            id: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
+            name: 'Jill Stein',
+            email: 'jillstein@fourscore.app',
+            emailVerified: null,
+            image: '/images/jill-stein.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '2402152a-ae04-4844-bdc5-212568b2e3f9',
+              userId: '69504b7c-4961-4b3f-867a-d2c6b5f4cdb3',
+              questionId: 'a0eecdee-4dc3-4703-99db-d87168e64425',
+              agree: true,
+              rating: calcRating(),
+              dateUpdated: now,
+              notes: String.raw``,
+              skipped: false,
+            },
+          },
+          {
+            id: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
+            name: 'Joe Biden',
+            email: 'joebiden@fourscore.app',
+            emailVerified: null,
+            image: '/images/joe-biden.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '0085f9c2-adee-4e8d-b77f-883635eb6fc7',
+              userId: 'c3066d9e-ac51-444d-a4bd-8dd690554610',
+              questionId: 'a0eecdee-4dc3-4703-99db-d87168e64425',
+              agree: true,
+              rating: calcRating(),
+              dateUpdated: now,
+              notes: String.raw``,
+              skipped: false,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'c014627d-48e7-4985-a26d-cb67ac6f0dbd',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'a0eecdee-4dc3-4703-99db-d87168e64425',
+              agree: true,
+              rating: calcRating(),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that sponsoring annual community events to promote local businesses and tourism is essential for stimulating economic growth, fostering community spirit, and supporting small businesses. She might emphasize that such events can draw visitors, boost local economies, and provide opportunities for local businesses to showcase their products and services. Harris could highlight the importance of creating vibrant, inclusive community spaces where residents and visitors can come together, enjoy cultural activities, and support local entrepreneurs. She would likely advocate for policies that ensure these events are accessible to all community members and that they reflect the diversity and unique character of the local area.
+
+**Percentage of Importance:** Given her focus on economic development and community engagement, Harris would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects her belief that annual community events are a valuable tool for promoting local businesses, enhancing tourism, and building strong, connected communities.`,
+              skipped: false,
+            },
+          },
+          {
+            id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
+            name: 'Robert F. Kennedy Jr.',
+            email: 'robertfkennedyjr@fourscore.app',
+            emailVerified: null,
+            image: '/images/robert-f-kennedy-jr.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '77805beb-90aa-4c91-bab4-08583e196668',
+              userId: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
+              questionId: 'a0eecdee-4dc3-4703-99db-d87168e64425',
+              agree: true,
+              rating: calcRating(),
+              dateUpdated: now,
+              notes: String.raw``,
               skipped: false,
             },
           },
@@ -2267,6 +2608,27 @@ export const answersMap = [
               notes: null,
               skipped: false,
               answeredByStaff: true,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'f77ada10-7897-4a06-84aa-2ef5f6108edb',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'e1e4a654-ef13-4e44-a476-02fb4c945275',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that raising the minimum wage to a livable standard is essential for ensuring that all workers can meet their basic needs, support their families, and live with dignity. She might emphasize that a livable wage is crucial for reducing poverty, boosting economic growth, and promoting fairness in the labor market. Harris could highlight the benefits of higher wages, such as increased consumer spending, improved worker productivity, and reduced reliance on public assistance programs. She would likely advocate for policies that ensure the minimum wage keeps pace with the cost of living and that address disparities faced by low-income and marginalized workers.
+
+**Percentage of Importance:** Given her focus on economic equity and worker rights, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that raising the minimum wage to a livable standard is a critical step toward creating a more just and equitable society, ensuring that all workers receive fair compensation for their labor.`,
+              skipped: false,
             },
           },
           {
@@ -2401,6 +2763,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '4beff4f2-a5db-460b-b775-282a59f7778a',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'd377e781-321b-425a-9e75-2eb32f758202',
+              agree: true,
+              rating: calcRating(95),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that state-level initiatives to reduce carbon emissions and combat climate change are essential for protecting public health, preserving natural resources, and ensuring a sustainable future. She might emphasize that climate change is an urgent crisis that requires immediate and comprehensive action at all levels of government. Harris could highlight the benefits of reducing carbon emissions, such as cleaner air and water, improved public health, and economic opportunities in the green energy sector. She would likely advocate for policies that promote renewable energy, energy efficiency, sustainable transportation, and conservation efforts. Harris might also stress the importance of environmental justice, ensuring that policies address the disproportionate impact of climate change on low-income and marginalized communities.
+
+**Percentage of Importance:** Given her focus on environmental sustainability and climate action, Harris would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects her belief that state-level initiatives to reduce carbon emissions and combat climate change are crucial for addressing the climate crisis and promoting a healthier, more sustainable future for all residents.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -2529,6 +2912,27 @@ export const answersMap = [
               notes: null,
               skipped: false,
               answeredByStaff: true,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'bcb76446-79b7-429e-9168-d1a10b897f4b',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'd1fe7e7a-1146-4064-a739-d0066fa7273e',
+              agree: true,
+              rating: calcRating(75),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that legalizing marijuana for recreational use is essential for addressing the disparities and injustices of the current criminal justice system. She might emphasize that the criminalization of marijuana has disproportionately impacted communities of color and that legalization can help rectify these injustices. Harris could highlight the potential economic benefits of legalization, such as generating tax revenue, creating jobs, and boosting local economies. She would likely advocate for a regulatory framework that ensures the safe and responsible use of marijuana, including measures to prevent underage use and impaired driving. Additionally, Harris might stress the importance of investing in public health education and treatment programs to address substance abuse.
+
+**Percentage of Importance:** Given her focus on criminal justice reform and public health, Harris would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects her belief that legalizing marijuana for recreational use is a significant step towards creating a more just and equitable society, while also providing economic and public health benefits.`,
+              skipped: false,
             },
           },
           {
@@ -2663,6 +3067,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'fc56b7f6-1108-4867-8dd3-e89e8e8d4543',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'c9a11f55-2731-4339-a55d-2645edd39097',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that increased state investment in public transportation infrastructure is essential for creating efficient, sustainable, and equitable transportation systems. She might emphasize that robust public transportation can reduce traffic congestion, lower greenhouse gas emissions, and improve air quality, contributing to environmental sustainability. Harris could highlight the social and economic benefits, such as increased accessibility to jobs, education, and healthcare, particularly for low-income and marginalized communities. She would likely advocate for policies that prioritize modernizing and expanding public transit options, ensuring they are safe, reliable, and accessible to all residents. Harris might also stress the importance of integrating public transportation planning with broader urban development and environmental goals.
+
+**Percentage of Importance:** Given her focus on sustainability, economic growth, and social equity, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that investing in public transportation infrastructure is crucial for building more livable, inclusive, and sustainable communities, while also addressing pressing environmental and social challenges.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -2791,6 +3216,27 @@ export const answersMap = [
               notes: null,
               skipped: false,
               answeredByStaff: true,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '786a6308-3a45-47f4-8651-c352f2e5e126',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'c87a586c-c7ea-47e9-a71b-37cc2837dbe6',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that state-funded scholarship programs for higher education are essential for making college more accessible and affordable for all students, regardless of their financial background. She might emphasize that investing in education is crucial for ensuring that all individuals have the opportunity to succeed and contribute to the economy. Harris could highlight the potential benefits of such programs, including reducing student debt, increasing college enrollment and graduation rates, and fostering a more educated workforce. She would likely advocate for scholarship programs that prioritize low-income and marginalized students, ensuring that those who face the greatest barriers to higher education receive the support they need.
+
+**Percentage of Importance:** Given her focus on education and economic equity, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that state-funded scholarship programs are critical for promoting social and economic mobility, reducing disparities in access to higher education, and ensuring that all students have the opportunity to achieve their academic and career goals.`,
+              skipped: false,
             },
           },
           {
@@ -2925,6 +3371,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '29817f90-2af7-4a84-85a0-d540ebc014ae',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'c782ab35-8b52-4c68-85bd-7e430f8d3bc1',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that state policies encouraging the creation of more union jobs are essential for protecting workers' rights, ensuring fair wages, and promoting economic equity. She might emphasize that unions play a critical role in advocating for better working conditions, healthcare benefits, and job security for workers. Harris could highlight the benefits of union jobs, such as higher wages, better benefits, and stronger worker protections, which contribute to a more stable and prosperous middle class. She would likely advocate for policies that support collective bargaining, protect the right to organize, and ensure that workers have a voice in their workplaces.
+
+**Percentage of Importance:** Given her focus on worker rights and economic equity, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that promoting union jobs is crucial for creating a fairer economy, empowering workers, and building stronger, more resilient communities.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -3053,6 +3520,27 @@ export const answersMap = [
               notes: null,
               skipped: false,
               answeredByStaff: true,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'd96dc843-4cab-4978-a906-603d53cd5337',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'c109e589-76a3-4669-9fee-b70ced0e4f85',
+              agree: true,
+              rating: calcRating(95),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that protecting the right to abortion access is essential for safeguarding women's health, autonomy, and equality. She might emphasize that decisions about reproductive health should be made by women in consultation with their healthcare providers, free from government interference. Harris could highlight the importance of ensuring that all women, regardless of their socioeconomic status or geographic location, have access to safe and legal abortion services. She would likely advocate for policies that protect and expand access to reproductive health services, including abortion, and oppose any efforts to restrict or undermine these rights.
+
+**Percentage of Importance:** Given her focus on women's rights and healthcare access, Harris would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects her belief that protecting the right to abortion access is crucial for promoting gender equality, safeguarding women's health, and ensuring that all individuals have control over their own reproductive choices.`,
+              skipped: false,
             },
           },
           {
@@ -3187,6 +3675,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '9d4dbf25-12ce-4f26-b1fe-724d6362d042',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'b90b3655-fdaf-45ec-ae7f-ed1c41fc8ee6',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that increasing funding for K-12 public education is essential for providing every child with access to high-quality education, regardless of their background or socioeconomic status. She might emphasize that adequate funding is crucial for hiring and retaining qualified teachers, reducing class sizes, updating facilities, and providing students with the necessary resources and support services. Harris could highlight the importance of addressing educational disparities and ensuring that all students, particularly those in underserved communities, receive the support they need to succeed. She would likely advocate for comprehensive policies that ensure equitable distribution of resources and prioritize investments in areas with the greatest need.
+
+**Percentage of Importance:** Given her focus on education and equity, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that increasing funding for K-12 public education is critical for promoting social and economic mobility, closing achievement gaps, and ensuring that every child has the opportunity to reach their full potential.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -3315,6 +3824,27 @@ export const answersMap = [
               notes: null,
               skipped: false,
               answeredByStaff: true,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '3e4abedb-6dc9-47e7-a4d6-4edbc4e9d908',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'b670278f-0efb-4443-8ed2-7b39230eb383',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that increasing state taxes on the wealthy is essential for ensuring that everyone pays their fair share and for generating the revenue needed to fund critical public services. She might emphasize that such a tax policy is necessary to address income inequality and to invest in education, healthcare, infrastructure, and other public services that benefit all residents. Harris could highlight the importance of using tax revenue to support programs that help low- and middle-income families, create opportunities, and promote economic mobility. She would likely advocate for a progressive tax system where those with the greatest ability to pay contribute more, ensuring that public services are adequately funded and accessible to all.
+
+**Percentage of Importance:** Given her focus on economic equity and social justice, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that increasing taxes on the wealthy is a critical step toward creating a fairer, more equitable society and ensuring that public services are adequately funded to meet the needs of all residents.`,
+              skipped: false,
             },
           },
           {
@@ -3450,6 +3980,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '065fc25e-67c3-4ee5-a1b8-ca75eeec4633',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'b06c673e-73e0-4951-98bd-78b3732a067a',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that expanding Medicaid is essential for ensuring that all low-income individuals and families have access to the healthcare they need. She might emphasize that healthcare is a fundamental human right and that no one should be denied care due to their financial situation. Harris could highlight the benefits of Medicaid expansion, such as improving health outcomes, reducing uncompensated care costs for hospitals, and providing economic stability for families. She would likely advocate for policies that ensure comprehensive and affordable healthcare coverage for all, particularly for underserved and marginalized communities, to address health disparities and promote overall public health.
+
+**Percentage of Importance:** Given her focus on healthcare access and social equity, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that expanding Medicaid is crucial for creating a more equitable healthcare system, ensuring that all individuals have the opportunity to live healthy and productive lives.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -3578,6 +4129,27 @@ export const answersMap = [
               notes: null,
               skipped: false,
               answeredByStaff: true,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'e554535b-5de2-4a4a-9a0c-cf9f040c5d3e',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'a1f47abc-8668-4800-b0b2-d574a9a8cff2',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that allocating state funds to protect and restore natural habitats and wildlife is essential for preserving biodiversity, combating climate change, and ensuring the health of ecosystems that support human life. She might emphasize the importance of protecting natural areas and wildlife as part of a comprehensive environmental strategy that includes reducing pollution, promoting clean energy, and fostering sustainable development. Harris could highlight the benefits of conservation efforts, such as improved air and water quality, enhanced recreational opportunities, and strengthened resilience against natural disasters. She would likely advocate for policies that prioritize the conservation of critical habitats, support wildlife preservation programs, and involve local communities in stewardship efforts.
+
+**Percentage of Importance:** Given her focus on environmental sustainability and climate action, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that protecting and restoring natural habitats and wildlife is crucial for ensuring a healthy and sustainable environment for current and future generations.`,
+              skipped: false,
             },
           },
           {
@@ -3712,6 +4284,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'a0924382-59a8-4ad7-92ad-fa9ab54cf6bf',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '9fc9bc7d-aa2f-4a42-862c-d9afa8bd2454',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that offering tax incentives to businesses that implement green technologies is essential for encouraging the adoption of sustainable practices and accelerating the transition to a clean energy economy. She might emphasize that such incentives can help reduce greenhouse gas emissions, improve air and water quality, and create jobs in the green technology sector. Harris could highlight the potential economic benefits of supporting businesses that invest in renewable energy, energy efficiency, and other sustainable technologies, including driving innovation and making the state a leader in the green economy. She would likely advocate for policies that ensure these incentives are accessible to a wide range of businesses, including small and minority-owned enterprises, to promote inclusive economic growth.
+
+**Percentage of Importance:** Given her focus on environmental sustainability and economic development, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that tax incentives for green technologies are a critical tool for promoting environmental stewardship, supporting economic growth, and addressing the urgent challenges of climate change.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -3840,6 +4433,27 @@ export const answersMap = [
               notes: null,
               skipped: false,
               answeredByStaff: true,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '493376bb-80ee-4914-995a-2ddf40e34371',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '8bbe2aaf-9b84-4b2d-a73e-39913d5b74bb',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that enforcing stricter gun control laws is essential for reducing gun violence, protecting communities, and saving lives. She might emphasize that comprehensive gun control measures, such as universal background checks, restrictions on high-capacity magazines and assault weapons, and measures to prevent individuals with a history of violence or mental illness from obtaining firearms, are necessary to ensure public safety. Harris could highlight the need for collaboration between state and local authorities to effectively implement and enforce these laws. She would likely advocate for policies that balance the rights of responsible gun owners with the need to protect communities from gun violence, emphasizing that common-sense gun control measures can significantly reduce the incidence of shootings and save lives.
+
+**Percentage of Importance:** Given her focus on public safety and gun violence prevention, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that stricter gun control laws are crucial for creating safer communities and protecting the well-being of all residents.`,
+              skipped: false,
             },
           },
           {
@@ -3974,6 +4588,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '35629c9b-bc76-4ef6-b5a4-b34f01cc141a',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '8692105c-97ad-418f-afdd-64293134489e',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that requiring paid family leave for all employees is essential for promoting economic equity, supporting working families, and ensuring that all individuals have the ability to care for their loved ones without sacrificing their financial stability. She might emphasize that paid family leave is crucial for the health and well-being of families, allowing parents to bond with newborns, care for sick family members, and address personal health needs. Harris could highlight the positive impacts of paid family leave on employee retention, productivity, and overall economic stability. She would likely advocate for policies that ensure all workers, regardless of their job or income level, have access to paid family leave, thus promoting a more equitable and supportive workplace environment.
+
+**Percentage of Importance:** Given her focus on workers' rights and family support, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that paid family leave is a critical component of a fair and just labor policy, supporting both the economic and personal well-being of all employees.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -4105,6 +4740,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'abb999c3-b720-448b-a9ab-dc8c00103541',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '820ecaef-3802-4ad8-a921-e79b8242c0fd',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`=**Answer:** Kamala Harris would likely argue that allocating more resources to improve broadband internet access in rural areas is essential for ensuring all Americans have equal access to educational, economic, and healthcare opportunities. She might emphasize that reliable internet access is a fundamental necessity in today's digital age, enabling remote work, online learning, telehealth services, and access to critical information. Harris could highlight the disparities between urban and rural areas in terms of internet access and stress the importance of closing this gap to promote economic development and social equity. She would likely advocate for public-private partnerships and targeted investments to expand broadband infrastructure in underserved rural communities.
+
+**Percentage of Importance:** Given her focus on equity and access to essential services, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that improving broadband internet access in rural areas is crucial for creating a more inclusive and connected society, ensuring that all residents can fully participate in the digital economy and access essential services.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -4233,6 +4889,27 @@ export const answersMap = [
               notes: null,
               skipped: false,
               answeredByStaff: true,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '37d4801e-f19f-488a-b014-de428c171b86',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '61c3b1db-ea51-4816-a7e1-7a6ecc90bb49',
+              agree: true,
+              rating: calcRating(95),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that prioritizing funding for renewable energy projects is essential for reducing greenhouse gas emissions, protecting public health, and ensuring a sustainable future. She might emphasize that the transition to renewable energy sources such as solar, wind, and geothermal is critical for addressing the urgent challenges of climate change. Harris could highlight the economic benefits of investing in renewable energy, including job creation, technological innovation, and energy independence. She would likely advocate for policies that support the development and deployment of renewable energy infrastructure, incentivize clean energy investments, and phase out subsidies for fossil fuels.
+
+**Percentage of Importance:** Given her focus on environmental sustainability and climate action, Harris would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects her belief that prioritizing renewable energy projects is crucial for mitigating climate change, promoting public health, and building a resilient and sustainable economy for the future.`,
+              skipped: false,
             },
           },
           {
@@ -4368,6 +5045,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'ca0582c6-4cd9-4dee-a98e-a87f85f44708',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '3aa95c1b-d8b1-4d6b-ab3e-9747993a9729',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that reforming the state's criminal justice system to focus more on rehabilitation is essential for addressing systemic inequalities, reducing recidivism, and promoting public safety. She might emphasize that a justice system focused on rehabilitation rather than punishment can better address the root causes of criminal behavior, such as substance abuse, mental health issues, and lack of economic opportunities. Harris could highlight the benefits of rehabilitation programs, including reduced incarceration rates, lower costs for taxpayers, and improved outcomes for individuals and communities. She would likely advocate for policies that expand access to education, job training, mental health services, and substance abuse treatment for individuals in the criminal justice system, as well as alternatives to incarceration for non-violent offenders.
+
+**Percentage of Importance:** Given her focus on criminal justice reform and social equity, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that a rehabilitative approach is crucial for creating a fairer and more effective criminal justice system that promotes safety, supports rehabilitation, and helps individuals reintegrate into society successfully.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -4496,6 +5194,27 @@ export const answersMap = [
               notes: null,
               skipped: false,
               answeredByStaff: true,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '3c6d91d6-9133-48ea-b841-a5cb26a92c8c',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '2e557e12-1931-44b2-9f68-55e8e0496901',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that implementing state-level regulations to reduce prescription drug prices is essential for ensuring that all individuals have access to affordable medications. She might emphasize that high prescription drug costs are a significant burden on many families, particularly those with chronic illnesses and low incomes. Harris could highlight the need for government intervention to curb the excessive pricing practices of pharmaceutical companies and to make essential medications more accessible to everyone. She would likely advocate for policies that promote transparency in drug pricing, encourage competition, and enable the state to negotiate directly with drug manufacturers to secure lower prices.
+
+**Percentage of Importance:** Given her focus on healthcare access and affordability, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that reducing prescription drug prices is crucial for improving public health, reducing financial strain on families, and ensuring that all residents can afford the medications they need to maintain their health and well-being.`,
+              skipped: false,
             },
           },
           {
@@ -4637,6 +5356,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '53d944fd-2c8d-485b-a90f-4d43f35a6860',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'fff353c3-68d4-4038-8e64-2f5fb15cba28',
+              agree: true,
+              rating: calcRating(95),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that implementing a nationwide minimum wage increase is essential for ensuring that all workers are paid a fair and livable wage. She might emphasize that the current federal minimum wage has not kept pace with the rising cost of living, leaving many workers struggling to make ends meet. Harris could highlight the benefits of a higher minimum wage, including increased consumer spending, reduced poverty, and improved quality of life for millions of American workers. She would likely advocate for a gradual increase in the federal minimum wage to a level that reflects the cost of living across the country, ensuring that all workers can support themselves and their families.
+
+**Percentage of Importance:** Given her focus on economic equity and worker rights, Harris would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects her belief that a nationwide minimum wage increase is crucial for promoting economic justice, reducing income inequality, and ensuring that all workers receive fair compensation for their labor.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -4766,6 +5506,27 @@ export const answersMap = [
               notes: null,
               skipped: false,
               answeredByStaff: true,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '03490bf4-5eb4-497b-bd24-553932081cb4',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'e6a7d80f-1b9d-4c99-9ee2-0c2c61f339c0',
+              agree: true,
+              rating: calcRating(95),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that investing in renewable energy sources is essential for reducing greenhouse gas emissions, combating climate change, and ensuring a sustainable future for the nation. She might emphasize that transitioning away from fossil fuels is critical for protecting public health, preserving the environment, and achieving energy independence. Harris could highlight the economic benefits of renewable energy investments, such as creating jobs in the green energy sector, driving technological innovation, and making the United States a leader in the global clean energy market. She would likely advocate for comprehensive federal policies that support the development and deployment of renewable energy infrastructure, provide incentives for clean energy investments, and ensure an equitable transition for workers and communities affected by the shift away from fossil fuels.
+
+**Percentage of Importance:** Given her focus on environmental sustainability and climate action, Harris would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects her belief that federal investment in renewable energy is crucial for mitigating climate change, promoting public health, and building a resilient and sustainable economy for future generations.`,
+              skipped: false,
             },
           },
           {
@@ -4900,6 +5661,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '9c8ebd62-feab-438d-b022-fabbd52bd003',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'db86f386-6bd6-4e72-96b1-720747e81e10',
+              agree: true,
+              rating: calcRating(75),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that while maintaining a strong national defense is essential, the United States should reassess and potentially reduce its military presence overseas in areas where it is no longer strategically necessary. She might emphasize the importance of focusing on diplomacy, international cooperation, and addressing global challenges through multilateral efforts. Harris could highlight the need to prioritize resources on emerging threats such as cybersecurity, climate change, and global health security, while also ensuring that military commitments are aligned with current geopolitical realities. She would likely advocate for a strategic approach that involves close consultation with allies and a focus on supporting peace and stability through non-military means where possible.
+
+**Percentage of Importance:** Given her focus on a balanced approach to national security and diplomacy, Harris would likely assign a moderate to high importance to this issue, possibly in the range of 70-80%. This reflects her belief that while a robust defense posture is important, there is also a need to adapt military commitments to evolving global circumstances and to invest in other areas of national and international security.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -5031,6 +5813,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '9500478f-10e6-44b9-9ece-051b30e715db',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'ac6711b6-491f-41d2-90fe-9bb2e24aa5d9',
+              agree: true,
+              rating: calcRating(95),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that enacting more comprehensive anti-discrimination laws is essential for ensuring that all individuals are treated fairly and equitably, regardless of their race, gender, sexual orientation, religion, disability, or other protected characteristics. She might emphasize that while progress has been made, significant gaps and challenges remain in protecting individuals from discrimination in various areas, including employment, housing, education, and public accommodations. Harris could highlight the importance of strengthening legal protections, increasing enforcement of existing laws, and providing resources for education and training to prevent discrimination. She would likely advocate for policies that address systemic inequalities and promote inclusivity and diversity in all aspects of society.
+
+**Percentage of Importance:** Given her focus on social justice and equality, Harris would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects her belief that comprehensive anti-discrimination laws are crucial for building a more just and inclusive society, ensuring that all individuals have the opportunity to live, work, and thrive without fear of discrimination.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -5159,6 +5962,27 @@ export const answersMap = [
               notes: null,
               skipped: false,
               answeredByStaff: true,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '85fbd4d7-a784-49b4-b8cd-8d7a74309841',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: 'a6799358-bf54-4c2b-a5c3-d549211ff0b7',
+              agree: true,
+              rating: calcRating(95),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that nationwide legalization of same-sex marriage is essential for ensuring equality and protecting the rights of all individuals, regardless of their sexual orientation. She might emphasize that marriage is a fundamental right and that denying this right to same-sex couples is unjust and discriminatory. Harris could highlight the importance of recognizing and validating the relationships of same-sex couples, providing them with the same legal protections and benefits as heterosexual couples. She would likely advocate for policies that reinforce and protect the legality of same-sex marriage across the United States, ensuring that all couples have the right to marry and have their marriages recognized by the federal government.
+
+**Percentage of Importance:** Given her focus on civil rights and equality, Harris would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects her belief that nationwide legalization of same-sex marriage is crucial for promoting social justice, equality, and the dignity of all individuals.`,
+              skipped: false,
             },
           },
           {
@@ -5294,6 +6118,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'c640fe74-5b35-4004-b643-76ce9c99b21a',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '97504394-41e2-46cc-acbc-b4bba9537775',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that implementing more stringent regulations on Wall Street and financial institutions is essential for protecting consumers, ensuring financial stability, and preventing the kinds of abuses that led to the financial crisis of 2008. She might emphasize that strong regulatory oversight is necessary to hold financial institutions accountable, prevent risky behavior, and protect the economy from systemic risks. Harris could highlight the importance of transparency, accountability, and ethical practices in the financial sector. She would likely advocate for policies that enhance consumer protections, increase regulatory enforcement, and ensure that financial institutions operate in a manner that supports long-term economic stability and fairness.
+
+**Percentage of Importance:** Given her focus on economic fairness and consumer protection, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that stringent regulations on Wall Street and financial institutions are crucial for promoting a fair and stable financial system, protecting consumers, and preventing economic crises.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -5422,6 +6267,27 @@ export const answersMap = [
               notes: null,
               skipped: false,
               answeredByStaff: true,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'ceeb1110-f02e-4ee0-9029-65fc9ac4f1d6',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '82c11445-4bf8-407c-955e-ef9ee3cd770c',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that reforming the tax code to ensure higher taxes on the wealthiest Americans is essential for promoting economic fairness and addressing income inequality. She might emphasize that those who have benefited the most from the economy should contribute their fair share to support public services, infrastructure, education, and healthcare. Harris could highlight the importance of using the additional revenue to invest in programs that benefit middle and working-class families, create economic opportunities, and promote social mobility. She would likely advocate for a progressive tax system where the tax burden is more equitably distributed, ensuring that the wealthiest Americans contribute proportionately to the nation's needs.
+
+**Percentage of Importance:** Given her focus on economic equity and social justice, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that tax code reform is crucial for creating a fairer and more equitable society, reducing disparities, and ensuring that the government has the necessary resources to invest in critical public services and infrastructure.`,
+              skipped: false,
             },
           },
           {
@@ -5556,6 +6422,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '7adc49ef-e9c0-400c-8530-04d8f14c2bab',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '7feea740-ed63-40a7-8a4f-2fefb058f6d3',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that mandating paid parental leave is essential for supporting working families, promoting gender equality, and ensuring the well-being of children. She might emphasize that paid parental leave allows parents to bond with their newborns or newly adopted children without the fear of losing their income or job security. Harris could highlight the benefits of paid parental leave, such as improved maternal and child health, increased employee retention, and greater economic stability for families. She would likely advocate for a comprehensive federal policy that ensures all workers, regardless of their job or income level, have access to paid parental leave.
+
+**Percentage of Importance:** Given her focus on supporting families and promoting economic equity, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that mandating paid parental leave is crucial for creating a fair and supportive workplace, enhancing the well-being of families, and promoting a more equitable society.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -5687,6 +6574,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'c3f62901-aa6e-409a-b0d1-f4f1ccf03c9d',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '7e6de2a1-c1d1-46f5-bc36-d7c4f232f6af',
+              agree: true,
+              rating: calcRating(75),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that increasing funding for border security is important for ensuring the safety and security of the United States, but it should be done in a way that respects human rights and promotes humane treatment of immigrants. She might emphasize the need for a comprehensive approach to border security that includes advanced technology, improved infrastructure, and better training for border agents to handle asylum seekers and vulnerable populations with dignity. Harris could highlight the importance of addressing the root causes of migration, such as violence and poverty in home countries, through foreign aid and diplomatic efforts. She would likely advocate for policies that balance robust border security with fair and efficient immigration processes, ensuring that America remains a nation of laws and a beacon of hope for those seeking refuge.
+
+**Percentage of Importance:** Given her focus on balancing security with humane treatment and fair immigration policies, Harris would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects her belief that while border security is crucial, it must be part of a broader strategy that includes respect for human rights and comprehensive immigration reform.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -5815,6 +6723,27 @@ export const answersMap = [
               notes: null,
               skipped: false,
               answeredByStaff: true,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '9b4521fc-3716-4f35-890d-db048be6f634',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '79771ad7-e20e-4a2f-a44a-196b503f2e42',
+              agree: true,
+              rating: calcRating(75),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that ensuring national security is a top priority, but increasing the defense budget should be done judiciously and strategically. She might emphasize the importance of modernizing the military, investing in cybersecurity, and addressing emerging threats, such as climate change and pandemics, that also impact national security. Harris could highlight the need for a comprehensive approach that includes not just military strength but also robust diplomacy, international cooperation, and investments in technological innovation. She would likely advocate for a balanced approach where defense spending is aligned with broader national interests and does not come at the expense of essential social programs, education, and infrastructure.
+
+**Percentage of Importance:** Given her focus on a balanced and comprehensive approach to national security, Harris would likely assign a moderate to high importance to this issue, possibly in the range of 70-80%. This reflects her belief that while national defense is crucial, it must be integrated with other priorities to ensure overall national resilience and security.`,
+              skipped: false,
             },
           },
           {
@@ -5950,6 +6879,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'b03c08c0-e049-4f52-b876-b89663f440d0',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '6f1c5a55-1fa6-40ef-a492-99e438cbb6c7',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that providing a path to citizenship for undocumented immigrants is essential for creating a fair and humane immigration system. She might emphasize that many undocumented immigrants contribute significantly to the economy, communities, and culture of the United States, and that it is unjust to leave them in a state of legal limbo. Harris could highlight the importance of a comprehensive approach that includes background checks, paying taxes, and learning English, while also addressing border security and the root causes of migration. She would likely advocate for policies that ensure undocumented immigrants who meet certain criteria can earn citizenship, thereby promoting social integration and economic stability.
+
+**Percentage of Importance:** Given her focus on social justice and comprehensive immigration reform, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that providing a path to citizenship is crucial for building a more just, inclusive, and prosperous society.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -6079,6 +7029,27 @@ export const answersMap = [
               notes: null,
               skipped: false,
               answeredByStaff: true,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '02168b0a-c682-422e-8f73-1ead3cb856d3',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '693e5023-4f78-44da-ab32-0253cd2f26c1',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that expanding federal programs to protect workers' rights and promote job creation is essential for ensuring a fair and thriving economy. She might emphasize that protecting workers' rights, such as fair wages, safe working conditions, and the right to unionize, is crucial for economic justice and stability. Harris could highlight the importance of investing in job creation programs that focus on emerging industries, such as clean energy and technology, to prepare the workforce for the future. She would likely advocate for policies that support workforce development, job training, and small business growth to create new opportunities and strengthen the economy.
+
+**Percentage of Importance:** Given her focus on economic equity and worker rights, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that expanding federal programs to protect workers' rights and promote job creation is crucial for building a strong, inclusive economy that benefits all Americans.`,
+              skipped: false,
             },
           },
           {
@@ -6213,6 +7184,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'b56b67c4-5c49-4f83-878e-0c35dd5eb040',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '5696a094-3d0a-4f8f-b4bc-d2e4242e9cd8',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that enforcing stricter gun control laws is essential for reducing gun violence, protecting communities, and saving lives. She might emphasize the need for comprehensive gun control measures, including universal background checks, restrictions on high-capacity magazines and assault weapons, and measures to prevent individuals with a history of violence or mental illness from obtaining firearms. Harris could highlight the importance of federal regulations to ensure consistency and effectiveness across all states. She would likely advocate for policies that balance the rights of responsible gun owners with the need to protect the public from gun violence, emphasizing that common-sense gun control measures can significantly reduce shootings and save lives.
+
+**Percentage of Importance:** Given her focus on public safety and gun violence prevention, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that stricter gun control laws are crucial for creating safer communities and protecting the well-being of all residents.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -6341,6 +7333,27 @@ export const answersMap = [
               notes: null,
               skipped: false,
               answeredByStaff: true,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'f0607f59-61d5-4501-8a2b-56b7431ee23c',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '4f363556-c98d-4fab-82a4-7d0c65a2ccad',
+              agree: true,
+              rating: calcRating(75),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that providing more tax incentives for small businesses is essential for stimulating economic growth, creating jobs, and fostering innovation. She might emphasize that small businesses are the backbone of the American economy and that supporting them through tax incentives can help them thrive, expand, and hire more workers. Harris could highlight the importance of making it easier for small businesses to access capital, invest in new technologies, and compete in the marketplace. She would likely advocate for policies that offer targeted tax relief to small businesses, particularly those owned by women, minorities, and individuals in underserved communities, to promote economic equity and inclusivity.
+
+**Percentage of Importance:** Given her focus on economic development and support for small businesses, Harris would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects her belief that tax incentives for small businesses are a critical tool for driving economic growth, creating opportunities, and building strong, resilient communities.`,
+              skipped: false,
             },
           },
           {
@@ -6475,6 +7488,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'c34de148-a0ef-48cd-9ab2-2ab36898a514',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '36549ffe-6eb3-49e1-84eb-126bea845dc2',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that making public college tuition-free for all Americans is essential for expanding access to higher education, reducing the burden of student debt, and promoting social and economic mobility. She might emphasize that access to higher education is a key driver of economic opportunity and that no one should be denied the chance to pursue a college degree due to financial barriers. Harris could highlight the importance of investing in education as a means to build a more skilled and competitive workforce. She would likely advocate for policies that make public college tuition-free for low- and middle-income families, ensuring that those who need it most benefit from this initiative, while also exploring ways to make higher education more affordable for all.
+
+**Percentage of Importance:** Given her focus on education and economic equity, Harris would likely assign a very high importance to this issue, possibly in the range of 80-90%. This reflects her belief that making public college tuition-free is crucial for creating a more equitable society, reducing disparities in access to higher education, and ensuring that all Americans have the opportunity to achieve their educational and career goals.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -6603,6 +7637,27 @@ export const answersMap = [
               notes: null,
               skipped: false,
               answeredByStaff: true,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '9e4ea61e-24ad-4340-b21d-f4337516c6f6',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '2d6e7f96-b864-4300-b0d3-43b916ce45a9',
+              agree: true,
+              rating: calcRating(95),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that taking steps to lower the cost of prescription drugs is essential for ensuring that all Americans have access to the medications they need without financial hardship. She might emphasize that high prescription drug prices are a significant burden on many families, particularly those with chronic illnesses and low incomes, and that no one should have to choose between paying for medication and other essentials. Harris could highlight the importance of government intervention to curb the excessive pricing practices of pharmaceutical companies and to make essential medications more affordable. She would likely advocate for policies that allow Medicare to negotiate drug prices, cap out-of-pocket costs, increase transparency in drug pricing, and promote the availability of generic drugs.
+
+**Percentage of Importance:** Given her focus on healthcare access and affordability, Harris would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects her belief that lowering the cost of prescription drugs is crucial for improving public health, reducing financial strain on families, and ensuring that all individuals can afford the medications they need to maintain their health and well-being.`,
+              skipped: false,
             },
           },
           {
@@ -6737,6 +7792,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '368a1d62-647b-4876-8f70-eb4481bf8eb9',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '274b5d4d-9845-4ffc-a216-b87a9b11e1af',
+              agree: true,
+              rating: calcRating(85),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that forgiving student loan debt is essential for relieving financial burdens on millions of Americans, promoting economic mobility, and stimulating economic growth. She might emphasize that many borrowers are struggling with unmanageable debt that prevents them from buying homes, starting businesses, or saving for retirement. Harris could highlight the need for a targeted approach to student debt forgiveness, such as forgiving debt for low- and middle-income borrowers, those in public service professions, or those who have been paying their loans diligently for many years. She would likely advocate for policies that also address the root causes of student debt, including the high cost of college, and ensure that future students do not face the same burdens.
+
+**Percentage of Importance:** Given her focus on economic equity and education, Harris would likely assign a high importance to this issue, possibly in the range of 80-90%. This reflects her belief that addressing the student loan debt crisis is crucial for promoting financial stability, economic opportunity, and a more equitable society.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -6865,6 +7941,27 @@ export const answersMap = [
               notes: null,
               skipped: false,
               answeredByStaff: true,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'f0a7c05e-8de4-48bc-bd5e-c525d20c50e5',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '24aabccf-abd4-416e-9d18-956e1e4da95c',
+              agree: true,
+              rating: calcRating(95),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that the federal government should play a larger role in protecting voting rights to ensure that every American has the ability to participate fully and fairly in the democratic process. She might emphasize that voting is a fundamental right and that recent efforts to restrict access to voting disproportionately impact marginalized communities, including people of color, low-income individuals, and young voters. Harris could highlight the importance of federal legislation to address these challenges, such as restoring and strengthening the Voting Rights Act, implementing automatic voter registration, ensuring adequate polling locations, and protecting against voter suppression tactics. She would likely advocate for comprehensive voting rights reforms to make voting more accessible, secure, and equitable for all citizens.
+
+**Percentage of Importance:** Given her focus on equity, justice, and democratic integrity, Harris would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects her belief that protecting voting rights is crucial for maintaining a fair and inclusive democracy, ensuring that every voice is heard, and safeguarding the fundamental principles of the United States.`,
+              skipped: false,
             },
           },
           {
@@ -7000,6 +8097,27 @@ export const answersMap = [
             },
           },
           {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: 'a54da540-c3b5-414f-b431-eabdd18388a0',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '1c2f5f01-714e-477f-ac9c-154dc16db82b',
+              agree: true,
+              rating: calcRating(95),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that rejoining international agreements focused on combating climate change is essential for demonstrating global leadership, fulfilling our environmental responsibilities, and addressing the urgent threats posed by climate change. She might emphasize that climate change is a global challenge that requires coordinated international action and that the United States must play a leading role in these efforts. Harris could highlight the importance of agreements such as the Paris Climate Accord in setting ambitious targets for reducing greenhouse gas emissions, promoting renewable energy, and supporting vulnerable communities. She would likely advocate for policies that not only commit to international climate agreements but also strengthen domestic climate action to meet and exceed these targets.
+
+**Percentage of Importance:** Given her focus on environmental sustainability and global cooperation, Harris would likely assign a very high importance to this issue, possibly in the range of 90-100%. This reflects her belief that rejoining and actively participating in international climate agreements is crucial for mitigating climate change, protecting the environment, and ensuring a sustainable future for all.`,
+              skipped: false,
+            },
+          },
+          {
             id: '87ab6a98-2c2b-4429-8d22-89eda0506fbb',
             name: 'Robert F. Kennedy Jr.',
             email: 'robertfkennedyjr@fourscore.app',
@@ -7128,6 +8246,27 @@ export const answersMap = [
               notes: null,
               skipped: false,
               answeredByStaff: true,
+            },
+          },
+          {
+            id: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+            name: 'Kamala Harris',
+            email: 'kamalaharris@fourscore.app',
+            emailVerified: null,
+            image: '/images/kamala-harris.jpg',
+            dateUpdated: null,
+            seenVotingTutorial: false,
+            answer: {
+              id: '54ae89f6-7887-4a5c-899e-d795c29b6ac9',
+              userId: 'd411c88e-162b-4881-b1cd-ee9c6352459e',
+              questionId: '14030697-ffb0-48e0-b4e1-9004ba6b6d2e',
+              agree: true,
+              rating: calcRating(75),
+              dateUpdated: now,
+              notes: String.raw`**Answer:** Kamala Harris would likely argue that while a single-payer healthcare system has the potential to ensure universal coverage and reduce overall healthcare costs, the United States must take a practical approach to healthcare reform. She might emphasize the importance of building on the Affordable Care Act, expanding Medicaid, and introducing a public option as immediate steps towards universal coverage. Harris could highlight the need to ensure that any transition to a single-payer system is carefully planned to avoid disruptions in care and to address concerns from various stakeholders, including patients, healthcare providers, and insurers. She would likely advocate for policies that aim to make healthcare more affordable and accessible for all Americans, while continuing to explore the feasibility of a single-payer system in the long term.
+
+**Percentage of Importance:** Given her focus on expanding healthcare access and affordability, Harris would likely assign a high importance to this issue, possibly in the range of 70-80%. This reflects her belief that while a single-payer system could be a solution for the United States, immediate and practical steps must be taken to improve the current healthcare system and ensure that all Americans have access to the care they need.`,
+              skipped: false,
             },
           },
           {

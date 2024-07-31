@@ -558,3 +558,52 @@ export const getLocalities = async () => {
   const localities = await db.selectFrom('Locality').selectAll().execute();
   return localities;
 };
+
+export const getPledgedCandidate = async (user: DefaultSession['user']) => {
+  const currentUser = await getUser(user);
+
+  if (!currentUser) {
+    throw new Error('Not logged in.');
+  }
+
+  const pledgedCandidate = await db
+    .selectFrom('User')
+    .selectAll()
+    .whereRef(
+      'id',
+      'in',
+      db
+        .selectFrom('UserPledge')
+        .select('candidateId')
+        .where('userId', '=', currentUser.id)
+        .where('dateDeleted', 'is', null),
+    )
+    .executeTakeFirst();
+
+  return pledgedCandidate;
+};
+
+export const pledgeCandidate = async (user: DefaultSession['user'], candidate: User) => {
+  const currentUser = await getUser(user);
+
+  if (!currentUser) {
+    throw new Error('Not logged in.');
+  }
+
+  await db
+    .updateTable('UserPledge')
+    .where('UserPledge.userId', '=', currentUser.id)
+    .where('UserPledge.dateDeleted', 'is', null)
+    .set({
+      dateDeleted: new Date(),
+    })
+    .execute();
+
+  await db
+    .insertInto('UserPledge')
+    .values({
+      userId: currentUser.id,
+      candidateId: candidate.id,
+    })
+    .execute();
+};

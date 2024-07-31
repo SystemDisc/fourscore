@@ -4,6 +4,7 @@ import styles from '@/app/normalize.module.scss';
 import { CandidateResult } from '@/types';
 import classNames from 'classnames';
 import Image from 'next/image';
+import { BsChevronCompactRight } from 'react-icons/bs';
 import Star from '../atoms/star';
 import LinkWithBackDetection from './link-with-back-detection';
 import PledgeToggle from './pledge-toggle';
@@ -23,7 +24,7 @@ export default function CandidateCard({
 }) {
   return (
     <div
-      className={classNames('grid gap-4 hover: cursor-pointer', {
+      className={classNames('grid gap-4', {
         'grid-cols-[3rem_1fr]': !hidePledge,
         'grid-cols-1': hidePledge,
       })}
@@ -41,7 +42,7 @@ export default function CandidateCard({
         </div>
       )}
       <LinkWithBackDetection
-        className='h-[calc(1rem_+_4rem_+_2px)] overflow-hidden border border-neutral-300 rounded-lg shadow-md shadow-neutral-500 grid [grid-template-columns:4rem_1fr] gap-2 p-2 hover:bg-neutral-100'
+        className='h-[calc(1rem_+_4rem_+_2px)] overflow-hidden border border-neutral-300 rounded-lg shadow-md shadow-neutral-500 grid [grid-template-columns:4rem_1fr_min-content] gap-2 p-2 hover:bg-neutral-100'
         href={`/candidate-profile/${candidate.id}`}
       >
         <div>
@@ -86,6 +87,9 @@ export default function CandidateCard({
               />
             )
           )}
+        </div>
+        <div className='text-5xl flex items-center -mx-3 text-neutral-500'>
+          <BsChevronCompactRight />
         </div>
       </LinkWithBackDetection>
     </div>

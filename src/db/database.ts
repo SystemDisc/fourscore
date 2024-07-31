@@ -15,6 +15,7 @@ export interface Database {
   CandidateOffice: CandidateOfficeTable;
   CandidateUserScore: CandidateUserScoreTable;
   CandidateData: CandidateDataTable;
+  UserPledge: UserPledgeTable;
 }
 
 export interface UserTable {
@@ -178,6 +179,19 @@ export interface CandidateDataTable {
 export type CandidateData = Selectable<CandidateDataTable>;
 export type NewCandidateData = Insertable<CandidateDataTable>;
 export type CandidateDataUpdate = Updateable<CandidateDataTable>;
+
+export interface UserPledgeTable {
+  id: Generated<string>;
+  userId: string;
+  candidateId: string;
+  dateCreated: Generated<Date>;
+  dateUpdated: Date | null;
+  dateDeleted: Date | null;
+}
+
+export type UserPledge = Selectable<UserPledgeTable>;
+export type NewUserPledge = Insertable<UserPledgeTable>;
+export type UserPledgeUpdate = Updateable<UserPledgeTable>;
 
 export const dialect = new PostgresDialect({
   pool: new Pool({
