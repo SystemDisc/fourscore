@@ -22,7 +22,12 @@ export async function up(db: Kysely<Database>) {
 
   const users = await db.selectFrom('User').select('email').execute();
   for (const user of users) {
-    await calculateMatches({ email: user.email });
+    try {
+      await calculateMatches({ email: user.email });
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
   }
 
   const rankedScores = db

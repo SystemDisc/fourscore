@@ -97,6 +97,10 @@ export async function up(db: Kysely<Database>) {
     .onDelete('cascade')
     .onUpdate('cascade')
     .execute();
+  await db.schema
+    .alterTable('CandidateUserScore')
+    .addUniqueConstraint('uk_CandidateUserScore_userId_candidateId', ['userId', 'candidateId'])
+    .execute();
 
   await db
     .deleteFrom('CandidateData')

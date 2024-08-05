@@ -253,14 +253,12 @@ export default function Home() {
                 </a>
               </div>
               <div className='col-xs-4 text-center'>
-                <a
+                <Link
                   className='underline'
-                  href='https://termsfeed.com/privacy-policy/c4010971066e30d539b5d9103287de96'
-                  target='_blank'
-                  rel='noopener noreferrer'
+                  href='/privacy-policy'
                 >
                   Privacy
-                </a>
+                </Link>
               </div>
               <div className='col-xs-12 text-center contact md:col-span-3'>
                 <Link

@@ -1,7 +1,7 @@
 import appRootPath from 'app-root-path';
 import 'dotenv-flow/config';
 import { promises as fs } from 'fs';
-import { FileMigrationProvider, Migrator } from 'kysely';
+import { FileMigrationProvider, MigrationResult, Migrator } from 'kysely';
 import * as path from 'path';
 import { db } from './src/db/database';
 
@@ -37,10 +37,25 @@ async function migrateDown() {
   }
 }
 
-async function migrateToLatest() {
+async function migrateToLatest(steps?: number) {
   const migrator = getMigrator();
 
-  const { error, results } = await migrator.migrateToLatest();
+  let error: unknown,
+    results: MigrationResult[] | undefined = [];
+  if (steps !== undefined) {
+    for (let i = 0; i < steps; i++) {
+      const { error: innerError, results: innerResults } = await migrator.migrateUp();
+      if (innerResults) {
+        results.push(...innerResults);
+      }
+      if (innerError) {
+        error = innerError;
+        break;
+      }
+    }
+  } else {
+    ({ error, results } = await migrator.migrateToLatest());
+  }
 
   results?.forEach((it) => {
     if (it.status === 'Success') {
@@ -61,4 +76,6 @@ if (!process.argv[2]) {
   migrateToLatest().then(() => db.destroy());
 } else if (process.argv[2] === 'down') {
   migrateDown().then(() => db.destroy());
+} else if (process.argv[2] && !isNaN(+process.argv[2])) {
+  migrateToLatest(+process.argv[2]).then(() => db.destroy());
 }

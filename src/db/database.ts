@@ -123,6 +123,7 @@ export interface AnswerTable {
   questionId: string;
   agree: boolean | null;
   rating: number | null;
+  importance: number | null;
   skipped: boolean;
   notes: string | null;
   answeredByStaff: Generated<boolean>;

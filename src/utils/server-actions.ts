@@ -268,7 +268,7 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
         eb
           .selectFrom('CandidateUserScore')
           .selectAll('CandidateUserScore')
-          .where('CandidateUserScore.userId', '=', currentUserWithAnswers.id)
+          .where('CandidateUserScore.userId', '=', currentUser.id)
           .whereRef('CandidateUserScore.candidateId', '=', 'User.id'),
       ).as('candidateUserScore'),
       eb.val(0).as('score'),
