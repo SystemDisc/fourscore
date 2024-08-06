@@ -1,3 +1,7 @@
+import appImage from '@/../public/images/about/app.jpg';
+import headImage from '@/../public/images/about/head.jpg';
+import orgImage from '@/../public/images/about/organization.jpg';
+import upcomingImage from '@/../public/images/about/upcoming.jpg';
 import ExternalFooter from '@/components/molecules/external-footer';
 import ExternalNav from '@/components/molecules/external-nav';
 import { generateCommonMetadata } from '@/utils/helpers';
@@ -73,11 +77,10 @@ export default async function Page() {
           <div className='grid grid-cols-1 md:grid-cols-2 gap-8 mb-12'>
             <div>
               <Image
-                src='/images/about/head.jpg'
+                src={headImage}
                 alt='About FourScore'
                 className='w-full h-full object-cover rounded-lg shadow-md'
-                width={2125}
-                height={1416}
+                sizes='50vw, 100vw'
               />
             </div>
             <div className='flex'>
@@ -128,11 +131,10 @@ export default async function Page() {
             </div>
             <div className='order-1 md:order-2'>
               <Image
-                src='/images/about/organization.jpg'
+                src={orgImage}
                 alt='FourScore Organization'
                 className='w-full h-full object-cover rounded-lg shadow-md'
-                width={2125}
-                height={1416}
+                sizes='50vw, 100vw'
               />
             </div>
           </div>
@@ -140,11 +142,10 @@ export default async function Page() {
           <div className='grid grid-cols-1 md:grid-cols-2 gap-8 mb-12'>
             <div>
               <Image
-                src='/images/about/app.jpg'
+                src={appImage}
                 alt='FourScore App'
                 className='w-full h-full object-cover rounded-lg shadow-md'
-                width={2124}
-                height={1414}
+                sizes='50vw, 100vw'
               />
             </div>
             <div className='flex'>
@@ -212,11 +213,10 @@ export default async function Page() {
             </div>
             <div className='order-1 md:order-2'>
               <Image
-                src='/images/about/upcoming.jpg'
+                src={upcomingImage}
                 alt='Upcoming Features'
                 className='w-full h-full object-cover rounded-lg shadow-md'
-                width={2122}
-                height={1416}
+                sizes='50vw, 100vw'
               />
             </div>
           </div>
