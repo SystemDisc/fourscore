@@ -8,29 +8,11 @@ import { DefaultSession } from 'next-auth';
 
 const userCache = new Map<string, Simplify<User>>();
 
-export const getUserByEmail = async (email?: string | null) => {
-  if (!email) {
-    throw new Error('User email missing.');
-  }
-
-  if (userCache.has(email)) {
-    return userCache.get(email)!;
-  } else {
-    const currentUser = await db.selectFrom('User').where('email', '=', email).selectAll().executeTakeFirst();
-
-    if (!currentUser) {
-      throw new Error('User not found.');
-    }
-
-    return currentUser;
-  }
-};
-
 export const saveAddress = async (
   user: DefaultSession['user'],
   { streetNumber, route, city, state, zip }: NewAddress,
 ) => {
-  const currentUser = await getUserByEmail(user?.email);
+  const currentUser = await getUser(user);
 
   if (!currentUser) {
     throw new Error('Not logged in.');
@@ -68,7 +50,7 @@ export const saveAddress = async (
 };
 
 export const getQuestions = async (user: DefaultSession['user']) => {
-  const currentUser = await getUserByEmail(user?.email);
+  const currentUser = await getUser(user);
 
   return await db
     .selectFrom('Question')
@@ -82,24 +64,22 @@ export const getQuestions = async (user: DefaultSession['user']) => {
       jsonObjectFrom(
         eb.selectFrom('Category').selectAll('Category').whereRef('Category.id', '=', 'Question.categoryId'),
       ).as('category'),
-      jsonObjectFrom(
-        eb
-          .selectFrom('Answer')
-          .selectAll('Answer')
-          .where('Answer.userId', '=', currentUser.id)
-          .whereRef('Answer.questionId', '=', 'Question.id'),
-      ).as('answer'),
+      currentUser
+        ? jsonObjectFrom(
+            eb
+              .selectFrom('Answer')
+              .selectAll('Answer')
+              .where('Answer.userId', '=', currentUser.id)
+              .whereRef('Answer.questionId', '=', 'Question.id'),
+          ).as('answer')
+        : eb.val(null).as('answer'),
     ])
     .orderBy(['Locality.position asc', 'Category.name asc'])
     .execute();
 };
 
 export const getPoll = async (user: DefaultSession['user']) => {
-  const currentUser = await getUserByEmail(user?.email);
-
-  if (!currentUser) {
-    throw new Error('Not logged in.');
-  }
+  const currentUser = await getUser(user);
 
   const questions = await getQuestions(currentUser);
 
@@ -120,7 +100,7 @@ export const getPoll = async (user: DefaultSession['user']) => {
 };
 
 export const savePoll = async (user: DefaultSession['user'], answers: Simplify<AnswerUpdate>[]) => {
-  const currentUser = await getUserByEmail(user?.email);
+  const currentUser = await getUser(user);
 
   if (!currentUser) {
     throw new Error('Not logged in.');
@@ -229,7 +209,7 @@ export const calculateMatches = async (user: DefaultSession['user']) => {
     throw new Error('Not logged in.');
   }
 
-  const currentUser = await getUserByEmail(user?.email);
+  const currentUser = await getUser(user);
 
   if (!currentUser) {
     throw new Error('Not logged in.');
@@ -361,6 +341,15 @@ export const deleteUser = async (user: DefaultSession['user']) => {
 export const getUser = async (user: DefaultSession['user']) => {
   const currentUser = await db.selectFrom('User').where('email', '=', user?.email!).selectAll().executeTakeFirst();
 
+  if (!currentUser) {
+    return currentUser;
+  }
+
+  if (userCache.has(currentUser.email)) {
+    return userCache.get(currentUser.email)!;
+  }
+
+  userCache.set(currentUser.email, currentUser);
   return currentUser;
 };
 
@@ -423,7 +412,11 @@ export const getUserQuestionsByCategory = async (userId: string) => {
 };
 
 export const getCandidateAnswerScore = async (user: DefaultSession['user'], candidateId: string) => {
-  const currentUser = await getUserByEmail(user?.email);
+  const currentUser = await getUser(user);
+
+  if (!currentUser) {
+    return undefined;
+  }
 
   const userQuestionCategories = await getUserQuestionsByCategory(currentUser.id);
 

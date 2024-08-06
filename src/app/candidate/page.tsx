@@ -2,27 +2,25 @@ import Button from '@/components/atoms/button';
 import ChevronDown from '@/components/atoms/chevron-down';
 import Disclaimer from '@/components/atoms/disclaimer';
 import Accordion from '@/components/molecules/accordion';
-import AuthButton from '@/components/molecules/auth-button';
+import ExternalNav from '@/components/molecules/external-nav';
+import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'FourScore - Candidate Registration',
+  description: 'Detailed information about a specific political candidate.',
+};
 
 export default function Home() {
   return (
     <>
       <div className='h-full'>
-        <header className='p-4 min-h-[100dvh] bg-[url("/images/home/candidate-bg.png")] bg-cover [background-position:bottom_center]'>
-          <nav className='h-11 flex justify-between items-center gap-4'>
-            <Link href='/'>
-              <Image
-                className='max-w-[calc(50vw_-_1.5rem)] relative top-[2px]'
-                src='/images/home/logo.svg'
-                width={170}
-                height={37}
-                alt='FourScore'
-              />
-            </Link>
-            <AuthButton isCandidate />
-          </nav>
+        <div className='min-h-[100dvh] bg-[url("/images/home/candidate-bg.png")] bg-cover [background-position:bottom_center]'>
+          <ExternalNav
+            className='bg-opacity-50'
+            buttonType='flat-white'
+          />
           <div className='min-h-[calc(100dvh_-_2.75rem_-_2rem_-_3rem)] flex items-center md:justify-start content-center flex-wrap md:pl-20 p-0 justify-center text-white'>
             <div className='max-w-2xl w-full text-center mb-4'>
               <div className='text-stroke text-6xl font-black sm:text-7xl'>Connected</div>
@@ -50,7 +48,7 @@ export default function Home() {
             </div>
           </div>
           <ChevronDown htmlFor='how-it-works' />
-        </header>
+        </div>
         <section
           className='from-[#9EA1A5] to-[#393C40] bg-gradient-to-b text-white pt-12 pb-24'
           id='how-it-works'

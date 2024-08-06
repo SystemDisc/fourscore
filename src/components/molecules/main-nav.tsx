@@ -1,12 +1,16 @@
 'use client';
 
 import Button from '@/components/atoms/button';
+import classNames from 'classnames';
 import { signIn, signOut } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
 import LinkWithBackDetection from './link-with-back-detection';
 
-export default function MainNav({ loggedIn }: { loggedIn: boolean }) {
+export default function MainNav({ loggedIn, className }: { loggedIn: boolean; className?: string }) {
+  const pathname = usePathname();
+
   return (
-    <nav className='flex justify-between p-4'>
+    <nav className={classNames('flex justify-between p-4', className)}>
       {loggedIn ? (
         <>
           <LinkWithBackDetection
@@ -30,10 +34,29 @@ export default function MainNav({ loggedIn }: { loggedIn: boolean }) {
             Sign Out
           </Button>
         </>
+      ) : pathname === '/candidates' ? (
+        <>
+          <LinkWithBackDetection
+            isButton
+            buttonType='white'
+            href='/'
+            className='text-sm'
+          >
+            Home
+          </LinkWithBackDetection>
+          <Button
+            className='text-xs sm:text-base'
+            buttonType='white'
+            onClick={() => signIn()}
+          >
+            Sign In
+          </Button>
+        </>
       ) : (
         <>
           <LinkWithBackDetection
             isButton
+            buttonType='white'
             href='/candidates'
             className='text-sm'
           >
@@ -41,7 +64,7 @@ export default function MainNav({ loggedIn }: { loggedIn: boolean }) {
           </LinkWithBackDetection>
           <Button
             className='text-xs sm:text-base'
-            buttonType='flat'
+            buttonType='white'
             onClick={() => signIn()}
           >
             Sign In / Register

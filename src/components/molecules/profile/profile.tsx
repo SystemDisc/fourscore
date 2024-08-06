@@ -18,7 +18,7 @@ export default async function Profile({
   ).filter((c) => c.questions.every((q) => !!q.answer));
   return (
     <div className='grid grid-cols-1 gap-2 p-2'>
-      {(candidateQuestionsWithScore || candidate.categories) && categoriesWithAnswers.length > 0 && (
+      {categoriesWithAnswers.length > 0 && (
         <Card className='grid grid-cols-1 gap-2 p-2'>
           <div className='text-4xl'>
             {candidate.candidateData?.description ? 'Poll' : `${candidate.name}'s`} Answers

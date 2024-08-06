@@ -1,17 +1,102 @@
 import ChevronDown from '@/components/atoms/chevron-down';
-import Disclaimer from '@/components/atoms/disclaimer';
 import Accordion from '@/components/molecules/accordion';
-import AuthButton from '@/components/molecules/auth-button';
+import ExternalFooter from '@/components/molecules/external-footer';
+import ExternalNav from '@/components/molecules/external-nav';
 import LocationForm from '@/components/molecules/location-form';
 import authOptions from '@/utils/auth-options';
+import { generateCommonMetadata } from '@/utils/helpers';
+import { getCandidates } from '@/utils/server-actions';
+import { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
-import Head from 'next/head';
 import Image from 'next/image';
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import Script from 'next/script';
+
+export async function generateMetadata(): Promise<Metadata> {
+  return generateCommonMetadata({
+    title: 'FourScore: Match Your Vote with Your Values',
+    description:
+      "FourScore revolutionizes the voting experience by using a policy-based matching system to connect voters with political candidates. By filling out a comprehensive survey on key issues, both voters and candidates receive a personalized 'Four Score,' reflecting their alignment on local, state, and federal policies. This innovative approach ensures voters can make more informed decisions at the ballot box, while candidates can engage more effectively with their potential supporters, making democracy more accessible and aligned with individual values.",
+    url: 'https://fourscore.app',
+    openGraphType: 'website',
+    keywords: ['voting', 'elections', 'voter engagement', 'FourScore', 'policy alignment', 'democracy'],
+  });
+}
 
 export default async function Home() {
+  const candidates = await getCandidates();
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: 'https://fourscore.app',
+      },
+    ],
+  };
+
+  const candidatesJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    url: 'https://fourscore.app/candidates',
+    name: 'List of Political Candidates',
+    itemListElement: candidates.map((candidate, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Person',
+        name: candidate.name,
+        description: candidate.candidateData?.description,
+        birthDate: candidate.candidateData?.birthDate,
+        birthPlace: candidate.candidateData?.birthPlace,
+        alumniOf: candidate.candidateData?.education,
+        memberOf: candidate.candidateData?.partyAffiliation,
+        sameAs: [
+          candidate.candidateData?.facebookProfile,
+          candidate.candidateData?.twitterProfile,
+          candidate.candidateData?.linkedInProfile,
+        ],
+        url: candidate.candidateData?.websiteUrl,
+        worksFor: {
+          '@type': 'Organization',
+          name: candidate.candidateData?.partyAffiliation,
+        },
+        knowsAbout: candidate.candidateData?.issues,
+        hasOccupation: candidate.candidateData?.previousPositions?.map((position) => ({
+          '@type': 'Occupation',
+          name: position,
+        })),
+      },
+    })),
+  };
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    url: 'https://fourscore.app',
+    name: 'FourScore: Match Your Vote with Your Values',
+    description:
+      "FourScore revolutionizes the voting experience by using a policy-based matching system to connect voters with political candidates. By filling out a comprehensive survey on key issues, both voters and candidates receive a personalized 'Four Score,' reflecting their alignment on local, state, and federal policies. This innovative approach ensures voters can make more informed decisions at the ballot box, while candidates can engage more effectively with their potential supporters, making democracy more accessible and aligned with individual values.",
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': 'https://fourscore.app',
+    },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: 'https://fourscore.app/search?q={search_term_string}',
+      'query-input': 'required name=search_term_string',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'FourScore',
+      url: 'https://fourscore.app',
+    },
+    mainEntity: candidatesJsonLd,
+  };
+
   const session = await getServerSession(authOptions);
   if (session) {
     redirect('/dashboard');
@@ -19,84 +104,23 @@ export default async function Home() {
 
   return (
     <>
-      <Script
-        id='home-ld'
+      <script
         type='application/ld+json'
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'WebPage',
-            name: 'FourScore - Home',
-            url: 'https://fourscore.app',
-            description:
-              'FourScore helps voters find political candidates that align with their values through a comprehensive survey and personalized Four Score.',
-            publisher: {
-              '@type': 'Organization',
-              name: 'FourScore',
-            },
-          }),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <Head>
-        <title>FourScore - Home</title>
-        <meta
-          name='description'
-          content='FourScore helps voters find political candidates that align with their values through a comprehensive survey and personalized Four Score.'
-        />
-        <meta
-          property='og:title'
-          content='FourScore - Home'
-        />
-        <meta
-          property='og:description'
-          content='FourScore helps voters find political candidates that align with their values through a comprehensive survey and personalized Four Score.'
-        />
-        <meta
-          property='og:image'
-          content='https://fourscore.app/images/website-preview.png'
-        />
-        <meta
-          property='og:url'
-          content='https://fourscore.app'
-        />
-        <meta
-          property='og:type'
-          content='website'
-        />
-        <meta
-          name='twitter:card'
-          content='summary_large_image'
-        />
-        <meta
-          name='twitter:title'
-          content='FourScore - Home'
-        />
-        <meta
-          name='twitter:description'
-          content='FourScore helps voters find political candidates that align with their values through a comprehensive survey and personalized Four Score.'
-        />
-        <meta
-          name='twitter:image'
-          content='https://fourscore.app/images/website-preview.png'
-        />
-      </Head>
+      <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <main>
-        <header className='p-4 min-h-[100dvh] bg-[url("/images/home/bg.png")] bg-cover bg-right-bottom'>
-          <nav className='h-11 flex justify-between items-center gap-4'>
-            <Link href='/'>
-              <Image
-                className='max-w-[calc(50vw_-_1.5rem)] relative top-[2px]'
-                src='/images/home/logo.svg'
-                width={170}
-                height={37}
-                alt='FourScore'
-              />
-            </Link>
-            <AuthButton />
-          </nav>
+        <div className='min-h-[100dvh] bg-[url("/images/home/bg.png")] bg-cover bg-right-bottom'>
+          <ExternalNav
+            className='bg-opacity-10'
+            buttonType='flat-black'
+          />
           <LocationForm />
           <ChevronDown htmlFor='3-steps' />
-        </header>
+        </div>
         <section
           className='pt-12 p-4 bg-white'
           id='3-steps'
@@ -310,59 +334,7 @@ export default async function Home() {
             <li>The Representative continues to reach out to Voters to get their feedback about the community</li>
           </ul>
         </section>
-        <footer className='text-center bg-[#212224] py-16 text-white'>
-          <div className='md:max-w-md md:w-full md:mx-auto'>
-            <div className='text-center mb-2'>
-              <Image
-                className='inline-block'
-                src='/images/home/footer.svg'
-                width={332}
-                height={60}
-                alt='FourScore'
-              />
-            </div>
-            <div className='md:grid md:grid-cols-3'>
-              <div className='col-xs-4 text-center'>
-                <Link
-                  className='underline'
-                  href='/faq'
-                >
-                  FAQ
-                </Link>
-              </div>
-              <div className='col-xs-4 text-center'>
-                <a
-                  className='underline'
-                  href='https://termsfeed.com/terms-conditions/e7eab208e5f8b9bae50e83ec13ad576b'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                >
-                  Terms of Use
-                </a>
-              </div>
-              <div className='col-xs-4 text-center'>
-                <Link
-                  className='underline'
-                  href='/privacy-policy'
-                >
-                  Privacy
-                </Link>
-              </div>
-              <div className='col-xs-12 text-center'>
-                <Link
-                  className='text-uppercase underline'
-                  href='/contact-us'
-                >
-                  Contact
-                </Link>
-              </div>
-            </div>
-            <Disclaimer className='text-justify text-xs my-2 px-2' />
-            <small className='copyright'>
-              &copy; All Rights Reserved FourScore Tech Inc. <span>2024</span>
-            </small>
-          </div>
-        </footer>
+        <ExternalFooter />
       </main>
     </>
   );

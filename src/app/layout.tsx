@@ -8,7 +8,6 @@ import { Analytics } from '@vercel/analytics/react';
 import classNames from 'classnames';
 import { getServerSession } from 'next-auth';
 import { Lato } from 'next/font/google';
-import Script from 'next/script';
 import './globals.css';
 
 const lato = Lato({
@@ -25,90 +24,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang='en'>
       <head>
         <title>FourScore: Match Your Vote with Your Values</title>
-        <link
-          rel='apple-touch-icon'
-          sizes='180x180'
-          href='/icons/apple-touch-icon.png'
-        />
-        <link
-          rel='icon'
-          type='image/png'
-          sizes='32x32'
-          href='/icons/favicon-32x32.png'
-        />
-        <link
-          rel='icon'
-          type='image/png'
-          sizes='16x16'
-          href='/icons/favicon-16x16.png'
-        />
-        <link
-          rel='manifest'
-          href='/manifest.json'
-        />
-        <link
-          rel='mask-icon'
-          href='/icons/safari-pinned-tab.svg'
-          color='#5bbad5'
-        />
-        <link
-          rel='shortcut icon'
-          href='/icons/favicon.ico'
-        />
-        <meta
-          name='msapplication-TileColor'
-          content='#00a300'
-        />
-        <meta
-          name='msapplication-config'
-          content='/browserconfig.xml'
-        />
-        <meta
-          name='theme-color'
-          content='#ffffff'
-        />
-        <meta
-          name='description'
-          content="FourScore revolutionizes the voting experience by using a policy-based matching system to connect voters with political candidates. By filling out a comprehensive survey on key issues, both voters and candidates receive a personalized 'Four Score,' reflecting their alignment on local, state, and federal policies. This innovative approach ensures voters can make more informed decisions at the ballot box, while candidates can engage more effectively with their potential supporters, making democracy more accessible and aligned with individual values."
-        />
-        <meta
-          property='og:title'
-          content='FourScore: Match Your Vote with Your Values'
-        />
-        <meta
-          property='og:description'
-          content="FourScore revolutionizes the voting experience by using a policy-based matching system to connect voters with political candidates. By filling out a comprehensive survey on key issues, both voters and candidates receive a personalized 'Four Score,' reflecting their alignment on local, state, and federal policies. This innovative approach ensures voters can make more informed decisions at the ballot box, while candidates can engage more effectively with their potential supporters, making democracy more accessible and aligned with individual values."
-        />
-        <meta
-          property='og:image'
-          content='https://fourscore.app/images/website-preview.png'
-        />
-        <meta
-          property='og:url'
-          content='https://fourscore.app'
-        />
-        <meta
-          property='og:type'
-          content='website'
-        />
-        <meta
-          name='twitter:card'
-          content='summary_large_image'
-        />
-        <meta
-          name='twitter:title'
-          content='FourScore: Match Your Vote with Your Values'
-        />
-        <meta
-          name='twitter:description'
-          content="FourScore revolutionizes the voting experience by using a policy-based matching system to connect voters with political candidates. By filling out a comprehensive survey on key issues, both voters and candidates receive a personalized 'Four Score,' reflecting their alignment on local, state, and federal policies. This innovative approach ensures voters can make more informed decisions at the ballot box, while candidates can engage more effectively with their potential supporters, making democracy more accessible and aligned with individual values."
-        />
-        <meta
-          name='twitter:image'
-          content='https://fourscore.app/images/website-preview.png'
-        />
         <GoogleTagManager gtmId='GTM-TK3ZT6B3' />
-        <Script
+        <script
           id='register-sw'
           dangerouslySetInnerHTML={{
             __html: `
@@ -134,7 +51,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           `,
           }}
         />
-        <Script
+        <script
           id='layout-ld'
           type='application/ld+json'
           dangerouslySetInnerHTML={{

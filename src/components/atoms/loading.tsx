@@ -1,11 +1,18 @@
+import classNames from 'classnames';
 import Image from 'next/image';
 
-export default function Loading() {
+interface LoadingProps {
+  className?: string;
+}
+
+export default function Loading({ className }: LoadingProps) {
   return (
-    <div className='flex justify-center items-center'>
+    <div className={classNames('flex justify-center items-center', className)}>
       <Image
         src='/images/loading.svg'
         alt='Loading...'
+        width={96}
+        height={96}
       />
     </div>
   );

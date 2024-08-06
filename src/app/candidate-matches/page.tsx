@@ -54,7 +54,7 @@ export default async function Page() {
             <div className='flex justify-end'>
               {pollPercentage === 100 ? (
                 <LinkWithBackDetection
-                  buttonType='white'
+                  buttonType='flat-white'
                   isButton
                   href='/dashboard'
                 >
@@ -62,7 +62,7 @@ export default async function Page() {
                 </LinkWithBackDetection>
               ) : (
                 <LinkWithBackDetection
-                  buttonType='white'
+                  buttonType='flat-white'
                   isButton
                   href='/poll'
                 >

@@ -3,41 +3,27 @@
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Button from '../atoms/button';
 
-export default function AuthButton({ isCandidate, isGreen = false }: { isCandidate?: boolean; isGreen?: boolean }) {
+interface AuthButtonProps {
+  buttonType?: 'default' | 'flat-black' | 'flat-white';
+}
+
+export default function AuthButton({ buttonType = 'flat-black' }: AuthButtonProps) {
   const { data: session } = useSession();
 
   return (
     <>
-      {!session && !isCandidate && (
+      {!session && (
         <Button
           className='text-xs sm:text-base'
-          buttonType={isGreen ? 'default' : 'flat'}
+          buttonType={buttonType}
           onClick={() => signIn()}
         >
           Sign in / Register
         </Button>
       )}
-      {session && !isCandidate && (
+      {session && (
         <Button
-          buttonType={isGreen ? 'default' : 'flat'}
-          onClick={() => signOut()}
-        >
-          Sign out
-        </Button>
-      )}
-      {!session && isCandidate && (
-        <Button
-          className='text-xs sm:text-base border-white text-white hover:!text-neutral-300'
-          buttonType={isGreen ? 'default' : 'flat'}
-          onClick={() => signIn()}
-        >
-          Sign in / Register
-        </Button>
-      )}
-      {session && isCandidate && (
-        <Button
-          className='border-white text-white hover:!text-neutral-300'
-          buttonType={isGreen ? 'default' : 'flat'}
+          buttonType={buttonType}
           onClick={() => signOut()}
         >
           Sign out

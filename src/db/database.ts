@@ -175,6 +175,17 @@ export interface CandidateDataTable {
   dateCreated: Generated<Date>;
   dateUpdated: Date | null;
   dateDeleted: Date | null;
+  birthDate: Date | null;
+  birthPlace: string | null;
+  education: string | null;
+  partyAffiliation: string | null;
+  facebookProfile: string | null;
+  twitterProfile: string | null;
+  linkedInProfile: string | null;
+  profileImage: string | null;
+  issues: string[] | null;
+  previousPositions: string[] | null;
+  websiteUrl: string | null;
 }
 
 export type CandidateData = Selectable<CandidateDataTable>;
