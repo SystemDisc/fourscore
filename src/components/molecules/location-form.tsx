@@ -1,7 +1,6 @@
 'use client';
 
 import { Autocomplete, useJsApiLoader } from '@react-google-maps/api';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import Button from '../atoms/button';
@@ -85,13 +84,6 @@ export default function LocationForm() {
             View Candidates
           </LinkWithBackDetection>
           <br />
-          <div className='text-sm tracking-wider text-stroke'>
-            <Link href='/candidate'>
-              Are you a candidate?
-              <br />
-              <span className='underline'>Discover how FourScore can boost your campaign and sign up today!</span>
-            </Link>
-          </div>
         </div>
       </div>
     </div>

@@ -36,15 +36,6 @@ export default function Home() {
                   Get Started
                 </Button>
               </div>
-              <div className='text-sm tracking-wider text-stroke text-center'>
-                <Link href='/'>
-                  Are you a voter?
-                  <br />
-                  <span className='underline'>
-                    Find the candidates who align with your values and make an informed choice!
-                  </span>
-                </Link>
-              </div>
             </div>
           </div>
           <ChevronDown htmlFor='how-it-works' />
