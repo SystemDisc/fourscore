@@ -78,6 +78,7 @@ export default async function Page() {
             <div>
               <Image
                 src={headImage}
+                placeholder='blur'
                 alt='About FourScore'
                 className='w-full h-full object-cover rounded-lg shadow-md'
                 sizes='50vw, 100vw'
@@ -132,6 +133,7 @@ export default async function Page() {
             <div className='order-1 md:order-2'>
               <Image
                 src={orgImage}
+                placeholder='blur'
                 alt='FourScore Organization'
                 className='w-full h-full object-cover rounded-lg shadow-md'
                 sizes='50vw, 100vw'
@@ -143,6 +145,7 @@ export default async function Page() {
             <div>
               <Image
                 src={appImage}
+                placeholder='blur'
                 alt='FourScore App'
                 className='w-full h-full object-cover rounded-lg shadow-md'
                 sizes='50vw, 100vw'
@@ -214,6 +217,7 @@ export default async function Page() {
             <div className='order-1 md:order-2'>
               <Image
                 src={upcomingImage}
+                placeholder='blur'
                 alt='Upcoming Features'
                 className='w-full h-full object-cover rounded-lg shadow-md'
                 sizes='50vw, 100vw'
