@@ -70,7 +70,7 @@ export default function Poll({
         const storedPoll = JSON.parse(storedPollJson) as Simplify<AnswerUpdate>[];
         setAnswers(storedPoll);
         const foundIndex = storedPoll.findIndex((a) => a.agree === undefined || a.agree === null);
-        if (foundIndex >= 0) {
+        if (foundIndex > 0) {
           setCurrentIndex(foundIndex);
           setTutorialShown(true);
         }
